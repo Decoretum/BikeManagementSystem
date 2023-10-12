@@ -1,0 +1,4 @@
+USE `softwareengineering`;
+SHOW TABLES;
+DROP TABLE PERSON;
+DESC PERSON;
