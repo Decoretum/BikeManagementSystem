@@ -12,6 +12,8 @@ DESC `bike`;
 
 SELECT * FROM `bike`;
 SELECT * FROM `bike_colors`;
+SELECT * FROM `orders`;
+SELECT * FROM `order_entry`;
 
 
 

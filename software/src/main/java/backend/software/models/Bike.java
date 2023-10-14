@@ -70,6 +70,7 @@ public class Bike {
     private List<BikeColors> bikeColors;
 
     @JsonIgnore
+    //@JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
     private List<OrderEntry> orderEntries;
 

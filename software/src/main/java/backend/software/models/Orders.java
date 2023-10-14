@@ -7,10 +7,12 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedBy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +33,7 @@ public class Orders {
     private Long id;
 
     @Column(name = "uuid")
+    @NotNull(message = "Uuid cannot be null!")
     private String uuid;
 
     @Column(name = "dateOfPurchase")
@@ -44,15 +47,15 @@ public class Orders {
     @Column(name = "totalcost")
     @NotNull(message = "Total cost cannot be null!")
     @DecimalMin("0.0")
-    private Long totalcost;
+    private Double totalcost;
 
     @Column(name = "customerName")
     @NotNull(message = "Customer name cannot be null!")
     @Length(max = 80)
     private String customerName;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderEntry> orderEntries;
 
     public String getUuid() {
@@ -79,11 +82,11 @@ public class Orders {
         this.description = description;
     }
 
-    public Long getTotalcost() {
+    public Double getTotalcost() {
         return totalcost;
     }
 
-    public void setTotalcost(Long totalcost) {
+    public void setTotalcost(Double totalcost) {
         this.totalcost = totalcost;
     }
 

@@ -1,5 +1,7 @@
 package backend.software.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,11 +24,11 @@ public class OrderEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    
     @ManyToOne
     @JoinColumn(name = "bike_id")
     private Bike bike;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Orders order;
@@ -38,5 +40,37 @@ public class OrderEntry {
     @Column(name = "cost")
     @DecimalMin("0")
     private Double cost;
+
+    public Bike getBike() {
+        return bike;
+    }
+
+    public void setBike(Bike bike) {
+        this.bike = bike;
+    }
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
 
 }

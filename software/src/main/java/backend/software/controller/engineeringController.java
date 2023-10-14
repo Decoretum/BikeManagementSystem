@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import backend.software.dto.makeAnOrder;
+import backend.software.dto.makeOrder;
 import backend.software.models.Bike;
+import backend.software.models.Orders;
 import backend.software.services.engineeringService;
 import jakarta.annotation.PostConstruct;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -46,6 +50,36 @@ public class engineeringController {
         @QueryParam("bikeName") String bikeName
     ){
         return engineeringService.test(bikeName);
+    }
+
+    @GET
+    @Path("/getOrder")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public Orders getOrder(
+        @QueryParam("orderUUID") String uuid
+    ){
+        return engineeringService.getOrder(uuid);
+    }
+
+    @POST
+    @Path("/makeBike")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public void makeBike(){
+        
+    }
+
+    @POST
+    @Path("/makeAnOrder")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public void makeOrder(makeAnOrder order){
+        engineeringService.makeOrder(order);
+    }
+
+    @POST
+    @Path("/makeOrder")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public void makeOrder(makeOrder order){
+        engineeringService.makeBikeOrder(order);
     }
 
     @POST

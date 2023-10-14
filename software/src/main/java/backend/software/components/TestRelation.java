@@ -1,5 +1,7 @@
 package backend.software.components;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,9 @@ public class TestRelation {
 
     @PostConstruct
     public void init(){
+
+        ArrayList<Bike> getBike = bikeRepository.queryName("Java Ultra Bike");
+        if (getBike.size() == 0){
         //add Bike Colors to a Bike 
         Bike newBike = new Bike();
         newBike.setCategory("Marathon");
@@ -46,6 +51,7 @@ public class TestRelation {
         bikeRepository.save(newBike);
         bikeColorsRepository.save(newColor);
         bikeColorsRepository.save(newColor2);
+        }
 
     }
 }
