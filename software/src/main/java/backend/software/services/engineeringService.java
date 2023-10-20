@@ -1,19 +1,22 @@
 package backend.software.services;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import backend.software.dto.makeAnOrder;
+import backend.software.dto.makeCategory;
+import backend.software.dto.makeColor;
 import backend.software.dto.makeOrder;
 import backend.software.models.Bike;
+import backend.software.models.BikeCategories;
+import backend.software.models.BikeColors;
 import backend.software.models.OrderEntry;
 import backend.software.models.Orders;
+import backend.software.repositories.BikeCategoryRepository;
 import backend.software.repositories.BikeColorsRepository;
 import backend.software.repositories.BikeRepository;
 import backend.software.repositories.OrderEntryRepository;
@@ -33,7 +36,12 @@ public class engineeringService {
     @Autowired
     private OrderEntryRepository orderEntryRepository;
 
-    public engineeringService(OrderEntryRepository orderEntryRepository, BikeRepository bikeRepository, BikeColorsRepository bikeColorsRepository, OrderRepostitory orderRepostitory){
+    @Autowired
+    private BikeCategoryRepository bikeCategoryRepository;
+
+    public engineeringService(BikeCategoryRepository bikeCategoryRepository, BikeColorsRepository bikeColorsRepository, OrderEntryRepository orderEntryRepository, BikeRepository bikeRepository, OrderRepostitory orderRepostitory){
+        this.bikeCategoryRepository = bikeCategoryRepository;
+        this.bikeColorsRepository = bikeColorsRepository;
         this.orderEntryRepository = orderEntryRepository;
         this.bikeColorsRepository = bikeColorsRepository;
         this.bikeRepository = bikeRepository;
@@ -43,6 +51,32 @@ public class engineeringService {
     public Bike test(String bikeName){
         return bikeRepository.queryName(bikeName).get(0);
     }
+
+    //BIKE COMPONENTS
+
+    public void addCategory(makeCategory json){
+        BikeCategories category = new BikeCategories();
+        category.setName(json.getName());
+        
+        Bike bike = (Bike) bikeRepository.queryName(json.getBikeName()).get(0);
+        category.setBike(bike);
+
+        bikeRepository.save(bike);
+        bikeCategoryRepository.save(category);
+    }
+
+    public void addColor(makeColor json){
+        BikeColors color = new BikeColors();
+        color.setName(json.getName());
+
+        Bike bike = (Bike) bikeRepository.queryName(json.getBikeName()).get(0);
+        color.setBike(bike);
+
+        bikeRepository.save(bike);
+        bikeColorsRepository.save(color);
+    }
+
+    //ORDERS
 
     public Orders getOrder(String uuid){
         Orders order = orderRepostitory.uuidQuery(uuid).get(0);

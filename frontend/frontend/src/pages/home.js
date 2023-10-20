@@ -24,7 +24,7 @@ export default function home(){
 
     return(
         <>
-            <Container style={{boxShadow: '0px 0px 10px', padding: '15px', backgroundColor: '#DE8F5F', borderRadius: '9px', marginTop: '15vh', width: '50vw'}}>
+            <Container style={{boxShadow: '0px 0px 10px', padding: '15px', backgroundColor: '#DE8F5F', borderRadius: '9px', marginTop: '15vh', minWidth: '500px', width: '50vw'}}>
                 <Typography variant='h4' style={{fontWeight: '100'}}> QC Bike Management System </Typography>
                     <Typography variant='subtitle2' style={{display: 'flex', marginTop: '5vh'}}>
                         <Avatar style={{backgroundColor: 'green', color: 'white', padding: '10px'}}> GE </Avatar>
