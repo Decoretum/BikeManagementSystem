@@ -24,7 +24,7 @@ export default function technical(){
             <Typography variant='subtitle1' style={{marginTop: '2vh'}}>
                 MySQL was used as the Relational Database Management System for the application. XAMPP was never used by Gael Estrera for any projects.
             </Typography>
-
+            <br/>
         </Container>
         
     )

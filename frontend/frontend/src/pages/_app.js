@@ -23,7 +23,7 @@ export default function myApp({Component, pageProps}){
             <Head>
                 <meta name="viewport" content="initial-scale=1, width=device-width" />
                 <title>
-                    QC Bike Management System
+                    Bisikleta para sa Atenista
                 </title>
             </Head> 
                 <AppBar style={{height: '10vh', backgroundColor: '#9A4444'}}>
@@ -47,6 +47,7 @@ export default function myApp({Component, pageProps}){
                 open={anchored}
                 anchorEl = {open}
                 onClose={() => {setOpen(null)}}
+                disableScrollLock = {true}
                 >
                     <MenuItem>
                         <Link href={'/bikes'}>
@@ -59,9 +60,6 @@ export default function myApp({Component, pageProps}){
                         </Link>
                     </MenuItem>
                 </Menu>
-                <Image src={'/bike1.avif'} style={{position: 'absolute', left: '2vw', top: '13vh', borderRadius: '9px'}} width={250} height={300} priority />
-                <Image src={'/bike2.avif'} style={{position: 'absolute', left: '78vw', bottom: '8vh', borderRadius: '9px'}} width={250} height={300} priority />
-                <Image src={'/bike3.avif'} style={{position: 'absolute', left: '2vw', top: '70vh', borderRadius: '9px'}} width={250} height={300} priority />
                     <div style={{maxHeight: '100%', maxWidth: '100%', fontFamily: 'Roboto', fontWeight: '100'}}>
                         <QueryClientProvider client={client}>
                             <Component {...pageProps} />
