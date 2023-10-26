@@ -3,6 +3,5 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/bikes": "pages/bikes.js",
-  "/bikes/addBike": "pages/bikes/addBike.js",
-  "/": "pages/index.js"
+  "/bikes/addBike": "pages/bikes/addBike.js"
 }

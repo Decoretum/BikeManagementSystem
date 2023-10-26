@@ -1,4 +1,4 @@
-import { Box, Button, Container, Input, Modal, Typography } from '@mui/material';
+import { Box, Button, Container, Input, Modal, TextField, Typography } from '@mui/material';
 import {useForm, SubmitHandler } from 'react-hook-form'
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -27,30 +27,31 @@ export default function addBike(){
     return(
         <form onSubmit={handleSubmit(onSubmit)}>
             <Container style={{marginTop: '15vh', border: 'solid', width: '50vw', maxWidth: '50vw'}}>
-                <Typography variant='h6'>
+                <Typography variant='h4'> Add a Bike </Typography>
+                <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Name
                 </Typography>
-                <Input {...register("name")} />
+                <Input {...register("name")} style={{minWidth: '40vw'}} />
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Description
-                </Typography>
-                <Input {...register("description")} />
+                </Typography> <br/>
+                <TextField rows={2} {...register("description")} multiline variant='filled' label="Description about the bike" style={{minWidth: '40vw'}}  />
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Price
                 </Typography>
-                <Input {...register("price")} />
+                <Input {...register("price")} style={{minWidth: '40vw'}}  />
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                    Stock
                 </Typography>
-                <Input {...register("stock")} />
+                <Input {...register("stock")} style={{minWidth: '40vw'}}  />
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Wheel Size
                 </Typography>
-                <Input {...register("wheelSize")} />
+                <Input {...register("wheelSize")} style={{minWidth: '40vw'}}  />
 
                 <Modal
                 open={modal === true}
