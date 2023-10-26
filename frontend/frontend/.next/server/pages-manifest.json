@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/bikes": "pages/bikes.js",
-  "/bikes/addBike": "pages/bikes/addBike.js"
+  "/bikes/addBike": "pages/bikes/addBike.js",
+  "/bikes": "pages/bikes.js"
 }
