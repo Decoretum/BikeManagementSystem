@@ -1,5 +1,8 @@
 package backend.software.controller;
 
+import java.util.*;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -8,7 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeOrder;
+import backend.software.dto.makeBike;
+import backend.software.dto.makeCategory;
 import backend.software.models.Bike;
+import backend.software.models.Categories;
 import backend.software.models.Orders;
 import backend.software.services.engineeringService;
 import jakarta.annotation.PostConstruct;
@@ -35,13 +41,36 @@ public class engineeringController {
         System.out.println("Application is running at Port 8000");
     }
 
+    //BIKES
     @GET
-    @Path("/test")
+    @Path("/getBikes")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public Bike test(
-        @QueryParam("bikeName") String bikeName
-    ){
-        return engineeringService.test(bikeName);
+    public ArrayList<Object> getBikes(){
+        return engineeringService.getBikes();
+    }
+
+    @POST
+    @Path("/makeBike")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> makeBike(makeBike dto){
+        return engineeringService.makeBike(dto);
+    }
+
+    //CATEGORY
+
+    @POST
+    @Path("/makeCategory")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public void addCategory(makeCategory dto){
+        engineeringService.addCategory(dto);
+    }
+
+    @GET
+    @Path("/getCategories")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ArrayList<Categories> getCategories(){
+        return engineeringService.getCategories();
     }
 
     @GET
@@ -53,12 +82,6 @@ public class engineeringController {
         return engineeringService.getOrder(uuid);
     }
 
-    @POST
-    @Path("/makeBike")
-    @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void makeBike(){
-        
-    }
 
     @POST
     @Path("/makeAnOrder")

@@ -1,12 +1,56 @@
 package backend.software.dto;
+import java.util.*;
 
 public class makeBike {
     private String name;
     private String description;
     private Double price;
     private int stock;
-    private String categoryString; //one to many
-    private Double wheelSize;
-    private Double shippingFee;
+    private ArrayList<Object> category;
+    private ArrayList<Object> colors;
+    private String wheelSize;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public Double getPrice() {
+        return price;
+    }
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+    public int getStock() {
+        return stock;
+    }
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+    
+    public String getWheelSize() {
+        return wheelSize;
+    }
+    public ArrayList<Object> getCategory() {
+        return category;
+    }
+    public void setCategory(ArrayList<Object> category) {
+        this.category = category;
+    }
+    public ArrayList<Object> getColors() {
+        return colors;
+    }
+    public void setColors(ArrayList<Object> colors) {
+        this.colors = colors;
+    }
+    public void setWheelSize(String wheelSize) {
+        this.wheelSize = wheelSize;
+    }
     
 }

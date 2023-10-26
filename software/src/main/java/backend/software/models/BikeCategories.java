@@ -1,10 +1,13 @@
 package backend.software.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,12 +24,23 @@ public class BikeCategories {
     private Long id;   
 
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bike_id")
     private Bike bike;
 
-    @Column(name = "name")
-    private String name;
+    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Categories categories;
+
+    public Categories getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Categories categories) {
+        this.categories = categories;
+    }
+
 
     public Bike getBike() {
         return bike;
@@ -34,14 +48,6 @@ public class BikeCategories {
 
     public void setBike(Bike bike) {
         this.bike = bike;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     

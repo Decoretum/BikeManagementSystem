@@ -51,14 +51,9 @@ public class Bike {
 
     @Column(name = "stock")
     @NotNull(message = "Stock cannot be negative or null!")
-    @Min(0)
+    @Min(1)
     @Max(50)
     private int stock;
-
-    @Column(name = "category")
-    @NotNull(message = "Category cannot be null!")
-    @Length(max = 50, message = "Category cannot be too long!")
-    private String category;
 
     @Column(name = "wheelSize")
     @NotNull(message = "Wheel size cannot be null!")
@@ -66,11 +61,14 @@ public class Bike {
     private String wheelSize;
 
     @JsonManagedReference
+    @OneToMany(fetch = FetchType.EAGER, mappedBy= "bike", cascade = CascadeType.ALL)
+    private List<BikeCategories> bikeCategories;
+
+    @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
     private List<BikeColors> bikeColors;
 
     @JsonIgnore
-    //@JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
     private List<OrderEntry> orderEntries;
 
@@ -106,12 +104,14 @@ public class Bike {
         this.stock = stock;
     }
 
-    public String getCategory() {
-        return category;
+    
+
+    public List<BikeCategories> getBikeCategories() {
+        return bikeCategories;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setBikeCategories(List<BikeCategories> bikeCategories) {
+        this.bikeCategories = bikeCategories;
     }
 
     public String getWheelSize() {

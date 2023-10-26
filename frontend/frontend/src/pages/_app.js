@@ -36,8 +36,8 @@ export default function myApp({Component, pageProps}){
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Link href={'/home'}>
-                            <Typography variant="h6" style={{ marginLeft: '2vw' }}> QC Bike Management System </Typography>
+                        <Link href={'/'}>
+                            <Typography variant="h6" style={{ marginLeft: '2vw' }}> Bisikleta para sa Atenista </Typography>
                         </Link>
                     </Toolbar>
                 </AppBar>

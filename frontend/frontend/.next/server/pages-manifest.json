@@ -3,6 +3,6 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/bikes": "pages/bikes.js",
-  "/technical": "pages/technical.js",
-  "/home": "pages/home.js"
+  "/bikes/addBike": "pages/bikes/addBike.js",
+  "/": "pages/index.js"
 }
