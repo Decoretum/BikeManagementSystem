@@ -83,7 +83,7 @@ public class engineeringService {
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Bike>> constraintViolations = validator.validate(newBike);
-        if (constraintViolations.size() >= 1){
+        if (constraintViolations.size() > 1){
             ArrayList<String> errors = new ArrayList<>();
             for (ConstraintViolation<Bike> violation : constraintViolations){
                 errors.add(violation.getPropertyPath() + " " + violation.getMessage());
@@ -91,18 +91,21 @@ public class engineeringService {
             result.put("result", errors);
             return result;
         }
+        bikeRepository.save(newBike);
         
         //Colors and Categories
-        ArrayList<Object> dtoColors = dto.getColors();
-        ArrayList<Object> dtoCategs = dto.getCategory();
+        ArrayList<String> dtoColors = dto.getColors();
+        ArrayList<String> dtoCategs = dto.getCategory();
 
+        
         for (int i = 0; i < dtoColors.size(); i++){
             BikeColors color = new BikeColors();
             color.setName((String) dtoColors.get(i));
             color.setBike(newBike);
-            bikeRepository.save(newBike);
             bikeColorsRepository.save(color);
+            bikeRepository.save(newBike);
         }
+        
 
         for (int i = 0; i < dtoCategs.size(); i++){
             //Find Category and relate them
@@ -117,6 +120,81 @@ public class engineeringService {
             bikeCategoryRepository.save(hybrid);
         }
 
+        result.put("result", "Successfully added Bike " + dto.getName() + " to the app!");
+        return result;
+    }
+
+    public HashMap<Object, Object> editBike(makeBike dto){
+        HashMap<Object, Object> result = new HashMap<>();
+        Bike newBike = bikeRepository.queryName(dto.getName()).get(0);
+
+        newBike.setName(dto.getName());
+        newBike.setDescription(dto.getDescription());
+        newBike.setPrice(dto.getPrice());
+        newBike.setStock(dto.getStock());
+        newBike.setWheelSize(dto.getWheelSize());
+
+        //Validator
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Bike>> constraintViolations = validator.validate(newBike);
+        if (constraintViolations.size() > 1){
+            ArrayList<String> errors = new ArrayList<>();
+            for (ConstraintViolation<Bike> violation : constraintViolations){
+                errors.add(violation.getPropertyPath() + " " + violation.getMessage());
+            }
+            result.put("result", errors);
+            return result;
+        }
+        bikeRepository.save(newBike);
+        
+        //Colors and Categories
+        ArrayList<String> dtoColors = dto.getColors();
+        ArrayList<String> dtoCategs = dto.getCategory();
+
+        
+        //Removing old Bike Colors
+            for (BikeColors color : newBike.getBikeColors()){
+                if (!dtoColors.contains(color.getName())){
+                    bikeColorsRepository.delete(color);
+                }
+            }
+        
+        //add New Bike Color
+        for (int i = 0; i < dtoColors.size(); i++){
+            ArrayList<Object> bikeColors = bikeColorsRepository.queryName((String) dtoColors.get(i), (Long) newBike.getId());
+            
+            if (bikeColors.size() == 0){
+                BikeColors color = new BikeColors();
+                color.setName((String) dtoColors.get(i));
+                color.setBike(newBike);
+                bikeColorsRepository.save(color);
+                bikeRepository.save(newBike);
+            }
+        }
+
+        
+        //Removing old Categories
+        for (BikeCategories categ : newBike.getBikeCategories()){
+            //Query Category from BikeCategory
+            ArrayList<Categories> category = categoryRepository.findThroughId(categ.getId());
+                if (!dtoCategs.contains(category.get(0).getName())){
+                    bikeCategoryRepository.delete(categ);
+                }
+            }
+        
+
+        for (int i = 0; i < dtoCategs.size(); i++){
+            //Find Category and relate them
+            Categories category = categoryRepository.findThroughName((String) dtoCategs.get(i)).get(0);
+            
+            BikeCategories hybrid = new BikeCategories();
+
+            hybrid.setBike(newBike);
+            hybrid.setCategories(category);
+
+            bikeRepository.save(newBike);
+            bikeCategoryRepository.save(hybrid);
+        }
 
         result.put("result", "Successfully added Bike " + dto.getName() + " to the app!");
         return result;

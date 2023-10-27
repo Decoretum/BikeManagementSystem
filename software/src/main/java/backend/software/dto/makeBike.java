@@ -6,8 +6,8 @@ public class makeBike {
     private String description;
     private Double price;
     private int stock;
-    private ArrayList<Object> category;
-    private ArrayList<Object> colors;
+    private ArrayList<String> category;
+    private ArrayList<String> colors;
     private String wheelSize;
     public String getName() {
         return name;
@@ -37,16 +37,16 @@ public class makeBike {
     public String getWheelSize() {
         return wheelSize;
     }
-    public ArrayList<Object> getCategory() {
+    public ArrayList<String> getCategory() {
         return category;
     }
-    public void setCategory(ArrayList<Object> category) {
+    public void setCategory(ArrayList<String> category) {
         this.category = category;
     }
-    public ArrayList<Object> getColors() {
+    public ArrayList<String> getColors() {
         return colors;
     }
-    public void setColors(ArrayList<Object> colors) {
+    public void setColors(ArrayList<String> colors) {
         this.colors = colors;
     }
     public void setWheelSize(String wheelSize) {

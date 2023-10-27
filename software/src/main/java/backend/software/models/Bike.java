@@ -35,18 +35,19 @@ public class Bike {
     private Long id;
 
     @Column(name = "name")
-    @Length(max = 50, message = "Bike name is too long!")
-    @NotNull(message = "Bike name cannot be null!")
+    @Length(min = 1, max = 50, message = "Bike name must be between 1 and 50 text characters!")
+    @NotNull(message = "cannot be null!")
     private String name;
 
     @Column(name = "description")
-    @NotNull(message = "Middle Name cannot be null!")
+    @Length(min = 1, message = "Description cannot be empty!")
+    @NotNull(message = "cannot be null!")
     private String description;
 
     @Column(name = "price")
     @DecimalMin("0.0")
     @DecimalMax("1000000.0")
-    @NotNull(message = "Price cannot be null or negative!")
+    @NotNull(message = "cannot be null or negative!")
     private Double price;
 
     @Column(name = "stock")
@@ -56,15 +57,17 @@ public class Bike {
     private int stock;
 
     @Column(name = "wheelSize")
-    @NotNull(message = "Wheel size cannot be null!")
-    @Length(max = 80, message = "Wheel size string length exceeded limit!")
+    @NotNull(message = "cannot be null!")
+    @Length(min = 1, max = 80, message = "Wheel size must be between 1 to 80 text characters!")
     private String wheelSize;
 
     @JsonManagedReference
+    // @NotNull(message = "weren't chosen")
     @OneToMany(fetch = FetchType.EAGER, mappedBy= "bike", cascade = CascadeType.ALL)
     private List<BikeCategories> bikeCategories;
 
     @JsonManagedReference
+    // @NotNull(message = "weren't chosen")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
     private List<BikeColors> bikeColors;
 
@@ -136,6 +139,14 @@ public class Bike {
 
     public void setOrderEntries(List<OrderEntry> orderEntries) {
         this.orderEntries = orderEntries;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     

@@ -26,6 +26,22 @@ public class Categories {
     @Column(name = "id")
     private Long id;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<BikeCategories> getBikeCategories() {
+        return bikeCategories;
+    }
+
+    public void setBikeCategories(List<BikeCategories> bikeCategories) {
+        this.bikeCategories = bikeCategories;
+    }
+
     @Column(name = "name")
     private String name;
 

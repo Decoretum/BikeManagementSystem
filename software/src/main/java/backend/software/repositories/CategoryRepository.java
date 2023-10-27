@@ -13,6 +13,9 @@ public interface CategoryRepository extends JpaRepository<Categories, Long> {
     @Query("SELECT a FROM Categories a WHERE a.name = ?1")
     public ArrayList<Categories> findThroughName(String a);
 
+    @Query("SELECT a FROM Categories a WHERE a.id = ?1")
+    public ArrayList<Categories> findThroughId(Long a);
+
     @Query("SELECT a FROM Categories a")
     public ArrayList<Categories> findAll();
 }

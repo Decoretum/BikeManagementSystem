@@ -1,0 +1,27 @@
+.modal{
+    position: absolute;
+    margin: auto;
+    transform: translate(-50%, -50%);
+    background-color: rgb(237, 229, 219);
+    border-radius: 9px;
+    padding: 30px;
+    min-width: 50%;
+    max-width: 50%;
+    left: 50%;
+    top: 50%;
+    
+    }
+
+    .modalError{
+        position: absolute;
+        margin: auto;
+        transform: translate(-50%, -50%);
+        background-color: rgb(237, 229, 219);
+        border-radius: 9px;
+        padding: 30px;
+        min-width: 50%;
+        max-width: 50%;
+        left: 50%;
+        top: 50%;
+        
+        }
