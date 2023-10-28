@@ -2,8 +2,6 @@ package backend.software.services;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.UUID;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,50 +151,65 @@ public class engineeringService {
 
         
         //Removing old Bike Colors
-            for (BikeColors color : newBike.getBikeColors()){
+        List<BikeColors> bikeColors = newBike.getBikeColors();
+        ArrayList<BikeColors> toDelete = new ArrayList<>();
+            for (int i = 0; i < bikeColors.size(); i++){
+                BikeColors color = bikeColors.get(i);
                 if (!dtoColors.contains(color.getName())){
-                    bikeColorsRepository.delete(color);
+                    color.setBike(null);
+                    
+                    bikeColorsRepository.save(color);
+                    toDelete.add(color);
                 }
             }
+        bikeColorsRepository.deleteAll(toDelete);
+
         
         //add New Bike Color
         for (int i = 0; i < dtoColors.size(); i++){
-            ArrayList<Object> bikeColors = bikeColorsRepository.queryName((String) dtoColors.get(i), (Long) newBike.getId());
-            
-            if (bikeColors.size() == 0){
+            ArrayList<Object> bikeColors2 = bikeColorsRepository.queryName((String) dtoColors.get(i), newBike);
+            if (bikeColors2.size() == 0){
                 BikeColors color = new BikeColors();
                 color.setName((String) dtoColors.get(i));
                 color.setBike(newBike);
                 bikeColorsRepository.save(color);
-                bikeRepository.save(newBike);
+
             }
         }
 
         
         //Removing old Categories
+        ArrayList<BikeCategories> toDelete2 = new ArrayList<>();
         for (BikeCategories categ : newBike.getBikeCategories()){
             //Query Category from BikeCategory
-            ArrayList<Categories> category = categoryRepository.findThroughId(categ.getId());
-                if (!dtoCategs.contains(category.get(0).getName())){
-                    bikeCategoryRepository.delete(categ);
+            Categories category = categ.getCategories();
+                if (!dtoCategs.contains(category.getName())){
+                    toDelete2.add(categ);
+
+                    categ.setBike(null);
+                    categ.setCategories(null);
+
+                    bikeCategoryRepository.save(categ);
                 }
             }
+        bikeCategoryRepository.deleteAll(toDelete2);
         
-
+        //Adding new Categories
         for (int i = 0; i < dtoCategs.size(); i++){
-            //Find Category and relate them
-            Categories category = categoryRepository.findThroughName((String) dtoCategs.get(i)).get(0);
-            
-            BikeCategories hybrid = new BikeCategories();
+            Categories category = categoryRepository.findThroughName(dtoCategs.get(i)).get(0);
+            ArrayList<BikeCategories> bikeCategory = bikeCategoryRepository.queryId(newBike, category);
+            if (bikeCategory.size() == 0){
+                BikeCategories hybrid = new BikeCategories();
 
-            hybrid.setBike(newBike);
-            hybrid.setCategories(category);
+                hybrid.setBike(newBike);
+                hybrid.setCategories(category);
 
-            bikeRepository.save(newBike);
-            bikeCategoryRepository.save(hybrid);
+                //bikeRepository.save(newBike);
+                bikeCategoryRepository.save(hybrid);
+            }
         }
 
-        result.put("result", "Successfully added Bike " + dto.getName() + " to the app!");
+        result.put("result", "Successfully edited Bike " + dto.getName() + " to the app!");
         return result;
 
 

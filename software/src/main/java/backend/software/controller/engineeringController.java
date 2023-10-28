@@ -21,6 +21,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
@@ -55,6 +56,14 @@ public class engineeringController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public HashMap<Object, Object> makeBike(makeBike dto){
         return engineeringService.makeBike(dto);
+    }
+
+    @PUT
+    @Path("/editBike")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> editBike(makeBike dto){
+        return engineeringService.editBike(dto);
     }
 
     //CATEGORY

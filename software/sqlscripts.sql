@@ -21,9 +21,10 @@ DESC `bike_categories`;
 DELETE FROM `bike_colors`;
 DELETE FROM `bike_categories`;
 DELETE FROM `bike`;
-DELETE FROM `categories`;
 DELETE FROM `orders`;
 DELETE FROM `order_entry`;
+
+DELETE FROM `categories`;
 
 
 SELECT * FROM `bike`;

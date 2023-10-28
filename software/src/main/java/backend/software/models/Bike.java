@@ -8,6 +8,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import backend.software.repositories.BikeCategoryRepository;
+import backend.software.repositories.BikeRepository;
+import backend.software.repositories.CategoryRepository;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -117,6 +120,11 @@ public class Bike {
         this.bikeCategories = bikeCategories;
     }
 
+    public void removeBikeCategory(BikeCategories bikeCategory){
+        this.bikeCategories.remove(bikeCategory);
+
+    }
+
     public String getWheelSize() {
         return wheelSize;
     }
@@ -131,6 +139,10 @@ public class Bike {
 
     public void setBikeColors(List<BikeColors> bikeColors) {
         this.bikeColors = bikeColors;
+    }
+
+    public void removeColor(BikeColors color){
+        bikeColors.remove(color);
     }
 
     public List<OrderEntry> getOrderEntries() {

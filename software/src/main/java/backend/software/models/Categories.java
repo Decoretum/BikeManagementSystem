@@ -57,5 +57,9 @@ public class Categories {
         this.name = name;
     }
 
+    public void removeBikeCategory(BikeCategories bikeCategories){
+        this.bikeCategories.remove(bikeCategories);
+    }
+
     
 }
