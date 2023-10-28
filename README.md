@@ -5,4 +5,8 @@ A door-step bike servicing platform and application which will use technology fo
 
 Order Inventory Management System <br>
 Admin-Side (Admin will access system) <br>
-Manage appointments for bikes <br>
+Manage appointments for bikes <br><br>
+
+## Database Design
+
+https://drive.google.com/file/d/1pMFz6mhLbc3nAbnaNp55bIKEjKo8Sxc2/view?usp=sharing
