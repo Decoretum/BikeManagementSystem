@@ -5,11 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import '@/styles/addBike.css'
 import { useRouter } from 'next/router';
+import { usePathname } from 'next/navigation';
 
 export default function addBike(){
 
     const router = useRouter();
-    const {register, handleSubmit} = useForm();
+    const pathName = usePathname();
+    const {register, handleSubmit, reset} = useForm();
     const onSubmit = (data) => {  
         const newArray = check.filter((n) => n !== ''); 
 
@@ -35,7 +37,11 @@ export default function addBike(){
             return;
          }
 
-        axios.post("http://localhost:8000/api/makeBike", data)
+        //  console.log(data);
+        //  return
+
+
+        axios.put("http://localhost:8000/api/editBike", data)
         .then(res => {
             console.log(res.data.result);
         
@@ -59,14 +65,61 @@ export default function addBike(){
     const [result, setResult] = useState(<></>);
     const [error, setError] = useState(false);
 
+
+    //Get Bike Object
+    const bikeQuery = useQuery({
+        queryKey: ['bike'],
+        enabled: JSON.stringify(router.query) !== '{}',
+        queryFn: async () => {
+            return axios.get(`http://localhost:8000/api/getBike?bikeID=${Number.parseInt(router.query.id)}`)
+            .then(res => {
+                let arrayColors = res.data.bikeColors;
+                let colorString = "";
+                for (let i of arrayColors){
+                    colorString += `${i.name}, `
+                }
+                colorString = colorString.slice(0, colorString.length - 2);
+                console.log(colorString);
+                let defaultValues = {
+                    colors: colorString,
+                    description: res.data.description,
+                    id: res.data.id,
+                    name: res.data.name,
+                    price: res.data.price,
+                    stock: res.data.stock,
+                    wheelSize: res.data.wheelSize
+                }  
+                 
+                for (let i of res.data.bikeCategories){
+                    setCheck(check => [ ...check, i.categories['name']]) 
+                }
+
+                reset({...defaultValues});
+                
+                return res.data
+            })
+        }
+    })
+
+
+
     //Getting Query of Categories
     const catQuery = useQuery({
         queryKey: ['categories'],
+        enabled: check.length !== 0,
         queryFn: async () => {
             return axios.get("http://localhost:8000/api/getCategories")
             .then(res => {return res.data})
         }
     })
+
+    console.log(bikeQuery.data);
+
+    if (bikeQuery.isFetching && !bikeQuery.isError){
+        return (
+            <Typography variant='h3'> Loading Bike Data </Typography>
+        )
+    }
 
     //handling checkbox
     function checkChange(value, isChecked){
@@ -110,7 +163,7 @@ export default function addBike(){
         
         <form onSubmit={handleSubmit(onSubmit)}>
             <Container style={{marginTop: '15vh', width: '50vw', maxWidth: '50vw'}}>
-                <Typography variant='h4'> Add a Bike </Typography>
+                <Typography variant='h4'> Edit Bike </Typography>
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Name
                 </Typography>
@@ -119,7 +172,7 @@ export default function addBike(){
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Description
                 </Typography> <br/>
-                <TextField rows={2} {...register("description")} multiline variant='filled' label="Description about the bike" style={{minWidth: '40vw'}}  />
+                <TextField rows={2} {...register("description")} multiline variant='standard' label="Description about the bike" style={{minWidth: '40vw'}}  />
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Price

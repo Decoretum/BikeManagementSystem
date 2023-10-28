@@ -50,6 +50,13 @@ public class engineeringController {
         return engineeringService.getBikes();
     }
 
+    @GET
+    @Path("/getBike")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public Bike getBike(@QueryParam("bikeID") Long bikeID){
+        return engineeringService.getBike(bikeID);
+    }
+
     @POST
     @Path("/makeBike")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)

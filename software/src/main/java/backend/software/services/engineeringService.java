@@ -58,9 +58,9 @@ public class engineeringService {
         this.orderRepostitory = orderRepostitory;
     }
 
-    // public Bike test(String bikeName){
-    //     return bikeRepository.queryName(bikeName).get(0);
-    // }
+    public Bike getBike(Long bikeID){
+        return bikeRepository.queryID(bikeID).get(0);
+    }
 
     //BIKE
     public ArrayList<Object> getBikes(){
@@ -81,7 +81,7 @@ public class engineeringService {
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Bike>> constraintViolations = validator.validate(newBike);
-        if (constraintViolations.size() > 1){
+        if (constraintViolations.size() >= 1){
             ArrayList<String> errors = new ArrayList<>();
             for (ConstraintViolation<Bike> violation : constraintViolations){
                 errors.add(violation.getPropertyPath() + " " + violation.getMessage());
@@ -135,7 +135,7 @@ public class engineeringService {
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Bike>> constraintViolations = validator.validate(newBike);
-        if (constraintViolations.size() > 1){
+        if (constraintViolations.size() >= 1){
             ArrayList<String> errors = new ArrayList<>();
             for (ConstraintViolation<Bike> violation : constraintViolations){
                 errors.add(violation.getPropertyPath() + " " + violation.getMessage());
@@ -157,7 +157,7 @@ public class engineeringService {
                 BikeColors color = bikeColors.get(i);
                 if (!dtoColors.contains(color.getName())){
                     color.setBike(null);
-                    
+
                     bikeColorsRepository.save(color);
                     toDelete.add(color);
                 }

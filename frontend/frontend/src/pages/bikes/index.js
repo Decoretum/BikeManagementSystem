@@ -42,9 +42,15 @@ export default function index(){
                                 <Typography color='text.secondary'>
                                     {bike.bikeColors.length} colors
                                 </Typography>
+
                                 <Chip label="View"
                                 style={{marginTop: '1vh', backgroundColor: 'lightblue'}}
-                                // onClick={}
+                                onClick = {() => {router.push(`http://localhost:3000/bikes/${bike.id}/viewBike`)}}
+                                />
+
+                                <Chip label="Edit"
+                                style={{marginTop: '1vh', marginLeft:'1.5vw', backgroundColor: 'lightblue'}}
+                                onClick = {() => {router.push(`http://localhost:3000/bikes/${bike.id}/editBike`)}}
                                 />
                             </CardContent>
                         </Card>
