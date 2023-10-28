@@ -1,6 +1,6 @@
-import { Box, Checkbox, Button, Container, FormControlLabel, FormGroup, Input, Modal, TextField, Typography, Alert } from '@mui/material';
+import { Box, Checkbox, Button, Container, FormControlLabel, FormGroup, Input, Modal, TextField, Typography, Alert, List, ListItem, Chip, Grid } from '@mui/material';
 import {useForm, SubmitHandler } from 'react-hook-form'
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import '@/styles/addBike.css'
@@ -60,7 +60,7 @@ export default function addBike(){
     }
 
     //MODAL
-    const [check, setCheck ] = useState(['']);
+    const [check, setCheck ] = useState([]);
     const [modal, setModal] = useState(false);
     const [result, setResult] = useState(<></>);
     const [error, setError] = useState(false);
@@ -80,7 +80,7 @@ export default function addBike(){
                     colorString += `${i.name}, `
                 }
                 colorString = colorString.slice(0, colorString.length - 2);
-                console.log(colorString);
+
                 let defaultValues = {
                     colors: colorString,
                     description: res.data.description,
@@ -92,9 +92,10 @@ export default function addBike(){
                 }  
 
                 setObject(defaultValues);
+                setCheck([]);
                  
                 for (let i of res.data.bikeCategories){
-                    setCheck(check => [ ...check, i.categories['name']]) 
+                    setCheck(check => [i.categories['name'], ...check]) 
                 }
 
                 reset({...defaultValues});
@@ -181,63 +182,45 @@ export default function addBike(){
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Price
-                </Typography>
+                </Typography><br/>
                 <Typography style={{minWidth: '40vw'}}> {object.price} </Typography>
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                    Stock
-                </Typography>
+                </Typography><br/>
                 <Typography style={{minWidth: '40vw'}}> {object.stock} </Typography>
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
                     Wheel Size
-                </Typography>
+                </Typography><br/>
                 <Typography {...register("wheelSize")} style={{minWidth: '40vw'}}> {object.wheelSize} </Typography>
 
                 <Typography variant='h6' style={{marginTop: '3vh'}}>
-                    Colors (Separate words with "," then a space)
-                </Typography>
-                <Input {...register("colors")} style={{minWidth: '40vw'}}  />
+                    Available Colors
+                </Typography><br/>
+                <Typography style={{minWidth: '40vw'}}> {object.colors} </Typography><br/>
 
-                <Button 
-                    variant='contained' 
-                    style={{marginTop: '4vh'}}
-                    onClick={() => {setModal(true)}}> 
-                        Select Categories
-                </Button>
-                <Button type='submit' variant='contained' style={{float: 'right', marginTop: '4vh'}}> Create </Button>
-                <Button variant='contained' onClick={() => {router.push("http://localhost:3000/bikes")}} style={{float: 'right', marginTop: '4vh', marginRight: '2vw', backgroundColor: 'red'}}> Cancel </Button>
+                <Typography variant='h6' style={{marginTop: '3vh'}}> Categories </Typography>
                 
-                <Modal
-                open={modal === true}
-                onClose = {() => setModal(false)}
-                disableScrollLock={true}
-                >
-                    <Box className='modal'>
-                        {
-                            catQuery?.data?.map((category) => {
-                                return(
-                                    <>
-                                        <FormGroup>
-                                            {
-                                                check.includes(category.name) ? (
-                                                    <FormControlLabel onChange={(event) => {checkChange(event.target.value, event.target.checked)} } control={<Checkbox defaultChecked />} defaultValue={category.name} value={category.name} label={category.name} />
-                                                ) : (
-                                                    <FormControlLabel onChange={(event) => {checkChange(event.target.value, event.target.checked)} } control={<Checkbox />} defaultValue={category.name} value={category.name} label={category.name} />
-                                                )   
-                                            }
-                                        </FormGroup>
-                                    </>
-                                )
-                            })
-                        }
-                    </Box>
+                <Grid container>
+                    {
+                        check.map((category) => {
+                            return (
+                                <Grid item style={{marginRight: '2vw'}}> 
+                                    <Chip label={category} style={{backgroundColor: 'lightgreen'}} /> 
+                                </Grid>
+                            )
+                        })
+                    }
+                </Grid>
 
-                </Modal>
+                <Button variant='contained' onClick={() => {router.push("http://localhost:3000/bikes")}} style={{float: 'right', marginRight: '2vw', backgroundColor: 'red'}}> Back </Button>
+                
 
                 <br/><br/>
             </Container>
         </form>
+        <br/> <br/>
         </>
     )
 }

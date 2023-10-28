@@ -200,7 +200,7 @@ export default function addBike(){
                     onClick={() => {setModal(true)}}> 
                         Select Categories
                 </Button>
-                <Button type='submit' variant='contained' style={{float: 'right', marginTop: '4vh'}}> Create </Button>
+                <Button type='submit' variant='contained' style={{float: 'right', marginTop: '4vh'}}> Submit </Button>
                 <Button variant='contained' onClick={() => {router.push("http://localhost:3000/bikes")}} style={{float: 'right', marginTop: '4vh', marginRight: '2vw', backgroundColor: 'red'}}> Cancel </Button>
                 
                 <Modal
