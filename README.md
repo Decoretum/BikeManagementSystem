@@ -1,11 +1,11 @@
 # Bisikleta Para sa Atenista
 
 Quoted from https://www.intelegain.com/app-ideas-for-startups-to-launch-in-2023/: <br><br>
-A door-step bike servicing platform and application which will use technology for the convenience of two-wheeler owners by providing them a transparent connection with high-quality vehicle maintenance providers. The platform can provide assisted door-step pick-up and drop, an in-built inventory management system that enables reduction of waiting-time, smarter stock allocation, an order management system etc. <br>
+This is an application that was designed and developed by Gael Estrera (mostly by him, since he started on this early), with the aid of his CSCI 180.05 groupmates for the final class project. This application is composed of both front-end and back-end. This application was designed and developed to be used as a Bike Management system for Ateneo de Manila University students and staff. It is composed of the following: <br><br>
 
-Order Inventory Management System <br>
-Admin-Side (Admin will access system) <br>
-Manage appointments for bikes <br><br>
+<li> Order Inventory Management System with Validation </li>
+<li> Admin-Side (only Admin will access system) </li>
+<li> Manage appointments with students for bike repairs and services </li>
 
 ## Database Design
 
