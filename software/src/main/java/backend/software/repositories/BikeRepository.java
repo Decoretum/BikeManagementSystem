@@ -18,5 +18,8 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
 
     @Query("SELECT a FROM Bike a WHERE a.id = ?1")
     ArrayList<Bike> queryID(Long bikeID);
+
+    @Query("SELECT a.name FROM Bike a")
+    ArrayList<String> getAllName();
     
 }

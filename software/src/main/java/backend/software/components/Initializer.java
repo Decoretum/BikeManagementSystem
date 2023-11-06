@@ -7,15 +7,19 @@ import org.springframework.stereotype.Component;
 
 import backend.software.models.Categories;
 import backend.software.repositories.CategoryRepository;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class Initializer {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @PostConstruct
     public void init(){
         ArrayList<Categories> categs = new ArrayList<>();
         ArrayList<Categories> dbCategs = categoryRepository.findAll();
+        System.out.println(dbCategs);
+        System.out.println("HAHAHA");
 
         if (dbCategs.isEmpty()){
             Categories newCateg1 = new Categories();

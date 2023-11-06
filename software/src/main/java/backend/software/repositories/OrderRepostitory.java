@@ -12,4 +12,7 @@ import backend.software.models.Orders;
 public interface OrderRepostitory extends JpaRepository<Orders, Long> {
     @Query("SELECT a FROM Orders a WHERE a.uuid = ?1")
     ArrayList<Orders> uuidQuery(String uuid);
+
+    @Query("Select a.id FROM Orders a")
+    ArrayList<String> getAllNumbers();
 }

@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import backend.software.dto.makeAnOrder;
+import backend.software.dto.makeAppointment;
 import backend.software.dto.makeOrder;
 import backend.software.dto.makeBike;
 import backend.software.dto.makeCategory;
+import backend.software.dto.makeCustomer;
 import backend.software.models.Bike;
 import backend.software.models.Categories;
 import backend.software.models.Orders;
+import backend.software.repositories.BikeRepository;
 import backend.software.services.engineeringService;
 import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.Consumes;
@@ -33,8 +36,12 @@ public class engineeringController {
     @Autowired
     engineeringService engineeringService;
 
-    public engineeringController(engineeringService engineeringService){
+    @Autowired
+    BikeRepository bikeRepository;
+
+    public engineeringController(BikeRepository bikeRepository, engineeringService engineeringService){
         this.engineeringService = engineeringService;
+        this.bikeRepository = bikeRepository;
     }
 
     @PostConstruct
@@ -113,13 +120,30 @@ public class engineeringController {
         engineeringService.makeBikeOrder(order);
     }
 
+    //APPOINTMENTS
+
     @POST
-    @Path("/uploadImage")
-    public void saveBikeImage(@RequestParam("image") MultipartFile multipartFile){
-        
+    @Path("/makeAppointment")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> makeAppointment(makeAppointment dto){
+        return engineeringService.makeAppointment(dto);
+    }  
+
+    @POST
+    @Path("/makeCustomer")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> makeCustomer(makeCustomer dto){
+        return engineeringService.makeCustomer(dto);
     }
 
-
+    @GET
+    @Path("/test")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ArrayList<String> test(){
+        return bikeRepository.getAllName();
+    }
 
 
 }

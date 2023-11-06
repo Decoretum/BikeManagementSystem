@@ -15,6 +15,11 @@
     "static/chunks/main-app.js"
   ],
   "pages": {
+    "/": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/index.js"
+    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -30,15 +35,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/bikes.js"
     ],
-    "/bikes/[id]/editBike": [
+    "/technical": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/bikes/[id]/editBike.js"
-    ],
-    "/bikes/addBike": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/bikes/addBike.js"
+      "static/chunks/pages/technical.js"
     ]
   },
   "ampFirstPages": []

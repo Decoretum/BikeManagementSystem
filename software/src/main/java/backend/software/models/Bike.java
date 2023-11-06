@@ -19,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -64,19 +65,26 @@ public class Bike {
     @Length(min = 1, max = 80, message = "Wheel size must be between 1 to 80 text characters!")
     private String wheelSize;
 
+    @Column(name = "canBeBorrowed")
+    @NotNull
+    private Boolean canBeBorrowed;
+
+    @JsonBackReference
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "bike")
+    private Appointment appointment;
+
     @JsonManagedReference
-    // @NotNull(message = "weren't chosen")
     @OneToMany(fetch = FetchType.EAGER, mappedBy= "bike", cascade = CascadeType.ALL)
     private List<BikeCategories> bikeCategories;
 
     @JsonManagedReference
-    // @NotNull(message = "weren't chosen")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
     private List<BikeColors> bikeColors;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
     private List<OrderEntry> orderEntries;
+
 
     public String getName() {
         return name;
@@ -159,6 +167,22 @@ public class Bike {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getCanBeBorrowed() {
+        return canBeBorrowed;
+    }
+
+    public void setCanBeBorrowed(Boolean canBeBorrowed) {
+        this.canBeBorrowed = canBeBorrowed;
+    }
+
+    public Appointment getAppointment() {
+        return appointment;
+    }
+
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
     }
 
     

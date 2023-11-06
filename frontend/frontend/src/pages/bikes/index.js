@@ -13,15 +13,13 @@ export default function index(){
         }
     })
 
-    if (testQuery.isFetching && !testQuery.isError){
+    if (testQuery.isFetching && testQuery.isRefetching && !testQuery.isError){
         return (
             <Typography>
                 Loading Data
             </Typography>
         )
     }
-
-    console.log(testQuery.data);
 
     if (testQuery.data?.length >= 1)
     return (
