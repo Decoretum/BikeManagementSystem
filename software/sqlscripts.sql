@@ -31,6 +31,7 @@ DELETE FROM `Customer`;
 
 DELETE FROM `categories`;
 DELETE FROM `Appointment`;
+DELETE FROM `rented_bike`;
 
 
 SELECT * FROM `bike`;
@@ -41,6 +42,7 @@ SELECT * FROM `orders`;
 SELECT * FROM `order_entry`;
 SELECT * FROM `Customer`;
 SELECT * FROM `Appointment`;
+SELECT * FROM `rented_bike`;
 
 
 

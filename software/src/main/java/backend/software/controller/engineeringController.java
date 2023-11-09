@@ -2,6 +2,7 @@ package backend.software.controller;
 
 import java.util.*;
 
+import javax.print.attribute.standard.Media;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -9,9 +10,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import backend.software.dto.confirmAppointment;
+import backend.software.dto.confirmRental;
+import backend.software.dto.editAppointment;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
 import backend.software.dto.makeOrder;
+import backend.software.dto.rentBike;
 import backend.software.dto.makeBike;
 import backend.software.dto.makeCategory;
 import backend.software.dto.makeCustomer;
@@ -105,6 +110,7 @@ public class engineeringController {
         return engineeringService.getOrder(uuid);
     }
 
+    //ORDERS
 
     @POST
     @Path("/makeAnOrder")
@@ -130,6 +136,30 @@ public class engineeringController {
         return engineeringService.makeAppointment(dto);
     }  
 
+    @PUT
+    @Path("/editAppointment")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> editAppointment(editAppointment dto){
+        return engineeringService.editAppointment(dto);
+    }  
+
+    @POST
+    @Path("/confirmAppointment")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public void confirmAppointment(confirmAppointment dto){
+        engineeringService.confirmAppointment(dto);
+    }
+
+    @GET
+    @Path("/appointment")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> getAppointment(@QueryParam("apID") Long apID){
+        return engineeringService.getAppointment(apID);
+    }
+
+    //CUSTOMER
+
     @POST
     @Path("/makeCustomer")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
@@ -138,6 +168,7 @@ public class engineeringController {
         return engineeringService.makeCustomer(dto);
     }
 
+    
     @GET
     @Path("/test")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -145,5 +176,18 @@ public class engineeringController {
         return bikeRepository.getAllName();
     }
 
+    //RENTED BIKE
+
+    @POST
+    @Path("/rentBike")
+    public void rentBike(rentBike dto){
+        engineeringService.rentBike(dto);
+    }
+
+    @POST
+    @Path("/confirmRental")
+    public void confirmRental(confirmRental dto){
+        engineeringService.confirmRental(dto);
+    }
 
 }

@@ -42,7 +42,7 @@ public class Categories {
         this.bikeCategories = bikeCategories;
     }
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @JsonBackReference

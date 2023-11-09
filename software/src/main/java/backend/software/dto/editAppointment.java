@@ -1,14 +1,16 @@
 package backend.software.dto;
 
-public class makeAppointment {
+public class editAppointment {
     private String customerName;
     private String category;
     private String description;
     private String dateTimeAppointed;
     private Double cost;
     private String name;
-
-    public makeAppointment(){}
+    private Long id;
+    private Boolean ongoing;
+    
+    public editAppointment(){}
 
     public Double getCost() {
         return cost;
@@ -57,5 +59,19 @@ public class makeAppointment {
         this.dateTimeAppointed = dateTimeAppointed;
     }
 
-    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Boolean getOngoing() {
+        return ongoing;
+    }
+
+    public void setOngoing(Boolean ongoing) {
+        this.ongoing = ongoing;
+    }
 }

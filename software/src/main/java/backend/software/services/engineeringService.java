@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,15 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDa
 import org.springframework.stereotype.Component;
 
 import backend.software.dto.confirmAppointment;
+import backend.software.dto.confirmRental;
+import backend.software.dto.editAppointment;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
 import backend.software.dto.makeCategory;
 import backend.software.dto.makeColor;
 import backend.software.dto.makeCustomer;
 import backend.software.dto.makeOrder;
+import backend.software.dto.rentBike;
 import backend.software.dto.makeBike;
 import backend.software.models.Appointment;
 import backend.software.models.Bike;
@@ -27,6 +31,7 @@ import backend.software.models.Categories;
 import backend.software.models.Customer;
 import backend.software.models.OrderEntry;
 import backend.software.models.Orders;
+import backend.software.models.RentedBike;
 import backend.software.repositories.AppointmentRepository;
 import backend.software.repositories.BikeCategoryRepository;
 import backend.software.repositories.BikeColorsRepository;
@@ -35,6 +40,7 @@ import backend.software.repositories.CategoryRepository;
 import backend.software.repositories.CustomerRepository;
 import backend.software.repositories.OrderEntryRepository;
 import backend.software.repositories.OrderRepostitory;
+import backend.software.repositories.RentedBikeRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -65,7 +71,11 @@ public class engineeringService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-    public engineeringService(AppointmentRepository appointmentRepository, CustomerRepository customerRepository, CategoryRepository categoryRepository, BikeCategoryRepository bikeCategoryRepository, BikeColorsRepository bikeColorsRepository, OrderEntryRepository orderEntryRepository, BikeRepository bikeRepository, OrderRepostitory orderRepostitory){
+    @Autowired
+    private RentedBikeRepository rentedBikeRepository;
+
+    public engineeringService(RentedBikeRepository rentedBikeRepository, AppointmentRepository appointmentRepository, CustomerRepository customerRepository, CategoryRepository categoryRepository, BikeCategoryRepository bikeCategoryRepository, BikeColorsRepository bikeColorsRepository, OrderEntryRepository orderEntryRepository, BikeRepository bikeRepository, OrderRepostitory orderRepostitory){
+        this.rentedBikeRepository = rentedBikeRepository;
         this.appointmentRepository = appointmentRepository;
         this.customerRepository = customerRepository;
         this.categoryRepository = categoryRepository;
@@ -327,6 +337,13 @@ public class engineeringService {
         return result;
     }
 
+    public HashMap<Object, Object> getAppointment(Long apID){
+        Optional<Appointment> appointment =  appointmentRepository.findById(apID);
+        HashMap<Object, Object> result = new HashMap<>();
+        result.put("Appointment", appointment.get());
+        return result;
+    }
+
     public HashMap<Object, Object> makeAppointment(makeAppointment dto){
         Customer customer = (Customer) customerRepository.queryName(dto.getCustomerName()).get(0);
         
@@ -362,6 +379,8 @@ public class engineeringService {
         appointment.setCategory(dto.getCategory());
         appointment.setDescription(dto.getDescription());
         appointment.setOngoing(true);
+        appointment.setName(dto.getName());
+        appointment.setCost(dto.getCost());
 
         appointment.setDateTimeAppointed(formatter.format(convertedDate).toString());
         appointment.setDateTimeCreated(formatter.format(now).toString());
@@ -385,29 +404,99 @@ public class engineeringService {
         return result;  
     }
 
-    public void confirmAppointment(confirmAppointment dto){
-        
+    public HashMap<Object, Object> editAppointment(editAppointment dto){
+        Appointment appointment = appointmentRepository.findById(dto.getId()).get();
+        Customer customer = customerRepository.queryName(dto.getCustomerName()).get(0);
+        appointment.setCategory(dto.getCategory());
+        appointment.setCost(dto.getCost());
+        appointment.setCustomer(customer);
+        appointment.setDateTimeAppointed(dto.getDateTimeAppointed());
+        appointment.setDescription(dto.getDescription());
+        appointment.setName(dto.getName());
+        appointment.setOngoing(dto.getOngoing());
+        appointmentRepository.save(appointment);
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Appointment>> violations = validator.validate(appointment);
+
+        //Validation
+        HashMap<Object, Object> result = new HashMap<>();
+        if (violations.size() >= 1){
+            ArrayList<Object> errors = new ArrayList<>();
+            for (ConstraintViolation<Appointment> violation : violations){
+                errors.add(violation.getMessage());
+            }
+            result.put("errors", errors);
+            return result;
+        }
+
+        result.put("result", "Appointment successfully edited");
+        return result;
     }
 
-    //If Appointment deals with category of "Bike Borrowing"
-    //This will confirm appointment cost BASED on Date Appointed AND the CURRENT Date
-    
-    //Else, if appointment deals with Bike Repairs, Services, and/or maintenance
-    //No impact will come from Date Appointed 
+    public void confirmAppointment(confirmAppointment dto){
+        Optional<Appointment> appointment = appointmentRepository.findById(dto.getId());
+        appointment.get().setOngoing(false);
+        appointmentRepository.save(appointment.get());
+        System.out.println("Appointment Confirmed");
+    }
 
-    //DTO here will contain what kind of category will be used
-    public void rentBike(confirmAppointment dto){
-        if (dto.getCategory().equals("Bike Borrowing")){
-            LocalDate now = LocalDate.now();
-            LocalDate appointed = LocalDate.parse(dto.getDateTimeAppointed());
-            Duration duration = Duration.between(now, appointed);
-            Long difference = Math.abs(duration.toDays());
-            int penalty;
-            //Comparisons for days
-            if (difference <= 3){
-                penalty = 200;
-            }
+
+    public void rentBike(rentBike dto){
+        Bike bike = bikeRepository.queryName(dto.getBikeName()).get(0);
+        Customer customer = customerRepository.queryName(dto.getCustomerName()).get(0);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
+        LocalDate date = LocalDate.now();
+        RentedBike rentedBike = new RentedBike();
+        Long days = dto.getDays();
+        Long hours = 24 * days;
+
+        rentedBike.setBike(bike);
+        rentedBike.setCustomer(customer);
+        rentedBike.setDateRented(formatter.format(date));
+        rentedBike.setRentalDuration(hours);
+        bike.setCanBeBorrowed(false);
+        
+        rentedBikeRepository.save(rentedBike);
+        bikeRepository.save(bike);
+    }
+
+    public void confirmRental(confirmRental dto){
+        RentedBike rentedBike = rentedBikeRepository.findById(dto.getRentalID()).get();
+        Customer customer = rentedBike.getCustomer();
+        Bike bike = rentedBike.getBike();
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter oldFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+
+        String nowDate = LocalDate.parse(LocalDate.now().toString(), oldFormatter).format(formatter);
+
+        LocalDate now = LocalDate.parse(nowDate, formatter);
+        LocalDate dateRented = LocalDate.parse(rentedBike.getDateRented(), formatter);
+        Long duration = now.until(dateRented, ChronoUnit.DAYS);
+
+        System.out.println("DIFFERENCE: " + duration);
+        
+        Long difference = Math.abs(duration);
+        Long rentDuration = rentedBike.getRentalDuration();
+
+        Double baseCost = 200 + (2 * (rentDuration + 1.5));
+        Double penalty;
+
+        if (difference != 0) {
+            penalty = baseCost + (5 * (difference + 1.5));
+        } else {
+            penalty = 0.0;
         }
+
+        bike.setCanBeBorrowed(true);
+        customer.setBalance(penalty + baseCost);
+        rentedBikeRepository.save(rentedBike);
+        customerRepository.save(customer);
+        bikeRepository.save(bike);
+        System.out.println("Bike Rentail Completed!");
+        
     }
 
 

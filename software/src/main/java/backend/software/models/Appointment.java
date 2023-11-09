@@ -63,7 +63,7 @@ public class Appointment {
     @Column(name = "dateTimeAppointed")
     private String dateTimeAppointed;
 
-    @JsonBackReference
+    @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull(message = "Appointment must be linked with a Customer")
     @JoinColumn(name = "customer_id")
@@ -71,6 +71,22 @@ public class Appointment {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getCost() {
+        return cost;
+    }
+
+    public void setCost(Double cost) {
+        this.cost = cost;
     }
 
     public void setId(Long id) {

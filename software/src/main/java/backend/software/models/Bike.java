@@ -3,6 +3,7 @@ package backend.software.models;
 import java.util.*;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,7 +39,7 @@ public class Bike {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     @Length(min = 1, max = 50, message = "Bike name must be between 1 and 50 text characters!")
     @NotNull(message = "cannot be null!")
     private String name;
@@ -80,6 +81,10 @@ public class Bike {
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
     private List<OrderEntry> orderEntries;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bike", cascade = CascadeType.ALL)
+    private List<RentedBike> rentedBikes;
 
 
     public String getName() {

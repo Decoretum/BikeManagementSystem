@@ -57,9 +57,45 @@ public class Customer {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer")
     private List<Orders> orders;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer")
     private List<Appointment> appointments;
+
+    @JsonBackReference
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer")
+    private List<RentedBike> rentedBikes;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    public List<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Orders> orders) {
+        this.orders = orders;
+    }
+
+    public List<RentedBike> getRentedBikes() {
+        return rentedBikes;
+    }
+
+    public void setRentedBikes(List<RentedBike> rentedBikes) {
+        this.rentedBikes = rentedBikes;
+    }
 
     public String getName() {
         return name;
