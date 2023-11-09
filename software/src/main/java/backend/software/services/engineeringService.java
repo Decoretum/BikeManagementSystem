@@ -385,6 +385,10 @@ public class engineeringService {
         return result;  
     }
 
+    public void confirmAppointment(confirmAppointment dto){
+        
+    }
+
     //If Appointment deals with category of "Bike Borrowing"
     //This will confirm appointment cost BASED on Date Appointed AND the CURRENT Date
     
@@ -392,7 +396,7 @@ public class engineeringService {
     //No impact will come from Date Appointed 
 
     //DTO here will contain what kind of category will be used
-    public void confirmAppointment(confirmAppointment dto){
+    public void rentBike(confirmAppointment dto){
         if (dto.getCategory().equals("Bike Borrowing")){
             LocalDate now = LocalDate.now();
             LocalDate appointed = LocalDate.parse(dto.getDateTimeAppointed());

@@ -32,6 +32,11 @@ public class Appointment {
     @Column(name = "id")
     private Long id;
 
+    @NotNull(message = "Appointment name must have a name")
+    @Size(min = 20, max = 100, message = "Appointment name must be between 20 to 100 characters")
+    @Column(name = "name")
+    private String name;
+
     @NotNull(message = "Description cannot be null")
     @Column(name = "description")
     private String description;
