@@ -380,15 +380,6 @@ public class engineeringService {
             return result;
         }
 
-        //Checking if Appointment will contain a Bike or Not
-        if (dto.getBikeName() == null || dto.getBikeName() == ""){
-            appointment.setBike(null);
-        } else {
-            Bike bike = bikeRepository.queryName(dto.getBikeName()).get(0);
-            appointment.setBike(bike);
-            bike.setCanBeBorrowed(false);
-        } 
-
         appointmentRepository.save(appointment);
         result.put("result", "Appointment successfully created!");
         return result;  
@@ -407,8 +398,11 @@ public class engineeringService {
             LocalDate appointed = LocalDate.parse(dto.getDateTimeAppointed());
             Duration duration = Duration.between(now, appointed);
             Long difference = Math.abs(duration.toDays());
-
-            //Comparisons 
+            int penalty;
+            //Comparisons for days
+            if (difference <= 3){
+                penalty = 200;
+            }
         }
     }
 

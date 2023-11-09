@@ -2,7 +2,6 @@ package backend.software.dto;
 
 public class makeAppointment {
     private String customerName;
-    private String bikeName;
     private String category;
     private String description;
     private String dateTimeAppointed;
@@ -26,14 +25,6 @@ public class makeAppointment {
     }
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getBikeName() {
-        return bikeName;
-    }
-
-    public void setBikeName(String bikeName) {
-        this.bikeName = bikeName;
     }
 
     public String getDateTimeAppointed() {

@@ -64,25 +64,12 @@ public class Appointment {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @JsonManagedReference
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "bike_id")
-    private Bike bike;
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Bike getBike() {
-        return bike;
-    }
-
-    public void setBike(Bike bike) {
-        this.bike = bike;
     }
 
     public String getDateTimeCreated() {

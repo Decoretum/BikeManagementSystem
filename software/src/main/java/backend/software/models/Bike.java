@@ -69,10 +69,6 @@ public class Bike {
     @NotNull
     private Boolean canBeBorrowed;
 
-    @JsonBackReference
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "bike")
-    private Appointment appointment;
-
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy= "bike", cascade = CascadeType.ALL)
     private List<BikeCategories> bikeCategories;
@@ -176,14 +172,5 @@ public class Bike {
     public void setCanBeBorrowed(Boolean canBeBorrowed) {
         this.canBeBorrowed = canBeBorrowed;
     }
-
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
-
     
 }

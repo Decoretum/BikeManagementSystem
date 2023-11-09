@@ -15,8 +15,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 @Table
 @Entity
@@ -45,6 +48,10 @@ public class Customer {
     @Email(message = "Email must be a valid Email address")
     @Column(name = "email")
     private String email;
+
+    @DecimalMin("0.0")
+    @Column(name = "balance")
+    private Double balance;
 
     @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer")
