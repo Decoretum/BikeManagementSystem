@@ -10,16 +10,8 @@
     "static/development/_buildManifest.js",
     "static/development/_ssgManifest.js"
   ],
-  "rootMainFiles": [
-    "static/chunks/webpack.js",
-    "static/chunks/main-app.js"
-  ],
+  "rootMainFiles": [],
   "pages": {
-    "/": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/index.js"
-    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -35,10 +27,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/bikes.js"
     ],
-    "/technical": [
+    "/bikes/[id]/viewBike": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/technical.js"
+      "static/chunks/pages/bikes/[id]/viewBike.js"
+    ],
+    "/bikes/addBike": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/bikes/addBike.js"
     ]
   },
   "ampFirstPages": []

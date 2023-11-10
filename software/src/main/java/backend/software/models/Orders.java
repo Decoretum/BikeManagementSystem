@@ -40,7 +40,7 @@ public class Orders {
 
     @Column(name = "dateOfPurchase")
     @NotNull(message = "Date of Purchase cannot be null!")
-    private LocalDate dateOfPurchase;
+    private String dateOfPurchase;
 
     @Column(name = "description")
     @NotNull(message = "Description cannot be null!")
@@ -51,10 +51,29 @@ public class Orders {
     @DecimalMin("0.0")
     private Double totalcost;
 
-    @Column(name = "customerName")
-    @NotNull(message = "Customer name cannot be null!")
-    @Length(max = 80)
-    private String customerName;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public List<OrderEntry> getOrderEntries() {
+        return orderEntries;
+    }
+
+    public void setOrderEntries(List<OrderEntry> orderEntries) {
+        this.orderEntries = orderEntries;
+    }
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER)
@@ -73,11 +92,11 @@ public class Orders {
         this.uuid = uuid;
     }
 
-    public LocalDate getDateOfPurchase() {
+    public String getDateOfPurchase() {
         return dateOfPurchase;
     }
 
-    public void setDateOfPurchase(LocalDate dateOfPurchase) {
+    public void setDateOfPurchase(String dateOfPurchase) {
         this.dateOfPurchase = dateOfPurchase;
     }
 
@@ -95,14 +114,6 @@ public class Orders {
 
     public void setTotalcost(Double totalcost) {
         this.totalcost = totalcost;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
     }
 
     

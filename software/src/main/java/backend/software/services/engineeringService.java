@@ -13,6 +13,7 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDa
 import org.springframework.stereotype.Component;
 
 import backend.software.dto.confirmAppointment;
+import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.editAppointment;
 import backend.software.dto.makeAnOrder;
@@ -276,32 +277,84 @@ public class engineeringService {
     }
 
     public void makeOrder(makeAnOrder order){
-        System.out.println("DOP: " + order.getDateOfPurchase());
         Orders newOrder = new Orders();
         String uuid = UUID.randomUUID().toString();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        LocalDate date = LocalDate.parse(order.getDateOfPurchase(), formatter);
-        newOrder.setCustomerName(order.getCustomerName());
+        DateTimeFormatter newFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        String date = LocalDate.parse(order.getDateOfPurchase(), formatter).format(newFormatter);
+
+        Customer customer = customerRepository.queryName(order.getCustomerName()).get(0);
+        newOrder.setCustomer(customer);
         newOrder.setDateOfPurchase(date);
         newOrder.setDescription(order.getDescription());
-        newOrder.setTotalcost(order.getTotalcost());
+        newOrder.setTotalcost(0.0);
         newOrder.setUuid(uuid);
         orderRepostitory.save(newOrder);
         System.out.println("Order Created!");
     }
+
     public void makeBikeOrder(makeOrder order){
         Orders mainOrder = orderRepostitory.uuidQuery(order.getUuid()).get(0);
         Bike bike = bikeRepository.queryName(order.getBikeName()).get(0);
+        Double oldCost = mainOrder.getTotalcost();
+
         OrderEntry orderEntry = new OrderEntry();
 
         orderEntry.setBike(bike);
         orderEntry.setOrder(mainOrder);
         orderEntry.setQuantity(order.getQuantity());
         orderEntry.setCost(order.getCost());
+        mainOrder.setTotalcost(oldCost + order.getCost());
 
-        bikeRepository.save(bike);
-        orderRepostitory.save(mainOrder);
+        // bikeRepository.save(bike);
+        // orderRepostitory.save(mainOrder);
         orderEntryRepository.save(orderEntry);
+        orderRepostitory.save(mainOrder);
+        System.out.println("Bike added to order!");
+    }
+
+    public void editBikeOrder(){
+        
+    } 
+
+    //For this, this will confirm the order and relay changes to other
+    //necessary entities. 
+    //Goal is to avoid using database calls as much as possible
+    public HashMap<Object, Object> confirmOrder(confirmOrder dto){
+        Orders cart = orderRepostitory.uuidQuery(dto.getUuid()).get(0);
+        ArrayList<Object> errors = new ArrayList<>();
+        List<OrderEntry> bikeOrders = cart.getOrderEntries();
+
+        //Contain the product - cost 
+        HashMap<Object, Object> productCost = new HashMap<>();
+        
+        for (OrderEntry a : bikeOrders){
+            Bike bike = a.getBike();
+            if (productCost.containsKey(bike.getName())){
+                Integer oldStock = (Integer) productCost.get(bike.getName());
+                productCost.put(bike.getName(), oldStock + a.getQuantity());
+            } else {
+                productCost.put(bike.getName(), a.getQuantity());
+            }   
+        }
+
+        //Assessment
+        for (Object bikeName : productCost.keySet()){
+            Bike bike = bikeRepository.queryName((String) bikeName).get(0);
+            Integer mapQuantity = (Integer) productCost.get(bikeName);
+            if (bike.getStock() < mapQuantity){
+                errors.add("Bike " + bikeName + " has an excess stock of " + productCost.get(bikeName));                
+            }
+        }
+
+        if (errors.isEmpty()){
+            return productCost;
+        }
+        productCost.put("errors", errors);
+        return productCost;
+
+
     }
 
     //APPOINTMENTS

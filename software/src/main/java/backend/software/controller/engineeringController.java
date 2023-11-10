@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import backend.software.dto.confirmAppointment;
+import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.editAppointment;
 import backend.software.dto.makeAnOrder;
@@ -119,6 +120,14 @@ public class engineeringController {
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
     public void makeOrder(makeAnOrder order){
         engineeringService.makeOrder(order);
+    }
+
+    @POST
+    @Path("/confirmOrder")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> confirmOrder(confirmOrder dto){
+        return engineeringService.confirmOrder(dto);
     }
 
     @POST

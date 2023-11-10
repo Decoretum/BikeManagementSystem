@@ -1,7 +1,5 @@
 package backend.software.dto;
 
-import java.time.LocalDate;
-
 public class makeOrder {
     //Orders
     private String uuid;
