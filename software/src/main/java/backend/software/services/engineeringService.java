@@ -316,10 +316,15 @@ public class engineeringService {
         System.out.println("Bike added to order!");
     }
 
-    //Deleting a Bike Order
+    //Removing a Bike Order from an Order
     public void deleteBikeOrder(deleteBikeOrder dto){
         OrderEntry bikeOrder = orderEntryRepository.findById(dto.getId()).get();
+        Orders mainOrder = bikeOrder.getOrder();
+
+        Double oldCost = mainOrder.getTotalcost();
+        mainOrder.setTotalcost(oldCost - bikeOrder.getCost());
         orderEntryRepository.delete(bikeOrder);
+        orderRepostitory.save(mainOrder);
     } 
 
     //For this, this will confirm the order and relay changes to other
@@ -352,10 +357,10 @@ public class engineeringService {
             }
         }
 
-        if (errors.isEmpty()){
-            return productCost;
+        if (!errors.isEmpty()){
+            productCost.put("errors", errors);
         }
-        productCost.put("errors", errors);
+        
         return productCost;
 
 
