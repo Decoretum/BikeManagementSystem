@@ -1,6 +1,7 @@
 package backend.software.models;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -20,6 +21,8 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.ws.rs.DefaultValue;
+
 import java.util.*;
 
 @Table
@@ -47,6 +50,7 @@ public class Appointment {
     private String category;
 
     @Column(name = "ongoing")
+    @Value("${ongoing:true}")
     private Boolean ongoing;
 
     @Column(name = "cost")

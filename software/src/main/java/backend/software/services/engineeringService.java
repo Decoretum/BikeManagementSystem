@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import backend.software.dto.confirmAppointment;
 import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
+import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
@@ -294,6 +295,7 @@ public class engineeringService {
         System.out.println("Order Created!");
     }
 
+    //OrderEntry Model
     public void makeBikeOrder(makeOrder order){
         Orders mainOrder = orderRepostitory.uuidQuery(order.getUuid()).get(0);
         Bike bike = bikeRepository.queryName(order.getBikeName()).get(0);
@@ -314,8 +316,10 @@ public class engineeringService {
         System.out.println("Bike added to order!");
     }
 
-    public void editBikeOrder(){
-        
+    //Deleting a Bike Order
+    public void deleteBikeOrder(deleteBikeOrder dto){
+        OrderEntry bikeOrder = orderEntryRepository.findById(dto.getId()).get();
+        orderEntryRepository.delete(bikeOrder);
     } 
 
     //For this, this will confirm the order and relay changes to other
