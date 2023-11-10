@@ -29,7 +29,7 @@ public class Customer {
     private Long id;
 
     @NotNull(message = "Name cannot be null")
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @NotNull(message = "ID Number cannot be null")

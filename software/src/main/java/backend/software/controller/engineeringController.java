@@ -27,6 +27,7 @@ import backend.software.repositories.BikeRepository;
 import backend.software.services.engineeringService;
 import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -101,6 +102,9 @@ public class engineeringController {
         return engineeringService.getCategories();
     }
 
+
+    //ORDERS
+
     @GET
     @Path("/getOrder")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -110,8 +114,6 @@ public class engineeringController {
         return engineeringService.getOrder(uuid);
     }
 
-    //ORDERS
-
     @POST
     @Path("/makeAnOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
@@ -120,10 +122,22 @@ public class engineeringController {
     }
 
     @POST
-    @Path("/makeOrder")
+    @Path("/makeBikeOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void makeOrder(makeOrder order){
+    public void makeBikeOrder(makeOrder order){
         engineeringService.makeBikeOrder(order);
+    }
+
+    @DELETE
+    @Path("/removeBikeOrder")
+    public void deleteBikeOrder(@QueryParam("id") Long id){
+        
+    }
+
+    @DELETE
+    @Path("/removeOrder")
+    public void deleteOrder(@QueryParam("id") Long id){
+        
     }
 
     //APPOINTMENTS
@@ -134,6 +148,12 @@ public class engineeringController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public HashMap<Object, Object> makeAppointment(makeAppointment dto){
         return engineeringService.makeAppointment(dto);
+    }  
+
+    @DELETE
+    @Path("/deleteAppointment")
+    public void deleteAppointment(@QueryParam("id") Long id){
+        
     }  
 
     @PUT
@@ -168,9 +188,14 @@ public class engineeringController {
         return engineeringService.makeCustomer(dto);
     }
 
-    
+    @DELETE
+    @Path("/deleteCustomer")
+    public void deleteCustomer(@QueryParam("name") String name){
+        
+    }  
+
     @GET
-    @Path("/test")
+    @Path("/getAllCustomer")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public ArrayList<String> test(){
         return bikeRepository.getAllName();
@@ -189,5 +214,11 @@ public class engineeringController {
     public void confirmRental(confirmRental dto){
         engineeringService.confirmRental(dto);
     }
+
+    @DELETE
+    @Path("/deleteRentedBike")
+    public void deleteRentedBike(@QueryParam("name") String name){
+        
+    } 
 
 }
