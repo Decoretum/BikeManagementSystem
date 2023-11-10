@@ -1,2 +1,2 @@
 node_modules
-application.properties
+software/src/main/resources/application.properties
