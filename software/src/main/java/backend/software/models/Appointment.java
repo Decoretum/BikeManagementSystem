@@ -51,7 +51,6 @@ public class Appointment {
 
     @Column(name = "ongoing")
     @NotNull(message = "Ongoing cannot be null, can only be true or false")
-    @Value("${ongoing:true}")
     private Boolean ongoing;
 
     @Column(name = "cost")

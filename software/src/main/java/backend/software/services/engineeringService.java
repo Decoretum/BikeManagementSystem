@@ -281,16 +281,17 @@ public class engineeringService {
         Orders newOrder = new Orders();
         String uuid = UUID.randomUUID().toString();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter newFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        String date = LocalDate.parse(order.getDateOfPurchase(), formatter).format(newFormatter);
-
+        String date = LocalDate.parse(LocalDate.now().toString(), formatter).format(newFormatter).toString();
+        
         Customer customer = customerRepository.queryName(order.getCustomerName()).get(0);
         newOrder.setCustomer(customer);
         newOrder.setDateOfPurchase(date);
         newOrder.setDescription(order.getDescription());
         newOrder.setTotalcost(0.0);
         newOrder.setUuid(uuid);
+        newOrder.setFinished(false);
         orderRepostitory.save(newOrder);
         System.out.println("Order Created!");
     }
@@ -307,24 +308,44 @@ public class engineeringService {
         orderEntry.setOrder(mainOrder);
         orderEntry.setQuantity(order.getQuantity());
         orderEntry.setCost(order.getCost());
+        orderEntry.setBike_color(order.getBike_color());
         mainOrder.setTotalcost(oldCost + order.getCost());
+        
 
-        // bikeRepository.save(bike);
-        // orderRepostitory.save(mainOrder);
         orderEntryRepository.save(orderEntry);
         orderRepostitory.save(mainOrder);
         System.out.println("Bike added to order!");
+    }
+
+    //Get Bike Orders / OrderEntry within a certain Main Order
+    public ArrayList<OrderEntry> getBikeOrders(Long a){
+        Orders mainOrder = orderRepostitory.findById(a).get();
+        return orderEntryRepository.getFromOrder(mainOrder);
     }
 
     //Removing a Bike Order from an Order
     public void deleteBikeOrder(deleteBikeOrder dto){
         OrderEntry bikeOrder = orderEntryRepository.findById(dto.getId()).get();
         Orders mainOrder = bikeOrder.getOrder();
+        Bike bike = bikeOrder.getBike();
 
         Double oldCost = mainOrder.getTotalcost();
         mainOrder.setTotalcost(oldCost - bikeOrder.getCost());
-        orderEntryRepository.delete(bikeOrder);
+        
+        List<OrderEntry> bikeOrders = mainOrder.getOrderEntries();
+        bikeOrders.remove(bikeOrder);
         orderRepostitory.save(mainOrder);
+
+        List<OrderEntry> bikeOrders2 = bike.getOrderEntries();
+        bikeOrders2.remove(bikeOrder);
+        bikeRepository.save(bike);
+
+        bikeOrder.setBike(null);
+        bikeOrder.setOrder(null);
+        
+        orderEntryRepository.save(bikeOrder);
+        orderEntryRepository.delete(bikeOrder);
+        System.out.println("Bike Order " + dto.getId() + " removed");
     } 
 
     //For this, this will confirm the order and relay changes to other
@@ -360,6 +381,8 @@ public class engineeringService {
         if (!errors.isEmpty()){
             productCost.put("errors", errors);
         }
+        
+        cart.setFinished(true);
         
         return productCost;
 

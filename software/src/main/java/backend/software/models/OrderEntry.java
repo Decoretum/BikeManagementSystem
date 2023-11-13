@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Table
 @Entity
@@ -24,12 +26,12 @@ public class OrderEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "bike_id")
     private Bike bike;
 
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     private Orders order;
 
@@ -41,8 +43,28 @@ public class OrderEntry {
     @DecimalMin("0")
     private Double cost;
 
+    @Column(name = "bike_color")
+    @NotNull(message = "There must be a bike color chosen for the order")
+    private String bike_color;
+
     public Bike getBike() {
         return bike;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getBike_color() {
+        return bike_color;
+    }
+
+    public void setBike_color(String bike_color) {
+        this.bike_color = bike_color;
     }
 
     public void setBike(Bike bike) {

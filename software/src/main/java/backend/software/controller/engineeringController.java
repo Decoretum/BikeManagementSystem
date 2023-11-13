@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import backend.software.dto.confirmAppointment;
 import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
+import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
@@ -23,6 +24,7 @@ import backend.software.dto.makeCategory;
 import backend.software.dto.makeCustomer;
 import backend.software.models.Bike;
 import backend.software.models.Categories;
+import backend.software.models.OrderEntry;
 import backend.software.models.Orders;
 import backend.software.repositories.BikeRepository;
 import backend.software.services.engineeringService;
@@ -137,10 +139,17 @@ public class engineeringController {
         engineeringService.makeBikeOrder(order);
     }
 
+    @GET
+    @Path("/getBikeOrders")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ArrayList<OrderEntry> getBikeOrders(@QueryParam("orderID") Long a){
+        return engineeringService.getBikeOrders(a);
+    }
+
     @DELETE
     @Path("/removeBikeOrder")
-    public void deleteBikeOrder(@QueryParam("id") Long id){
-        
+    public void deleteBikeOrder(deleteBikeOrder dto){
+        engineeringService.deleteBikeOrder(dto);
     }
 
     @DELETE

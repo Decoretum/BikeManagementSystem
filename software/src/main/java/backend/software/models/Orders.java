@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.hibernate.validator.constraints.Length;
 //import org.springframework.data.annotation.CreatedBy;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -51,8 +52,20 @@ public class Orders {
     @DecimalMin("0.0")
     private Double totalcost;
 
+    @Column(name = "finished")
+    @NotNull(message = "Finished can either be true or false, not null")
+    private Boolean finished;
+
     public Long getId() {
         return id;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 
     public void setId(Long id) {
