@@ -295,7 +295,7 @@ public class engineeringService {
         System.out.println("Order Created!");
     }
 
-    //OrderEntry Model
+    //Create an OrderEntry Model
     public void makeBikeOrder(makeOrder order){
         Orders mainOrder = orderRepostitory.uuidQuery(order.getUuid()).get(0);
         Bike bike = bikeRepository.queryName(order.getBikeName()).get(0);

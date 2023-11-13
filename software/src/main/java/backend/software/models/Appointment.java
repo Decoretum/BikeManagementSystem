@@ -50,6 +50,7 @@ public class Appointment {
     private String category;
 
     @Column(name = "ongoing")
+    @NotNull(message = "Ongoing cannot be null, can only be true or false")
     @Value("${ongoing:true}")
     private Boolean ongoing;
 
