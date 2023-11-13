@@ -142,7 +142,7 @@ public class engineeringController {
     @GET
     @Path("/getBikeOrders")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public ArrayList<OrderEntry> getBikeOrders(@QueryParam("orderID") Long a){
+    public ArrayList<Object> getBikeOrders(@QueryParam("orderID") Long a){
         return engineeringService.getBikeOrders(a);
     }
 

@@ -1,15 +1,11 @@
 package backend.software.services;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 import org.springframework.stereotype.Component;
 
 import backend.software.dto.confirmAppointment;
@@ -318,9 +314,23 @@ public class engineeringService {
     }
 
     //Get Bike Orders / OrderEntry within a certain Main Order
-    public ArrayList<OrderEntry> getBikeOrders(Long a){
+    public ArrayList<Object> getBikeOrders(Long a){
         Orders mainOrder = orderRepostitory.findById(a).get();
-        return orderEntryRepository.getFromOrder(mainOrder);
+        List<OrderEntry> bikeOrders = orderEntryRepository.getFromOrder(mainOrder);
+
+        ArrayList<Object> newArrayList = new ArrayList<>();
+
+        //restructuring JSON
+        for (OrderEntry i : bikeOrders){
+            HashMap<Object, Object> newObject = new HashMap<>();
+            newObject.put("bikeName", i.getBike().getName());
+            newObject.put("bikeColor", i.getBike_color());
+            newObject.put("quantity", i.getQuantity());
+            newObject.put("cost", i.getCost());
+            newArrayList.add(newObject);
+        }
+
+        return newArrayList;
     }
 
     //Removing a Bike Order from an Order
@@ -383,7 +393,9 @@ public class engineeringService {
         }
         
         cart.setFinished(true);
-        
+        orderRepostitory.save(cart);
+
+        productCost.put("result", "Order successfully confirmed and finished");
         return productCost;
 
 
