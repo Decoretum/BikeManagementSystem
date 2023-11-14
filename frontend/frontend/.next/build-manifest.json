@@ -30,10 +30,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/bikes.js"
     ],
-    "/bikes/[id]/editBike": [
+    "/bikes/[id]/viewBike": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/bikes/[id]/editBike.js"
+      "static/chunks/pages/bikes/[id]/viewBike.js"
     ],
     "/technical": [
       "static/chunks/webpack.js",

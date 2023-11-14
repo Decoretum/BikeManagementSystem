@@ -1,5 +1,5 @@
 USE `softwareengineering`;
-USE `portfolio`;
+
 SHOW DATABASES;
 show tables;
 
@@ -26,13 +26,13 @@ DESC `Appointment`;
 
 DELETE FROM `bike_colors`;
 DELETE FROM `bike_categories`;
-DELETE FROM `bike`;
-DELETE FROM `Customer`;
 DELETE FROM `categories`;
 DELETE FROM `Appointment`;
 DELETE FROM `rented_bike`;
 DELETE FROM `order_entry`;
 DELETE FROM `orders`;
+DELETE FROM `bike`;
+DELETE FROM `Customer`;
 
 
 SELECT * FROM `bike`;

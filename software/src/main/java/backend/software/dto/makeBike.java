@@ -9,6 +9,8 @@ public class makeBike {
     private ArrayList<String> category;
     private ArrayList<String> colors;
     private String wheelSize;
+
+    public makeBike(){}
     
     public String getName() {
         return name;
