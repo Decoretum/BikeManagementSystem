@@ -2,8 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
   "/bikes": "pages/bikes.js",
-  "/bikes/addBike": "pages/bikes/addBike.js",
-  "/bikes/[id]/viewBike": "pages/bikes/[id]/viewBike.js"
+  "/bikes/[id]/viewBike": "pages/bikes/[id]/viewBike.js",
+  "/bikes/[id]/editBike": "pages/bikes/[id]/editBike.js",
+  "/technical": "pages/technical.js"
 }

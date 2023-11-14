@@ -66,6 +66,13 @@ public class engineeringController {
         return engineeringService.getBikes();
     }
 
+    @DELETE
+    @Path("/deleteBike")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public void deleteBike(){
+        
+    }
+
     @GET
     @Path("/getBike")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
@@ -105,6 +112,12 @@ public class engineeringController {
         return engineeringService.getCategories();
     }
 
+    @DELETE
+    @Path("/deleteCategory")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public void deleteCategory(){
+        
+    }
 
     //ORDERS
 
