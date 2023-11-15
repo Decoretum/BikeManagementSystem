@@ -401,7 +401,15 @@ public class engineeringService {
 
     }
 
-    //APPOINTMENTS
+    //CUSTOMER
+
+    public List<Customer> getAllCustomer(){
+        return customerRepository.findAll();
+    }
+
+    public HashMap<Object, Object> editCustomer(makeCustomer dto){
+
+    }
 
     public HashMap<Object, Object> makeCustomer(makeCustomer dto){
         Customer newCustomer = new Customer();
@@ -433,6 +441,8 @@ public class engineeringService {
         result.put("result", "Customer " + dto.getName() + " added!");
         return result;
     }
+
+    //APPOINTMENT
 
     public HashMap<Object, Object> getAppointment(Long apID){
         Optional<Appointment> appointment =  appointmentRepository.findById(apID);

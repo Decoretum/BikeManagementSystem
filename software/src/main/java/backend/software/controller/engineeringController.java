@@ -24,6 +24,7 @@ import backend.software.dto.makeCategory;
 import backend.software.dto.makeCustomer;
 import backend.software.models.Bike;
 import backend.software.models.Categories;
+import backend.software.models.Customer;
 import backend.software.models.OrderEntry;
 import backend.software.models.Orders;
 import backend.software.repositories.BikeRepository;
@@ -228,8 +229,8 @@ public class engineeringController {
     @GET
     @Path("/getAllCustomer")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public ArrayList<String> test(){
-        return bikeRepository.getAllName();
+    public List<Customer> getAllCustomer(){
+        return engineeringService.getAllCustomer();
     }
 
     //RENTED BIKE
