@@ -1,6 +1,8 @@
 package backend.software.dto;
 
 public class makeOrder {
+
+    public makeOrder(){}
     //Orders
     private String uuid;
 

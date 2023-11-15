@@ -268,6 +268,10 @@ public class engineeringService {
 
     //ORDERS
 
+    public List<Orders> getAllOrders(){
+        return orderRepostitory.findAll();
+    }
+
     public Orders getOrder(String uuid){
         Orders order = orderRepostitory.uuidQuery(uuid).get(0);
         return order;
@@ -407,9 +411,9 @@ public class engineeringService {
         return customerRepository.findAll();
     }
 
-    public HashMap<Object, Object> editCustomer(makeCustomer dto){
+    // public HashMap<Object, Object> editCustomer(makeCustomer dto){
 
-    }
+    // }
 
     public HashMap<Object, Object> makeCustomer(makeCustomer dto){
         Customer newCustomer = new Customer();
@@ -443,6 +447,10 @@ public class engineeringService {
     }
 
     //APPOINTMENT
+
+    public List<Appointment> getAllAppointments(){
+        return appointmentRepository.findAll();
+    }
 
     public HashMap<Object, Object> getAppointment(Long apID){
         Optional<Appointment> appointment =  appointmentRepository.findById(apID);

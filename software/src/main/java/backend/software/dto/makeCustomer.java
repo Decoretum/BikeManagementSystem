@@ -7,6 +7,8 @@ public class makeCustomer {
     private String contactNumber;
     private String email;
     
+    public makeCustomer(){}
+    
     public String getName() {
         return name;
     }

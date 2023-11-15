@@ -22,6 +22,7 @@ import backend.software.dto.rentBike;
 import backend.software.dto.makeBike;
 import backend.software.dto.makeCategory;
 import backend.software.dto.makeCustomer;
+import backend.software.models.Appointment;
 import backend.software.models.Bike;
 import backend.software.models.Categories;
 import backend.software.models.Customer;
@@ -131,6 +132,13 @@ public class engineeringController {
         return engineeringService.getOrder(uuid);
     }
 
+    @GET
+    @Path("/getAllOrders")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public List<Orders> getAllOrders(){
+        return engineeringService.getAllOrders();
+    }
+
     @POST
     @Path("/makeAnOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
@@ -173,6 +181,13 @@ public class engineeringController {
     }
 
     //APPOINTMENTS
+
+    @GET
+    @Path("/getAllAppointments")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public List<Appointment> getAllAppointments(){
+        return engineeringService.getAllAppointments();
+    }
 
     @POST
     @Path("/makeAppointment")
