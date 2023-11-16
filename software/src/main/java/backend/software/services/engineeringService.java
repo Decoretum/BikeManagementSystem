@@ -298,7 +298,7 @@ public class engineeringService {
 
     //Create an OrderEntry Model
     public void makeBikeOrder(makeOrder order){
-        Orders mainOrder = orderRepostitory.uuidQuery(order.getUuid()).get(0);
+        Orders mainOrder = orderRepostitory.findById(order.getId()).get();
         Bike bike = bikeRepository.queryName(order.getBikeName()).get(0);
         Double oldCost = mainOrder.getTotalcost();
 

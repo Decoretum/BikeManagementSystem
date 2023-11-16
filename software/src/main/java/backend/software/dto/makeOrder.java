@@ -4,7 +4,7 @@ public class makeOrder {
 
     public makeOrder(){}
     //Orders
-    private String uuid;
+    private Long id;
 
     //order_entry
     private int quantity;
@@ -13,10 +13,6 @@ public class makeOrder {
     //Bike and the color chosen
     private String bikeName;
     private String bike_color;
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
 
     public void setQuantity(int quantity) {
@@ -44,10 +40,6 @@ public class makeOrder {
     }
 
 
-    public String getUuid() {
-        return uuid;
-    }
-
 
     public int getQuantity() {
         return quantity;
@@ -60,6 +52,16 @@ public class makeOrder {
 
     public String getBikeName() {
         return bikeName;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

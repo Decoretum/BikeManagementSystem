@@ -194,22 +194,22 @@ public class Initializer {
             // Bike Orders inside the Orders
             Orders orders2 = orderRepostitory.findById(1L).get();
             Orders orders3 = orderRepostitory.findById(2L).get();
-            String uuid = orders2.getUuid();
-            String uuid2 = orders3.getUuid();
+            Long oID2 = orders2.getId();
+            Long oID3 = orders3.getId();
 
             makeOrder a3 = new makeOrder();
             a3.setBikeName("Tomasini");
             a3.setBike_color("Blue");
             a3.setCost(281.07);
             a3.setQuantity(5);
-            a3.setUuid(uuid);
+            a3.setId(oID2);
             
             makeOrder a4 = new makeOrder();
             a4.setBikeName("JavaBike");
             a4.setBike_color("Brown");
             a4.setQuantity(10);
             a4.setCost(434.4);
-            a4.setUuid(uuid2);
+            a4.setId(oID3);
 
             engineeringService.makeBikeOrder(a3);
             engineeringService.makeBikeOrder(a4);
