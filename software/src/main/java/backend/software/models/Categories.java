@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class Categories {
     }
 
     @Column(name = "name", unique = true)
+    @NotNull(message = "Category cannot be null")
     private String name;
 
     @JsonBackReference

@@ -32,7 +32,8 @@ public class RentedBike {
 
     //in hours
     @Column(name = "rentalDuration")
-    @Min(0)
+    @NotNull(message = "There must be at least a minimum of 1 hour for the rental duration")
+    @Min(1)
     private Long rentalDuration;
 
     @JsonManagedReference

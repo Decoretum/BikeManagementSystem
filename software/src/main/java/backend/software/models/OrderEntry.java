@@ -38,11 +38,13 @@ public class OrderEntry {
     private Orders order;
 
     @Column(name = "quantity")
+    @NotNull(message = "There must be at least a quantity of 1 for the order entry.")
     @Min(1)
     private int quantity;
 
     @Column(name = "cost")
-    @DecimalMin("0")
+    @NotNull(message = "There must be at least a cost of 0.0 for the cost")
+    @DecimalMin("0.0")
     private Double cost;
 
     @Column(name = "bike_color")
