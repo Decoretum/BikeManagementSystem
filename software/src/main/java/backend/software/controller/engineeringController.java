@@ -2,19 +2,15 @@ package backend.software.controller;
 
 import java.util.*;
 
-import javax.print.attribute.standard.Media;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-
 import backend.software.dto.confirmAppointment;
 import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAppointment;
+import backend.software.dto.editCustomer;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
 import backend.software.dto.makeOrder;
@@ -26,7 +22,6 @@ import backend.software.models.Appointment;
 import backend.software.models.Bike;
 import backend.software.models.Categories;
 import backend.software.models.Customer;
-import backend.software.models.OrderEntry;
 import backend.software.models.Orders;
 import backend.software.repositories.BikeRepository;
 import backend.software.services.engineeringService;
@@ -71,8 +66,8 @@ public class engineeringController {
     @DELETE
     @Path("/deleteBike")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void deleteBike(){
-        
+    public void deleteBike(@QueryParam("bikeID") Long bikeID){
+        engineeringService.deleteBike(bikeID);
     }
 
     @GET
@@ -200,7 +195,7 @@ public class engineeringController {
     @DELETE
     @Path("/deleteAppointment")
     public void deleteAppointment(@QueryParam("id") Long id){
-        
+        engineeringService.deleteAppointment(id);
     }  
 
     @PUT
@@ -235,10 +230,18 @@ public class engineeringController {
         return engineeringService.makeCustomer(dto);
     }
 
+    @PUT
+    @Path("/editCustomer")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> editCustomer(editCustomer dto){
+        return engineeringService.editCustomer(dto);
+    }
+
     @DELETE
     @Path("/deleteCustomer")
     public void deleteCustomer(@QueryParam("name") String name){
-        
+        engineeringService.deleteCustomer(name);
     }  
 
     @GET

@@ -13,6 +13,7 @@ import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAppointment;
+import backend.software.dto.editCustomer;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
 import backend.software.dto.makeCategory;
@@ -243,6 +244,13 @@ public class engineeringService {
 
     }
 
+    public void deleteBike(Long bikeID){
+        Bike bike = bikeRepository.findById(bikeID).get();
+        bike.setCanBeBorrowed(false);
+        bike.setRemoved(true);
+        bikeRepository.save(bike);
+    }
+
     //BIKE COMPONENTS
 
     public ArrayList<Categories> getCategories(){
@@ -411,9 +419,50 @@ public class engineeringService {
         return customerRepository.findAll();
     }
 
-    // public HashMap<Object, Object> editCustomer(makeCustomer dto){
+    //This will remove all of a Customer's Association
+    //I don't know if this will be a feature
+    public void deleteCustomer(String name){
+        Customer customer = customerRepository.queryName(name.trim()).get(0);
+        List<Appointment> appointments = customer.getAppointments();
+        List<Orders> orders = customer.getOrders();
+        List<RentedBike> rentedBikes = customer.getRentedBikes();
 
-    // }
+        ArrayList<Appointment> saved1 = new ArrayList<>();
+        for (int i = 0; i < appointments.size(); i++){
+            Appointment a = appointments.get(i);
+            a.setCustomer(null);
+            saved1.add(a);
+        }
+
+        appointmentRepository.saveAll(saved1);
+
+        ArrayList<Orders> saved2 = new ArrayList<>();
+        for (int i = 0; i < orders.size(); i++){
+            Orders a = orders.get(i);
+            a.setCustomer(null);
+            saved2.add(a);
+        }
+
+        orderRepostitory.saveAll(saved2);
+
+        ArrayList<RentedBike> saved3 = new ArrayList<>();
+        for (int i = 0; i < rentedBikes.size(); i++){
+            RentedBike a = rentedBikes.get(i);
+            a.setCustomer(null);
+            saved3.add(a);
+        }
+
+        rentedBikeRepository.saveAll(saved3);
+
+        customer.setAppointments(null);
+        customer.setOrders(null);
+        customer.setRentedBikes(null);
+
+        customerRepository.save(customer);
+        customerRepository.delete(customer);
+
+        System.out.println("Customer " + name + " has been deleted from the application");
+    }
 
     public HashMap<Object, Object> makeCustomer(makeCustomer dto){
         Customer newCustomer = new Customer();
@@ -446,6 +495,37 @@ public class engineeringService {
         return result;
     }
 
+    public HashMap<Object, Object> editCustomer(editCustomer dto){
+        Customer customer = customerRepository.findById(dto.getId()).get();
+        customer.setClassification(dto.getClassification().trim());
+        customer.setContactNumber(dto.getContactNumber().trim());
+        if (dto.getEmail().trim().equals("")){
+            customer.setEmail(null);
+        } else {
+            customer.setEmail(dto.getEmail().trim());
+        }
+        customer.setName(dto.getName());
+        customer.setIdNumber(dto.getIdNumber());
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
+
+
+        HashMap<Object, Object> result = new HashMap<>();
+        if (violations.size() >= 1){
+            ArrayList<Object> errors = new ArrayList<>();
+            for (ConstraintViolation<Customer> violation : violations){
+                errors.add(violation.getMessage());
+            }
+            result.put("errors", errors);
+            return result;
+        }
+
+        customerRepository.save(customer);
+        result.put("result", "Customer " + dto.getId() + " has been edited!");
+        return result;
+    }
+
     //APPOINTMENT
 
     public List<Appointment> getAllAppointments(){
@@ -457,6 +537,18 @@ public class engineeringService {
         HashMap<Object, Object> result = new HashMap<>();
         result.put("Appointment", appointment.get());
         return result;
+    }
+
+    public void deleteAppointment(Long appointmentID){
+        Appointment appointment = appointmentRepository.findById(appointmentID).get();
+        Customer customer = appointment.getCustomer();
+        List<Appointment> appointments = customer.getAppointments();
+        appointments.remove(appointment);
+        
+        customerRepository.save(customer);
+        appointmentRepository.deleteById(appointmentID);
+        System.out.println("Appointment " + appointmentID +  " deleted");
+
     }
 
     public HashMap<Object, Object> makeAppointment(makeAppointment dto){

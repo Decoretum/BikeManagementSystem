@@ -70,6 +70,26 @@ public class Bike {
     @NotNull
     private Boolean canBeBorrowed;
 
+    public Boolean getRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(Boolean removed) {
+        this.removed = removed;
+    }
+
+    public List<RentedBike> getRentedBikes() {
+        return rentedBikes;
+    }
+
+    public void setRentedBikes(List<RentedBike> rentedBikes) {
+        this.rentedBikes = rentedBikes;
+    }
+
+    @Column(name = "removed")
+    @NotNull(message = "Removed can either be true or false")
+    private Boolean removed;
+
     @JsonManagedReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy= "bike", cascade = CascadeType.ALL)
     private List<BikeCategories> bikeCategories;
