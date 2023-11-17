@@ -267,8 +267,8 @@ public class engineeringController {
 
     @DELETE
     @Path("/deleteRentedBike")
-    public void deleteRentedBike(@QueryParam("name") String name){
-        
+    public void deleteRentedBike(@QueryParam("rentedBikeID") Long rentedBikeID){
+        engineeringService.deleteRental(rentedBikeID);
     } 
 
 }

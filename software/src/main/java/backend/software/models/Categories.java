@@ -43,7 +43,7 @@ public class Categories {
         this.bikeCategories = bikeCategories;
     }
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     @NotNull(message = "Category cannot be null")
     private String name;
 

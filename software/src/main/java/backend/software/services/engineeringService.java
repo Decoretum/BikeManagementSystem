@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAppointment;
+import backend.software.dto.editCategory;
 import backend.software.dto.editCustomer;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
@@ -106,10 +108,12 @@ public class engineeringService {
         newBike.setStock(dto.getStock());
         newBike.setWheelSize(dto.getWheelSize());
         newBike.setCanBeBorrowed(true);
+        newBike.setRemoved(false);
 
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Bike>> constraintViolations = validator.validate(newBike);
+        List<Bike> bikePresent = bikeRepository.queryName(dto.getName());
         if (constraintViolations.size() >= 1){
             ArrayList<String> errors = new ArrayList<>();
             for (ConstraintViolation<Bike> violation : constraintViolations){
@@ -117,7 +121,11 @@ public class engineeringService {
             }
             result.put("result", errors);
             return result;
+        } else if (!bikePresent.isEmpty()){
+            result.put("result", "Bike " + dto.getName() + " is already present.");
+            return result;
         }
+
         bikeRepository.save(newBike);
         
         //Colors and Categories
@@ -164,12 +172,16 @@ public class engineeringService {
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Bike>> constraintViolations = validator.validate(newBike);
+        List<Bike> bikePresent = bikeRepository.queryName(dto.getName());
         if (constraintViolations.size() >= 1){
             ArrayList<String> errors = new ArrayList<>();
             for (ConstraintViolation<Bike> violation : constraintViolations){
                 errors.add(violation.getPropertyPath() + " " + violation.getMessage());
             }
             result.put("result", errors);
+            return result;
+        } else if (!bikePresent.isEmpty()){
+            result.put("result", "Bike " + dto.getName() + " is already present.");
             return result;
         }
         bikeRepository.save(newBike);
@@ -258,9 +270,26 @@ public class engineeringService {
     }
 
     public void addCategory(makeCategory json){
+        ArrayList<Categories> categPresent = categoryRepository.findThroughName(json.getName());
+        if (!categPresent.isEmpty()){
+            System.out.println(json.getName() + " already exists");
+            return;
+        }
         Categories category = new Categories();
         category.setName((String) json.getName());
         categoryRepository.save(category);
+    }
+
+    public void editCategory(editCategory json){
+        Categories edited = categoryRepository.findById(json.getCategID()).get();
+        ArrayList<Categories> categPresent = categoryRepository.findThroughName(json.getName());
+        if (!categPresent.isEmpty()){
+            System.out.println(json.getName() + " already exists");
+            return;
+        }
+
+        edited.setName((String) json.getName());
+        categoryRepository.save(edited);
     }
 
     public void addColor(makeColor json){
@@ -479,7 +508,7 @@ public class engineeringService {
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Customer>> violations = validator.validate(newCustomer);
-
+        List<Customer> customerPresent = customerRepository.queryName(dto.getName());
         HashMap<Object, Object> result = new HashMap<>();
         if (violations.size() >= 1){
             ArrayList<Object> errors = new ArrayList<>();
@@ -487,6 +516,9 @@ public class engineeringService {
                 errors.add(violation.getMessage());
             }
             result.put("errors", errors);
+            return result;
+        } else if (!customerPresent.isEmpty()){
+            result.put("errors", "Customer " + dto.getName() + " already exists");
             return result;
         }
 
@@ -512,12 +544,16 @@ public class engineeringService {
 
 
         HashMap<Object, Object> result = new HashMap<>();
+        List<Customer> customerPresent = customerRepository.queryName(dto.getName());
         if (violations.size() >= 1){
             ArrayList<Object> errors = new ArrayList<>();
             for (ConstraintViolation<Customer> violation : violations){
                 errors.add(violation.getMessage());
             }
             result.put("errors", errors);
+            return result;
+        } else if (!customerPresent.isEmpty()){
+            result.put("errors", "Customer " + dto.getName() + " already exists");
             return result;
         }
 
@@ -648,6 +684,7 @@ public class engineeringService {
         System.out.println("Appointment Confirmed");
     }
 
+    //RENTED BIKE
 
     public void rentBike(rentBike dto){
         Bike bike = bikeRepository.queryName(dto.getBikeName()).get(0);
@@ -662,10 +699,12 @@ public class engineeringService {
         rentedBike.setCustomer(customer);
         rentedBike.setDateRented(formatter.format(date));
         rentedBike.setRentalDuration(hours);
+        rentedBike.setFinished(false);
         bike.setCanBeBorrowed(false);
         
         rentedBikeRepository.save(rentedBike);
         bikeRepository.save(bike);
+        System.out.println("Bike " + dto.getBikeName() + " rented by " + dto.getCustomerName());
     }
 
     public void confirmRental(confirmRental dto){
@@ -699,11 +738,33 @@ public class engineeringService {
 
         bike.setCanBeBorrowed(true);
         customer.setBalance(penalty + baseCost);
+        rentedBike.setFinished(true);
         rentedBikeRepository.save(rentedBike);
         customerRepository.save(customer);
         bikeRepository.save(bike);
-        System.out.println("Bike Rentail Completed!");
+        System.out.println("Bike Rental Completed!");
         
+    }
+
+    public void deleteRental(Long rentedBikeID){
+        RentedBike rentedBike = rentedBikeRepository.findById(rentedBikeID).get();
+        if (rentedBike.getFinished() == false){
+            Customer customer = rentedBike.getCustomer();
+            Bike bike = rentedBike.getBike();
+            List<RentedBike> rentedBikes = customer.getRentedBikes();
+            List<RentedBike> rentedBikes2 = bike.getRentedBikes();
+            rentedBikes.remove(rentedBike);
+            rentedBikes2.remove(rentedBike);
+            rentedBike.setCustomer(null);
+            rentedBike.setBike(null);
+
+            bikeRepository.save(bike);
+            customerRepository.save(customer);
+            rentedBikeRepository.save(rentedBike);
+            rentedBikeRepository.delete(rentedBike);
+            
+            System.out.println("Rented Bike " + rentedBikeID + " has been deleted");
+        }
     }
 
 

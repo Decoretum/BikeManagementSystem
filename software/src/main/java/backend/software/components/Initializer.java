@@ -16,6 +16,7 @@ import backend.software.models.Categories;
 import backend.software.models.Customer;
 import backend.software.models.OrderEntry;
 import backend.software.models.Orders;
+import backend.software.models.RentedBike;
 import backend.software.repositories.AppointmentRepository;
 import backend.software.repositories.BikeCategoryRepository;
 import backend.software.repositories.BikeRepository;

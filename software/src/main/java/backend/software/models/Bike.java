@@ -39,7 +39,7 @@ public class Bike {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     @Length(min = 1, max = 50, message = "Bike name must be between 1 and 50 text characters!")
     @NotNull(message = "cannot be null!")
     private String name;

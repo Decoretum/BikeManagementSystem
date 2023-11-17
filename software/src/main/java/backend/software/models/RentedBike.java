@@ -30,6 +30,10 @@ public class RentedBike {
     @NotNull(message = "Date Rented cannot be null")
     private String dateRented;
 
+    @Column(name = "finished")
+    @NotNull(message = "Finished can only be true or false")
+    private Boolean finished;
+
     //in hours
     @Column(name = "rentalDuration")
     @NotNull(message = "There must be at least a minimum of 1 hour for the rental duration")
@@ -84,6 +88,14 @@ public class RentedBike {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 
     
