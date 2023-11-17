@@ -269,27 +269,36 @@ public class engineeringService {
         return categoryRepository.findAll();
     }
 
-    public void addCategory(makeCategory json){
+    public HashMap<Object, Object> addCategory(makeCategory json){
         ArrayList<Categories> categPresent = categoryRepository.findThroughName(json.getName());
+        HashMap<Object, Object> result = new HashMap<>();
         if (!categPresent.isEmpty()){
-            System.out.println(json.getName() + " already exists");
-            return;
+            result.put("result", json.getName() + " already exists");
+            return result;
+        } else {
+            result.put("errorResult", json.getName() + " successfully added!");
         }
         Categories category = new Categories();
         category.setName((String) json.getName());
         categoryRepository.save(category);
+        return result;
+        
     }
 
-    public void editCategory(editCategory json){
+    public HashMap<Object, Object> editCategory(editCategory json){
+        HashMap<Object, Object> result = new HashMap<>();
         Categories edited = categoryRepository.findById(json.getCategID()).get();
         ArrayList<Categories> categPresent = categoryRepository.findThroughName(json.getName());
         if (!categPresent.isEmpty()){
-            System.out.println(json.getName() + " already exists");
-            return;
+            result.put("errorResult", json.getName() + " already exists");
+            return result;
+        } else {
+            result.put("result", "Category " + json.getCategID() + " successfully edited");
         }
 
         edited.setName((String) json.getName());
         categoryRepository.save(edited);
+        return result;
     }
 
     public void addColor(makeColor json){

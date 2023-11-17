@@ -10,6 +10,7 @@ import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAppointment;
+import backend.software.dto.editCategory;
 import backend.software.dto.editCustomer;
 import backend.software.dto.makeAnOrder;
 import backend.software.dto.makeAppointment;
@@ -98,8 +99,17 @@ public class engineeringController {
     @POST
     @Path("/makeCategory")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void addCategory(makeCategory dto){
-        engineeringService.addCategory(dto);
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> addCategory(makeCategory dto){
+        return engineeringService.addCategory(dto);
+    }
+
+    @PUT
+    @Path("/editCategory")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> editCategory(editCategory dto){
+        return engineeringService.editCategory(dto);
     }
 
     @GET
@@ -238,6 +248,7 @@ public class engineeringController {
         return engineeringService.editCustomer(dto);
     }
 
+    //I'm not sure if this is practical in a business setting
     @DELETE
     @Path("/deleteCustomer")
     public void deleteCustomer(@QueryParam("name") String name){
