@@ -17,6 +17,7 @@ import backend.software.dto.makeAppointment;
 import backend.software.dto.makeOrder;
 import backend.software.dto.rentBike;
 import backend.software.dto.makeBike;
+import backend.software.dto.editBike;
 import backend.software.dto.makeCategory;
 import backend.software.dto.makeCustomer;
 import backend.software.models.Appointment;
@@ -90,8 +91,9 @@ public class engineeringController {
     @Path("/editBike")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public HashMap<Object, Object> editBike(makeBike dto){
+    public HashMap<Object, Object> editBike(editBike dto){
         return engineeringService.editBike(dto);
+
     }
 
     //CATEGORY

@@ -1,34 +1,184 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Modal from 'react-bootstrap/Modal';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { Alert } from 'react-bootstrap';
 
 
 function FormGroup(props) {
+  const {register} = useFormContext();
+  const isView = props.viewType === 'View';
+  let finalContent = '';
+
+  if (props.content instanceof Array){
+    if (props.id === 'colors'){
+      for (let i = 0; i < props.content.length; i++){
+        if (i === props.content.length - 1){
+          finalContent += props.content[i].name;
+        } else {
+          finalContent += props.content[i].name + ', ';
+        }
+      }
+    } else if (props.id === 'categories'){
+      for (let i = 0; i < props.content.length; i++){
+        if (i === props.content.length - 1){
+          finalContent += props.content[i].categories.name;
+        } else {
+          finalContent += props.content[i].categories.name + ', ';
+        }
+      }
+    }
+  } else {
+    finalContent = props.content;
+  }
+
   return (
     <Form.Group as={Col} controlId={props.id}>
       <Form.Label><b>{props.name}</b></Form.Label>
       {
-        props.viewType === 'View' ? (
-          <Form.Control defaultValue={props.content} type={props.type} placeholder="" />
-          ) : props.viewType === 'Edit' (
-            <Form.Control defaultValue={props.content} type={props.type} placeholder="" required/>
-            )
+        isView ? (
+          <Form.Control readOnly as='textarea' defaultValue={finalContent} type={props.type} />
+          ) : (
+            <Form.Control as='textarea' {...register(`${props.id}`)} defaultValue={finalContent} type={props.type} placeholder={props.id} required/>
+            ) 
       }
     </Form.Group>
   )
 }
 
+
+
+
 function AddEditBike() {
   const params = useParams();
-  const bikeID = params.id;
+  const bikeID = Number(params.id);
   const viewType = params.mode;
 
-  //if ()
+  const [show, setShow] = useState(false);
+  const [cat, setCat] = useState([]);
+  const [error, setError] = useState(<></>);
+  const [showError, setShowError] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const methods = useForm();
+  const {handleSubmit, register, errors} = methods;
+
+  let history = useNavigate();
+
+  //Checks checkbox change
+  function checkChange(value, isChecked){
+        if (isChecked){
+            setCat([...cat, value])
+        } else {
+            setCat(cat.filter((category) => category !== value))
+        }
+    }
+
+  const onSubmit = (data) => {
+    // String to array
+    let oldColors = data['colors'];
+    let newColors = oldColors.split(", ")
+    data.colors = newColors;
+
+    //Fixing Color array
+    const newArray2 = data['colors'].filter((n) => n !== '');
+    data.colors = newArray2;
+
+    //Categories Array
+    data.category = cat;
+
+    //bikeID
+    data.id = bikeID;
+
+    //Decimal validation
+    if (data.stock.toString().includes('.')){
+      let errors = <></>;
+      errors = 
+      <>
+        <Alert varient='error'> Stock cannot be a decimal </Alert>
+      </>
+      setError(errors);
+      setShowError(true);
+      return;
+    }
+    axios.put('http://localhost:8000/api/editBike', data)
+    .then(res => {
+      console.log(res.data);
+      if (res.data.result instanceof Array === false){
+          history('/bikes');
+      } else {
+        let errors = <></>;
+        errors = 
+        <>
+          {
+            res.data.result.map((error) => {
+              return <Alert varient='error'> {error} </Alert>
+            })
+          }
+        </>
+        setError(errors);
+        setShowError(true);
+      }
+    })
+  }
+  
+  //Queries
+  const bikeQuery = useQuery({
+    queryKey: ['bikeData'],
+    queryFn: async () => {
+      return axios.get(`http://localhost:8000/api/getBike?bikeID=${bikeID}`)
+      .then(
+        res => {
+            for (let i of res.data.bikeCategories){
+              setCat(cat => [...cat, i.categories.name])
+            }
+          
+          return res.data}
+      )
+    }
+  })
+
+ 
+  const categoryQuery = useQuery({
+  queryKey: ['categoryData'],
+  enabled: viewType === 'Edit',
+  queryFn: async () => {
+    return axios.get(`http://localhost:8000/api/getCategories`)
+    .then(
+      res => {
+        return res.data}
+    )
+  }
+})
+  
+
+  //Query Frontend
+  if (((bikeQuery.isFetching || bikeQuery.isRefetching) || (categoryQuery.isFetching || categoryQuery.isRefetching))){
+    return (
+      <Container className='open-sans'>
+        <div className='form-style'>
+          <h1 className='page-title my-5'> Loading Bike and Category Data </h1>
+        </div>
+      </Container>
+    )
+  } else if (bikeQuery.isError || categoryQuery.isError){
+    return(
+      <Container className='open-sans'>
+        <div className='form-style'>
+          <h1 className='page-title my-5'> Error Fetching Bike and Category Data </h1>
+        </div>
+      </Container>
+    )
+  }
 
   return (
     <>  
@@ -36,20 +186,21 @@ function AddEditBike() {
         <h1 className='page-title my-5'>{params.mode} bike</h1>
 
         <div className='form-style'>
-          <Form>
+          <FormProvider {...methods}>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <Row className='mb-4 gx-5'>
               <FormGroup 
                 name = "Name"
                 id = "name"
                 type = "text"
-                content = ''
+                content = {bikeQuery?.data?.name}
                 viewType = {viewType}
               />
               <FormGroup 
                 name = "Stock"
                 id = "stock"
                 type = "number"
-                content = ''
+                content = {bikeQuery?.data?.stock}
                 viewType = {viewType}
               />
             </Row>
@@ -58,14 +209,14 @@ function AddEditBike() {
                 name = "Description"
                 id = "description"
                 type = "text"
-                content = ''
+                content = {bikeQuery?.data?.description}
                 viewType = {viewType}
               />
               <FormGroup 
                 name = "Colors"
                 id = "colors"
                 type = "text"
-                content = ''
+                content = {bikeQuery?.data?.bikeColors}
                 viewType = {viewType}
               />
           
@@ -75,36 +226,102 @@ function AddEditBike() {
                 name = "Price"
                 id = "price"
                 type = "number"
-                content = ''
+                content = {bikeQuery?.data?.price}
                 viewType = {viewType}
               />
               <FormGroup 
                 name = "Wheel Size"
                 id = "wheelSize"
                 type = "text"
-                content = ''
-                viewType = {viewType}
-              />
-              <FormGroup 
-                name = "Categories"
-                id = "categories"
-                type = "text"
-                content = ''
+                content = {bikeQuery?.data?.wheelSize}
                 viewType = {viewType}
               />
             </Row>
+            {
+              viewType === 'View' ? (
+                <FormGroup 
+                name = "Categories"
+                id = "categories"
+                type = "text"
+                content = {bikeQuery?.data?.bikeCategories}
+                viewType = {viewType}
+              />
+              ) : (<></>)
+            }
+
+      {
+      viewType === 'Edit' || viewType === 'Add' ? (
+      <Button variant="primary" onClick={handleShow}>
+        Select Categories
+      </Button>) : (<></>)
+      }
+      
+
+      {/* Modals */}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Select Categories</Modal.Title>
+        </Modal.Header>
+          <Modal.Body>
+
+          {/* Checkboxes */}
+          {
+            categoryQuery?.data?.map((category) => {
+              return (
+              <>
+                <div key={category.id} className='mb-3'> 
+                  {
+                    cat.includes(category.name) ? (
+                      <Form.Check
+                      checked
+                      type={'checkbox'}
+                      onChange={(event) => {checkChange(category.name, event.target.checked)}}
+                      label={category.name}
+                      />
+                    ) : (
+                      <Form.Check
+                      type={'checkbox'}
+                      onChange={(event) => {checkChange(category.name, event.target.checked)}}
+                      label={category.name}
+                      />
+                    )
+                  }
+                </div>
+              </>
+              )
+            })
+          }      
+          </Modal.Body>
+      </Modal>
+
+      {/* For the Error results */}
+      <Modal show={showError} onHide={() => setShowError(false)}>
+        <Modal.Header closeButton onClick={() => setShowError(false)}>
+          <Modal.Title>Errors</Modal.Title>
+        </Modal.Header>
+          <Modal.Body>
+            {error}
+          </Modal.Body>
+      </Modal>
+
             <div className='d-flex justify-content-end'>
               <Link to='/bikes' className='btn btn-secondary m-1 px-3 rounded-4'>
                 <i className='bi-arrow-left me-1'></i>
                 Back
                 </Link>
-              <Button type='submit' className='btn-view m-1 px-3 rounded-4'>
-                Submit
-                </Button>
+                {
+                  params.mode === 'Edit' ? (
+                    <Button type='submit' className='btn-view m-1 px-3 rounded-4'>
+                      Submit
+                    </Button>
+                  ) : (<></>)
+                }
+              
               
             </div>
             
           </Form>
+          </FormProvider>
         </div>
         
         </Container>

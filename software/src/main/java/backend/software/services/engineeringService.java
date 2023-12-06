@@ -23,6 +23,7 @@ import backend.software.dto.makeColor;
 import backend.software.dto.makeCustomer;
 import backend.software.dto.makeOrder;
 import backend.software.dto.rentBike;
+import backend.software.dto.editBike;
 import backend.software.dto.makeBike;
 import backend.software.models.Appointment;
 import backend.software.models.Bike;
@@ -159,15 +160,16 @@ public class engineeringService {
         return result;
     }
 
-    public HashMap<Object, Object> editBike(makeBike dto){
+    public HashMap<Object, Object> editBike(editBike dto){
         HashMap<Object, Object> result = new HashMap<>();
-        Bike newBike = bikeRepository.queryName(dto.getName()).get(0);
-
+        Bike newBike = bikeRepository.findById(dto.getId()).get();
+  
         newBike.setName(dto.getName());
         newBike.setDescription(dto.getDescription());
         newBike.setPrice(dto.getPrice());
         newBike.setStock(dto.getStock());
         newBike.setWheelSize(dto.getWheelSize());
+
 
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -180,10 +182,10 @@ public class engineeringService {
             }
             result.put("result", errors);
             return result;
-        } else if (!bikePresent.isEmpty()){
+        } else if (!dto.getName().equals(newBike.getName()) && !bikePresent.isEmpty()){
             result.put("result", "Bike " + dto.getName() + " is already present.");
             return result;
-        }
+        } 
         bikeRepository.save(newBike);
         
         //Colors and Categories
