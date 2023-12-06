@@ -86,3 +86,14 @@ textarea {
   padding: 0.5rem;
 }
 
+/* Breadcrumb */
+.breadcrumb > a {
+  font-family: 'Inter', sans-serif;
+  text-decoration: none !important;
+  color: var(--accent-blue) !important;
+}
+
+.breadcrumb-item.active {
+  font-weight: 700;
+  color: var(--main-blue) !important;
+}

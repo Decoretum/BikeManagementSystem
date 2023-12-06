@@ -4,8 +4,16 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import PageTitle from '../PageTitle';
 
+function BreadcrumbBar() {
+  return (
+    <Breadcrumb className='mt-4'>
+        <Link to="/appointments" className="breadcrumb-item active">Appointments</Link>
+    </Breadcrumb>
+  );
+}
 
 function Appointments() {
     const appQuery = useQuery({
@@ -26,6 +34,7 @@ function Appointments() {
     return (
       <>
           <Container>
+          <BreadcrumbBar />
           <PageTitle
               page = "Manage appointments"
               link = "/appointments/Add"

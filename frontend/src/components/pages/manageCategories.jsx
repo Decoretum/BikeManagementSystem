@@ -8,9 +8,17 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import EditCategory from './editCategory';
 
 
+function BreadcrumbBar() {
+  return (
+    <Breadcrumb className='mt-4'>
+        <Link to="/categories" className="breadcrumb-item active">Categories</Link>
+    </Breadcrumb>
+  );
+}
 
 function Categories() {
     const params = useParams();
@@ -43,8 +51,9 @@ function Categories() {
     return (
       <>
           <Container>
+          <BreadcrumbBar />
           <div className='d-flex justify-content-between'>
-            <h1 className='page-title my-5'>Manage categories</h1>
+            <h1 className='page-title mt-1 mb-5'>Manage categories</h1>
             <div className='d-flex align-items-center'>
                 <Button className='btn-lg btn-main' onClick={handleShow}>
                   <i className='me-1 bi-plus-lg'></i>

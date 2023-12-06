@@ -4,8 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import PageTitle from '../PageTitle';
 
+
+function BreadcrumbBar() {
+  return (
+    <Breadcrumb className='mt-4'>
+        <Link to="/rentals" className="breadcrumb-item active">Rentals</Link>
+    </Breadcrumb>
+  );
+}
 
 function Rentals() {
     const rentQuery = useQuery({
@@ -27,6 +36,7 @@ function Rentals() {
     return (
       <>
           <Container>
+              <BreadcrumbBar />
               <PageTitle
                 page = "Manage rentals"
                 link = "/rentals/Add"

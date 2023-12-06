@@ -4,9 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import PageTitle from '../PageTitle';
 
 
+function BreadcrumbBar() {
+  return (
+    <Breadcrumb className='mt-4'>
+        <Link to="/orders" className="breadcrumb-item active">Orders</Link>
+    </Breadcrumb>
+  );
+}
 
 function Orders() {
     const orderQuery = useQuery({
@@ -27,6 +35,7 @@ function Orders() {
     return (
       <>
           <Container>
+          <BreadcrumbBar />
           <PageTitle
                 page = "Manage orders"
                 link = "/orders/Add"
@@ -75,6 +84,7 @@ function Orders() {
       return (
           <>
               <Container>
+              
               <PageTitle
                 page = "Manage orders"
                 link = "/orders/Add"

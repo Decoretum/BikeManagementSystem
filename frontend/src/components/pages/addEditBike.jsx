@@ -5,8 +5,19 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { useParams } from 'react-router-dom';
 
+
+function BreadcrumbBar() {
+  const params = useParams();
+  return (
+    <Breadcrumb className='mt-4'>
+        <Link to="/bikes" className="breadcrumb-item">Bikes</Link>
+        <Link to="#" className="breadcrumb-item active">{params.mode} bike</Link>
+    </Breadcrumb>
+  );
+}
 
 function FormGroup(props) {
   return (
@@ -22,8 +33,10 @@ function AddEditBike() {
   
   return (
     <>  
+
         <Container className='open-sans'>
-        <h1 className='page-title my-5'>{params.mode} bike</h1>
+          <BreadcrumbBar />
+        <h1 className='page-title mt-1 mb-5'>{params.mode} bike</h1>
 
         <div className='form-style'>
           <Form>
