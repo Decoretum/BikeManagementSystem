@@ -35,7 +35,7 @@ function Orders() {
 
           <Table className='open-sans' striped hover>
           <thead>
-            <tr>
+            <tr className='inter'>
               <th></th>
               <th>Purchase Date</th>
               <th>Customer</th>

@@ -36,7 +36,7 @@ function Appointments() {
 
           <Table className='open-sans' striped hover>
           <thead>
-            <tr>
+            <tr className='inter'>
               <th></th>
               <th>Date Created</th>
               <th>Category</th>

@@ -55,7 +55,7 @@ function Categories() {
 
             <Table className='open-sans w-50 mx-auto' hover>
             <thead>
-              <tr>
+              <tr className='inter'>
                 <th></th>
                 <th>Name</th>
                 <th></th>
