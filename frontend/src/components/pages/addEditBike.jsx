@@ -12,14 +12,24 @@ function FormGroup(props) {
   return (
     <Form.Group as={Col} controlId={props.id}>
       <Form.Label><b>{props.name}</b></Form.Label>
-      <Form.Control type={props.type} placeholder="" required/>
+      {
+        props.viewType === 'View' ? (
+          <Form.Control defaultValue={props.content} type={props.type} placeholder="" />
+          ) : props.viewType === 'Edit' (
+            <Form.Control defaultValue={props.content} type={props.type} placeholder="" required/>
+            )
+      }
     </Form.Group>
   )
 }
 
 function AddEditBike() {
   const params = useParams();
-  
+  const bikeID = params.id;
+  const viewType = params.mode;
+
+  //if ()
+
   return (
     <>  
         <Container className='open-sans'>
@@ -32,11 +42,15 @@ function AddEditBike() {
                 name = "Name"
                 id = "name"
                 type = "text"
+                content = ''
+                viewType = {viewType}
               />
               <FormGroup 
                 name = "Stock"
                 id = "stock"
                 type = "number"
+                content = ''
+                viewType = {viewType}
               />
             </Row>
             <Row className='mb-4 gx-5'>
@@ -44,11 +58,15 @@ function AddEditBike() {
                 name = "Description"
                 id = "description"
                 type = "text"
+                content = ''
+                viewType = {viewType}
               />
               <FormGroup 
                 name = "Colors"
                 id = "colors"
                 type = "text"
+                content = ''
+                viewType = {viewType}
               />
           
             </Row>
@@ -57,16 +75,22 @@ function AddEditBike() {
                 name = "Price"
                 id = "price"
                 type = "number"
+                content = ''
+                viewType = {viewType}
               />
               <FormGroup 
                 name = "Wheel Size"
                 id = "wheelSize"
                 type = "text"
+                content = ''
+                viewType = {viewType}
               />
               <FormGroup 
                 name = "Categories"
                 id = "categories"
                 type = "text"
+                content = ''
+                viewType = {viewType}
               />
             </Row>
             <div className='d-flex justify-content-end'>
