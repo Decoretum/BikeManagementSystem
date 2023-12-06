@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -7,15 +7,37 @@ import Card from 'react-bootstrap/Card';
 import PageTitle from '../PageTitle';
 
 
-
 function Bikes() {
+    const [bikes, setBikes] = useState([]);
+
     const bikeQuery = useQuery({
         queryKey: ['bike'],
         queryFn: async () => {
             return axios.get('http://localhost:8000/api/getBikes')
-            .then(res => {return res.data})
+            .then(res => {
+                console.log(res.data)
+                let bikeArray = res.data.filter(filterFunc);
+                setBikes(bikeArray);
+                return res.data
+            })
         }
     })
+
+    const filterFunc = (bike) => {
+        return bike.removed === false;
+    }
+
+    const deleteBike = (bikeID) => {
+        let newArray = [];
+        for (let bike of bikes){
+            if (bike.id !== bikeID){
+                newArray.push(bike);
+            }
+        }
+        setBikes(newArray);
+        return axios.delete(`http://localhost:8000/api/deleteBike?bikeID=${Number(bikeID)}`)
+    }
+
 
     if (bikeQuery.isFetching && bikeQuery.isRefetching && !bikeQuery.isError){
         return (
@@ -23,7 +45,7 @@ function Bikes() {
         )
     }
 
-    if (bikeQuery.data?.length >= 1)
+    if (bikes.length >= 1)
     return (
         <>  
 
@@ -36,7 +58,7 @@ function Bikes() {
                 
                 <div className='d-flex'>
                 {
-                    bikeQuery.data?.map((bike) => 
+                    bikes.map((bike) => 
                         <Card className='card-style mx-2 open-sans'>
                             <Card.Body>
                                 <Card.Title className='inter'><b>{bike.name}</b></Card.Title>
@@ -49,7 +71,7 @@ function Bikes() {
                             <div className='d-flex justify-content-center'>
                                 <Link to={`/bikes/${bike.id}/View`} className='d-flex btn btn-view m-1 rounded-4'>View</Link>
                                 <Link to={`/bikes/${bike.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                                <Link to={`/bikes/bike/delete/${bike.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                                <Link onClick={() => {deleteBike(bike.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                             </div>
                             
                         </Card>
