@@ -19,7 +19,7 @@ function EditCategory(props) {
     return (
     
         <>
-        <Modal show={edit} onHide={handleEditClose}>
+        <Modal show={edit} onHide={handleEditClose} centered>
             <Modal.Header closeButton>
               <Modal.Title>{params.mode} Category {params.id}</Modal.Title>
             </Modal.Header>
