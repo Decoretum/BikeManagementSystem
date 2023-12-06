@@ -44,8 +44,8 @@ public class Bike {
     @NotNull(message = "cannot be null!")
     private String name;
 
-    @Column(name = "description")
-    @Length(min = 1, message = "Description cannot be empty!")
+    @Column(columnDefinition =  "MEDIUMTEXT", name = "description")
+    @Length(min = 1, max = 1000, message = "Description cannot be empty!")
     @NotNull(message = "cannot be null!")
     private String description;
 

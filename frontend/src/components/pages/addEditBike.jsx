@@ -12,7 +12,6 @@ import axios from 'axios';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { Alert } from 'react-bootstrap';
 
-
 function FormGroup(props) {
   const {register} = useFormContext();
   const isView = props.viewType === 'View';
@@ -44,10 +43,14 @@ function FormGroup(props) {
     <Form.Group as={Col} controlId={props.id}>
       <Form.Label><b>{props.name}</b></Form.Label>
       {
-        isView ? (
-          <Form.Control readOnly as='textarea' defaultValue={finalContent} type={props.type} />
-          ) : (
-            <Form.Control as='textarea' {...register(`${props.id}`)} defaultValue={finalContent} type={props.type} placeholder={props.id} required/>
+        isView && props.id !== 'description' ? (
+          <Form.Control readOnly defaultValue={finalContent} type={props.type} />
+          ) : (isView && props.id === 'description') ? (
+            <Form.Control readOnly style={{minHeight: '50vh'}} as='textarea' defaultValue={finalContent} type={props.type} />
+            ) : (!isView && props.id === 'description') ? (
+              <Form.Control style={{minHeight: '50vh'}} {...register(`${props.id}`)} as='textarea' defaultValue={finalContent} type={props.type} placeholder={props.name} />
+              ) : (
+            <Form.Control as='textarea' {...register(`${props.id}`)} defaultValue={finalContent} type={props.type} placeholder={props.name} required/>
             ) 
       }
     </Form.Group>
@@ -83,6 +86,7 @@ function AddEditBike() {
         }
     }
 
+  //Submitting an Add or Edit Bike Request
   const onSubmit = (data) => {
     // String to array
     let oldColors = data['colors'];
@@ -99,6 +103,8 @@ function AddEditBike() {
     //bikeID
     data.id = bikeID;
 
+    console.log(data);
+
     //Decimal validation
     if (data.stock.toString().includes('.')){
       let errors = <></>;
@@ -110,7 +116,23 @@ function AddEditBike() {
       setShowError(true);
       return;
     }
-    axios.put('http://localhost:8000/api/editBike', data)
+
+    let operation = '';
+    let request = '';
+    
+    if (viewType === 'Edit'){
+      operation = 'edit';
+      request = 'put'
+    } else if (viewType === 'Add'){
+      operation = 'make';
+      request = 'post';
+    }
+
+    axios({
+      method: request,
+      url: `http://localhost:8000/api/${operation}Bike`,
+      data: data
+    })
     .then(res => {
       console.log(res.data);
       if (res.data.result instanceof Array === false){
@@ -132,8 +154,11 @@ function AddEditBike() {
   }
   
   //Queries
+  
+  //For Editing or Viewing 
   const bikeQuery = useQuery({
     queryKey: ['bikeData'],
+    enabled: viewType !== 'Add',
     queryFn: async () => {
       return axios.get(`http://localhost:8000/api/getBike?bikeID=${bikeID}`)
       .then(
@@ -147,10 +172,10 @@ function AddEditBike() {
     }
   })
 
- 
+ //For View/Edit/Add
   const categoryQuery = useQuery({
   queryKey: ['categoryData'],
-  enabled: viewType === 'Edit',
+  enabled: viewType === 'Edit' || viewType === 'Add',
   queryFn: async () => {
     return axios.get(`http://localhost:8000/api/getCategories`)
     .then(
@@ -193,14 +218,14 @@ function AddEditBike() {
                 name = "Name"
                 id = "name"
                 type = "text"
-                content = {bikeQuery?.data?.name}
+                content = {viewType === 'Add' ? '' : bikeQuery?.data?.name}
                 viewType = {viewType}
               />
               <FormGroup 
                 name = "Stock"
                 id = "stock"
                 type = "number"
-                content = {bikeQuery?.data?.stock}
+                content = {viewType === 'Add' ? '' : bikeQuery?.data?.stock}
                 viewType = {viewType}
               />
             </Row>
@@ -209,14 +234,14 @@ function AddEditBike() {
                 name = "Description"
                 id = "description"
                 type = "text"
-                content = {bikeQuery?.data?.description}
+                content = {viewType === 'Add' ? '' : bikeQuery?.data?.description}
                 viewType = {viewType}
               />
               <FormGroup 
                 name = "Colors"
                 id = "colors"
                 type = "text"
-                content = {bikeQuery?.data?.bikeColors}
+                content = {viewType === 'Add' ? '' : bikeQuery?.data?.bikeColors}
                 viewType = {viewType}
               />
           
@@ -226,14 +251,14 @@ function AddEditBike() {
                 name = "Price"
                 id = "price"
                 type = "number"
-                content = {bikeQuery?.data?.price}
+                content = {viewType === 'Add' ? '' : bikeQuery?.data?.price}
                 viewType = {viewType}
               />
               <FormGroup 
                 name = "Wheel Size"
                 id = "wheelSize"
                 type = "text"
-                content = {bikeQuery?.data?.wheelSize}
+                content = {viewType === 'Add' ? '' : bikeQuery?.data?.wheelSize}
                 viewType = {viewType}
               />
             </Row>
@@ -243,7 +268,7 @@ function AddEditBike() {
                 name = "Categories"
                 id = "categories"
                 type = "text"
-                content = {bikeQuery?.data?.bikeCategories}
+                content = {viewType === 'Add' ? '' : bikeQuery?.data?.bikeCategories}
                 viewType = {viewType}
               />
               ) : (<></>)
@@ -305,13 +330,13 @@ function AddEditBike() {
       </Modal>
 
             <div className='d-flex justify-content-end'>
-              <Link to='/bikes' className='btn btn-secondary m-1 px-3 rounded-4'>
+              <Link to='/bikes' className='btn btn-secondary m-1 px-3 rounded-4 mt-4 me-3'>
                 <i className='bi-arrow-left me-1'></i>
                 Back
                 </Link>
                 {
-                  params.mode === 'Edit' ? (
-                    <Button type='submit' className='btn-view m-1 px-3 rounded-4'>
+                  params.mode === 'Edit' || params.mode === 'Add' ? (
+                    <Button type='submit' className='btn-view m-1 px-3 rounded-4 mt-4'>
                       Submit
                     </Button>
                   ) : (<></>)

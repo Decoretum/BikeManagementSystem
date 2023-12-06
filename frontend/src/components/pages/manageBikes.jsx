@@ -63,7 +63,6 @@ function Bikes() {
                             <Card.Body>
                                 <Card.Title className='inter'><b>{bike.name}</b></Card.Title>
                                 <Card.Text>
-                                <p className='text-muted'>{bike.description}</p>
                                 {bike.bikeCategories.length} categories <br />
                                 {bike.bikeColors.length} colors
                                 </Card.Text>
