@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 function Header() {
   return (
-    <Navbar expand="lg" className="header navbar-dark">
+    <Navbar expand="lg" sticky='top' className="header navbar-dark">
       <Container>
 
         <Navbar.Brand href="/" className="header-logo">

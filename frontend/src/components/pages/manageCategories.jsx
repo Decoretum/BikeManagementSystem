@@ -15,20 +15,10 @@ import EditCategory from './editCategory';
 function Categories() {
     const params = useParams();
     const [show, setShow] = useState(false);
-    const [edit, setEdit] = useState(false);
-    const [catId, setCatId] = useState(null);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const handleEditClose = () => setEdit(false);
-    const handleEditShow = () => setEdit(true);
     
-
-    const getDetail = (catId) =>{
-      setEdit(true);
-      setCatId(catId);
-    };
-
 
     const {register, handleSubmit} = useForm();
     const onSubmit = (data) => { 
@@ -81,7 +71,8 @@ function Categories() {
                   <div className='d-flex'>
                       <Button 
                         onClick={ () => 
-                          window.location.href= `/categories/${cat.id}/Edit/true` } 
+                          window.location.href= `/categories/${cat.id}/Edit/true` 
+                        } 
                           className='d-flex btn-edit m-1 rounded-4'>Edit</Button>
                      
                       <Link to={`/categories/cat/delete/${cat.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>

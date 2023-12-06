@@ -39,9 +39,9 @@ function Bikes() {
                     bikeQuery.data?.map((bike) => 
                         <Card className='card-style mx-2 open-sans'>
                             <Card.Body>
-                                <Card.Title>{bike.name}</Card.Title>
+                                <Card.Title className='inter'>{bike.name}</Card.Title>
                                 <Card.Text>
-                                {bike.description} <br />
+                                <p className='text-muted'>{bike.description}</p>
                                 {bike.bikeCategories.length} categories <br />
                                 {bike.bikeColors.length} colors
                                 </Card.Text>
