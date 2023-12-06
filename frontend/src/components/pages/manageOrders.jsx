@@ -10,7 +10,7 @@ import PageTitle from '../PageTitle';
 
 function Orders() {
     const orderQuery = useQuery({
-    queryKey: ['orderomer'],
+    queryKey: ['order'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllOrders')
         .then(res => {return res.data})
@@ -58,7 +58,7 @@ function Orders() {
                   <td>
                     <div className='d-flex'>
                       <Link to={`/orders/${order.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                      <Link to={`/orders/${order.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                      <Link to={`/orders/order/delete/${order.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                     </div>
                   </td>
                 </tr>

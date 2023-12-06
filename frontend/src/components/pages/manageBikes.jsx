@@ -49,7 +49,7 @@ function Bikes() {
                             <div className='d-flex justify-content-center'>
                                 <Link to={`/bikes/${bike.id}/View`} className='d-flex btn btn-view m-1 rounded-4'>View</Link>
                                 <Link to={`/bikes/${bike.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                                <Link to={`/bikes/delete-bike/${bike.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                                <Link to={`/bikes/bike/delete/${bike.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                             </div>
                             
                         </Card>

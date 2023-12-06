@@ -67,7 +67,7 @@ function Categories() {
                 <td>
                   <div className='d-flex'>
                       <Link to={`/categories/${cat.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                      <Link to={`/categories/${cat.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                      <Link to={`/categories/cat/delete/${cat.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                     </div>
                 </td>
               </tr>

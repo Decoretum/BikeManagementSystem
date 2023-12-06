@@ -92,12 +92,18 @@ function AddOrder() {
 
           <tbody>
             <tr>
-              <td></td>
+              <td>0</td>
               <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
               <td>Empty</td>
-              <td></td>
+              <td>
+                <div className='d-flex'>
+                  {/* Replace 0 with ${border.id} */}
+                    <Link to={`/orders/bike-order/0/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
+                    <Link to={`/orders/bike-order/bo/delete/0`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                  </div>
+              </td>
             </tr>
           </tbody>
         </Table>

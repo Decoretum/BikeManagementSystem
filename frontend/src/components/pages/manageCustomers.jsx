@@ -60,7 +60,7 @@ function Customers() {
                       <td>
                         <div className='d-flex'>
                           <Link to={`/customers/${cust.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                          <Link to={`/customers/${cust.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                          <Link to={`/customers/cust/delete/${cust.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                         </div>
                       </td>
                     </tr>

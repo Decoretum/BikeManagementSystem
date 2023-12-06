@@ -9,7 +9,7 @@ import PageTitle from '../PageTitle';
 
 function Appointments() {
     const appQuery = useQuery({
-    queryKey: ['appomer'],
+    queryKey: ['appointment'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllAppointments')
         .then(res => {return res.data})
@@ -60,7 +60,7 @@ function Appointments() {
                   <div className='d-flex'>
                     <Link to={`/appointments/${app.id}/View`} className='d-flex btn btn-main m-1 rounded-4'>View</Link>
                     <Link to={`/appointments/${app.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                    <Link to={`/appointments/${app.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                    <Link to={`/appointments/app/delete/${app.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                   </div>
                 </td>
               </tr>
