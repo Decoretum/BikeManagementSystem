@@ -1,5 +1,5 @@
 import { React, useState }  from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form'
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -8,14 +8,27 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import EditCategory from './editCategory';
 
 
 
 function Categories() {
+    const params = useParams();
     const [show, setShow] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [catId, setCatId] = useState(null);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const handleEditClose = () => setEdit(false);
+    const handleEditShow = () => setEdit(true);
+    
+
+    const getDetail = (catId) =>{
+      setEdit(true);
+      setCatId(catId);
+    };
+
 
     const {register, handleSubmit} = useForm();
     const onSubmit = (data) => { 
@@ -66,7 +79,11 @@ function Categories() {
                 <td>{cat.name}</td>
                 <td>
                   <div className='d-flex'>
-                      <Link to={`/categories/${cat.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
+                      <Button 
+                        onClick={ () => 
+                          window.location.href= `/categories/${cat.id}/Edit/true` } 
+                          className='d-flex btn-edit m-1 rounded-4'>Edit</Button>
+                     
                       <Link to={`/categories/cat/delete/${cat.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                     </div>
                 </td>
@@ -79,12 +96,13 @@ function Categories() {
   
           </Container>
 
+            {/* Add category */}
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
               <Modal.Title>Add Category</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form onSubmit={handleSubmit(onSubmit)}>
+              <Form>
                 <Form.Group className="mb-3" controlId="name">
                   <Form.Label><b>Category</b></Form.Label>
                   <Form.Control
@@ -105,6 +123,13 @@ function Categories() {
               </Button>
             </Modal.Footer>
           </Modal>
+
+
+          {/* Edit category */}
+            <EditCategory 
+              bool = {params.bool}
+            />
+
   
       </>
     )

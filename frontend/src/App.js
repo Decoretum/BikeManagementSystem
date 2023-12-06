@@ -16,6 +16,7 @@ import AddEditAppointment from './components/pages/addEditAppointment';
 import AddOrder from './components/pages/addOrder';
 import AddEditBikeOrder from './components/pages/addEditBikeOrder';
 import AddEditRental from './components/pages/addEditRental';
+import EditCategory from './components/pages/editCategory';
 
 
 
@@ -54,6 +55,7 @@ function App() {
           <Route path='/appointments/:id/:mode' Component={AddEditAppointment} />
 
           <Route path='/categories' Component={Categories} />
+          <Route path='/categories/:id/:mode/:bool' Component={Categories}/>
         </Routes>
 
       </Router>
