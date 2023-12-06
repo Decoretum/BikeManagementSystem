@@ -35,12 +35,15 @@ function Rentals() {
 
               <Table className='open-sans' striped hover>
                 <thead>
-                  <th></th>
-                  <th>Date Rented</th>
-                  <th>Bike Name</th>
-                  <th>Customer Name</th>
-                  <th>Rental Duration</th>
-                  <th></th>
+                  <tr className='inter'>
+                    <th></th>
+                    <th>Date Rented</th>
+                    <th>Bike Name</th>
+                    <th>Customer Name</th>
+                    <th>Rental Duration</th>
+                    <th></th>
+                  </tr>
+                  
                 </thead>
                
                 <tbody>

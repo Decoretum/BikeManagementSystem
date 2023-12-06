@@ -82,12 +82,15 @@ function AddOrder() {
 
         <Table className='open-sans' hover>
           <thead>
-            <th></th>
-            <th>Bike Name</th>
-            <th>Quantity</th>
-            <th>Cost</th>
-            <th>Bike Color</th>
-            <th></th>
+            <tr className='inter'>
+              <th></th>
+              <th>Bike Name</th>
+              <th>Quantity</th>
+              <th>Cost</th>
+              <th>Bike Color</th>
+              <th></th>
+            </tr>
+            
           </thead>
 
           <tbody>

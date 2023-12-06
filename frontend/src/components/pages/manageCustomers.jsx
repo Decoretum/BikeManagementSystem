@@ -36,7 +36,7 @@ function Customers() {
 
               <Table className='open-sans' striped hover>
               <thead>
-                <tr>
+                <tr className='inter'>
                   <th></th>
                   <th>ID Number</th>
                   <th>Name</th>
