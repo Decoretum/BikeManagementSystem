@@ -88,6 +88,7 @@ function Rentals() {
       return (
           <>
               <Container>
+              <BreadcrumbBar />
               <PageTitle
                 page = "Manage rentals"
                 link = "/rentals/Add"

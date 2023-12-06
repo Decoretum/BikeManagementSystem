@@ -87,6 +87,7 @@ function Customers() {
       return (
           <>
               <Container>
+              <BreadcrumbBar />
               <PageTitle 
                   page = "Manage customers"
                   link = "/customers/Add"

@@ -85,6 +85,7 @@ function Appointments() {
       return (
           <>
               <Container>
+              <BreadcrumbBar />
               <PageTitle
                 page = "Manage appointments"
                 link = "/appointments/Add"

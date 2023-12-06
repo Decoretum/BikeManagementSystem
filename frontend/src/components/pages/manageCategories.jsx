@@ -99,12 +99,12 @@ function Categories() {
             {/* Add category */}
           <Modal show={show} onHide={handleClose} centered>
             <Modal.Header closeButton>
-              <Modal.Title>Add Category</Modal.Title>
+              <Modal.Title className="inter">Add Category</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form>
                 <Form.Group className="mb-3" controlId="name">
-                  <Form.Label><b>Category</b></Form.Label>
+                  <Form.Label className="inter"><b>Category</b></Form.Label>
                   <Form.Control
                     type="text"
                     placeholder=""
@@ -137,8 +137,9 @@ function Categories() {
       return (
           <>
               <Container>
+              <BreadcrumbBar />
               <div className='d-flex justify-content-between'>
-                <h1 className='page-title my-5'>Manage categories</h1>
+                <h1 className='page-title mt-1 mb-5'>Manage categories</h1>
               <div className='d-flex align-items-center'>
                   <Button className='btn-lg btn-main' onClick={handleShow}>
                     <i className='me-1 bi-plus-lg'></i>
@@ -153,12 +154,12 @@ function Categories() {
                {/* Add category */}
               <Modal show={show} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                  <Modal.Title>Add Category</Modal.Title>
+                  <Modal.Title className="inter">Add Category</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   <Form>
                     <Form.Group className="mb-3" controlId="name">
-                      <Form.Label><b>Category</b></Form.Label>
+                      <Form.Label className="inter"><b>Category</b></Form.Label>
                       <Form.Control
                         type="text"
                         placeholder=""

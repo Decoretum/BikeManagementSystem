@@ -24,7 +24,7 @@ function BreadcrumbBar() {
 function FormGroup(props) {
   return (
     <Form.Group as={Col} controlId={props.id}>
-      <Form.Label><b>{props.name}</b></Form.Label>
+      <Form.Label className="inter"><b>{props.name}</b></Form.Label>
       <Form.Control type={props.type} placeholder={props.ph} value={props.value} required/>
     </Form.Group>
   )

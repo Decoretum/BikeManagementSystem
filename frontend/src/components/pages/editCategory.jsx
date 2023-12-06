@@ -21,12 +21,12 @@ function EditCategory(props) {
         <>
         <Modal show={edit} onHide={handleEditClose} centered>
             <Modal.Header closeButton>
-              <Modal.Title>{params.mode} Category {params.id}</Modal.Title>
+              <Modal.Title className="inter">{params.mode} Category {params.id}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form>
                 <Form.Group className="mb-3" controlId="name">
-                  <Form.Label><b>Category</b></Form.Label>
+                  <Form.Label className="inter"><b>Category</b></Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="props.id.name"

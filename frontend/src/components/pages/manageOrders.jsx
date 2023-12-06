@@ -84,7 +84,7 @@ function Orders() {
       return (
           <>
               <Container>
-              
+              <BreadcrumbBar />
               <PageTitle
                 page = "Manage orders"
                 link = "/orders/Add"

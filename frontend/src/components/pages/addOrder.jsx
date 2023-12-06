@@ -16,7 +16,7 @@ const currentDate = moment().utcOffset('+08:00').format('MM/DD/YYYY hh:mm:ss a')
 function FormGroup(props) {
   return (
     <Form.Group as={Col} controlId={props.id}>
-      <Form.Label><b>{props.name}</b></Form.Label>
+      <Form.Label className="inter"><b>{props.name}</b></Form.Label>
       <Form.Control type={props.type} placeholder="" value={props.value} required/>
     </Form.Group>
   )

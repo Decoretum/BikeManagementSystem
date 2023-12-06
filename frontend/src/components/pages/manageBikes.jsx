@@ -74,6 +74,7 @@ function Bikes() {
         return (
             <>
                 <Container>
+                <BreadcrumbBar />
                 <PageTitle 
                     page = "Manage bikes"
                     link = "/bikes/bike/Add"
