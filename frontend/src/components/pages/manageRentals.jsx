@@ -74,6 +74,20 @@ function Rentals() {
   
       </>
     )
+    else {
+      return (
+          <>
+              <Container>
+              <PageTitle
+                page = "Manage rentals"
+                link = "/rentals/Add"
+                button = "Add rental" 
+              />
+              <h3 className='inter'>No rented bikes in the application.</h3>
+              </Container>
+          </>
+      )
+    }
   }
   
   export default Rentals;

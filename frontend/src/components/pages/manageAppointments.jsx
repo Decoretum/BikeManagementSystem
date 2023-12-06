@@ -27,10 +27,10 @@ function Appointments() {
       <>
           <Container>
           <PageTitle
-                page = "Manage appointments"
-                link = "/appointments/Add"
-                button = "Add appointment" 
-              />
+              page = "Manage appointments"
+              link = "/appointments/Add"
+              button = "Add appointment" 
+            />
   
           
 
@@ -72,6 +72,20 @@ function Appointments() {
           </Container>
       </>
     )
+    else {
+      return (
+          <>
+              <Container>
+              <PageTitle
+                page = "Manage appointments"
+                link = "/appointments/Add"
+                button = "Add appointment" 
+              />
+              <h3 className='inter'>No appointments added in the application.</h3>
+              </Container>
+          </>
+      )
+    }
   }
   
   export default Appointments;

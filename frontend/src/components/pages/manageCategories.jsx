@@ -124,6 +124,54 @@ function Categories() {
   
       </>
     )
+    else {
+      return (
+          <>
+              <Container>
+              <div className='d-flex justify-content-between'>
+                <h1 className='page-title my-5'>Manage categories</h1>
+              <div className='d-flex align-items-center'>
+                  <Button className='btn-lg btn-main' onClick={handleShow}>
+                    <i className='me-1 bi-plus-lg'></i>
+                    Add category
+                  </Button>
+              </div>
+              </div>
+
+              <h3 className='inter'>No categories added in the application.</h3>
+              </Container>
+
+               {/* Add category */}
+              <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Add Category</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group className="mb-3" controlId="name">
+                      <Form.Label><b>Category</b></Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder=""
+                        autoFocus
+                      />
+                    </Form.Group>
+                    
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" className="rounded-4" onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button type="submit" className="btn-main">
+                    Save
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+
+          </>
+      )
+    }
 
   }
   

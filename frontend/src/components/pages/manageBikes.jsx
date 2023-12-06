@@ -71,7 +71,7 @@ function Bikes() {
                     link = "/bikes/bike/Add"
                     button = "Add bike"
                 />
-                <h2>No bikes stored in the application.</h2>
+                <h3 className='inter'>No bikes added in the application.</h3>
                 </Container>
             </>
         )

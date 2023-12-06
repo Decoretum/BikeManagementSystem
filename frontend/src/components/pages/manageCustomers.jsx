@@ -84,7 +84,7 @@ function Customers() {
                   link = "/customers/Add"
                   button = "Add customer" 
               />
-              <h2>No customers added in the application.</h2>
+              <h3 className='inter'>No customers added in the application.</h3>
               </Container>
           </>
       )

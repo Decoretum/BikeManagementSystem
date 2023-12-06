@@ -71,6 +71,20 @@ function Orders() {
   
       </>
     )
+    else {
+      return (
+          <>
+              <Container>
+              <PageTitle
+                page = "Manage orders"
+                link = "/orders/Add"
+                button = "Add order" 
+              />
+              <h3 className='inter'>No orders added in the application.</h3>
+              </Container>
+          </>
+      )
+    }
   }
   
   export default Orders;
