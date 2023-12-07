@@ -15,4 +15,5 @@ public interface OrderRepostitory extends JpaRepository<Orders, Long> {
 
     @Query("Select a.id FROM Orders a")
     ArrayList<String> getAllNumbers();
+
 }

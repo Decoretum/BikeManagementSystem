@@ -24,6 +24,12 @@ function Rentals() {
         )
     }
 
+    if (rentQuery.isError){
+      return(
+        <h3 className='m-4'>Error fetching bike rentals</h3>
+      )
+    }
+
     if (rentQuery.data?.length === 0){
       return(
         <Container className='open-sans'>
@@ -33,6 +39,7 @@ function Rentals() {
       </Container>
       )
     }
+
 
     return (
       <>

@@ -13,7 +13,9 @@ function Orders() {
     queryKey: ['order'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllOrders')
-        .then(res => {return res.data})
+        .then(res => {
+          console.log(res.data)
+          return res.data})
     }
     })
 
@@ -47,17 +49,17 @@ function Orders() {
           </thead>
           <tbody>
             {
-              orderQuery.data?.map((order) =>
+              orderQuery?.data?.map((order) =>
                 <tr key={order.id}>
                   <td>{order.id}</td>
                   <td>{order.dateOfPurchase}</td>
                   <td>{order.customer.name}</td>
                   <td>{order.description}</td>
                   <td>{order.totalcost}</td>
-                  <td>{order.finished}</td>
+                  <td>{order.finished === true ? 'True' : 'False'}</td>
                   <td>
                     <div className='d-flex'>
-                      <Link to={`/orders/${order.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
+                      <Link to={`/orders/${order.uuid}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
                       <Link to={`/orders/order/delete/${order.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                     </div>
                   </td>

@@ -21,5 +21,8 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
 
     @Query("SELECT a.name FROM Bike a")
     ArrayList<String> getAllName();
+
+    @Query("SELECT a.name FROM Bike a WHERE a.removed = false")
+    ArrayList<Bike> getAvailableBikes();
     
 }

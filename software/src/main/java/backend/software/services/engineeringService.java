@@ -13,6 +13,7 @@ import backend.software.dto.confirmAppointment;
 import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
+import backend.software.dto.editAnOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.editCategory;
 import backend.software.dto.editCustomer;
@@ -97,6 +98,10 @@ public class engineeringService {
     public ArrayList<Object> getBikes(){
         ArrayList<Object> bikes = bikeRepository.getBikes();
         return bikes;
+    }
+
+    public ArrayList<Bike> getBikesAvailable(){
+        return bikeRepository.getAvailableBikes();
     }
 
     public HashMap<Object, Object> makeBike(makeBike dto){
@@ -323,6 +328,34 @@ public class engineeringService {
     public Orders getOrder(String uuid){
         Orders order = orderRepostitory.uuidQuery(uuid).get(0);
         return order;
+    }
+
+    public HashMap<Object, Object> editOrder(editAnOrder dto){
+        HashMap<Object, Object> result = new HashMap<>();
+        Orders order = orderRepostitory.uuidQuery(dto.getUuid()).get(0);
+        
+        order.setDescription(dto.getDescription());
+        
+        //There is a change of customers
+        if (!dto.getCustomerName().equals(order.getCustomer().getName())){
+            ArrayList<Customer> customerList = customerRepository.queryName(dto.getCustomerName());        
+            if (customerList.isEmpty()) {
+                result.put("result", "There is no customer with the name of " + dto.getCustomerName());
+                return result;
+            }
+
+            Customer customer = customerList.get(0);
+            List<Orders> customerOrders = customer.getOrders();
+            customerOrders.remove(order);
+            order.setCustomer(customer);
+
+            customerRepository.save(customer);
+        }
+
+        orderRepostitory.save(order);
+        result.put("result", "Editing Order is a success!");
+        return result;
+
     }
 
     public void makeOrder(makeAnOrder order){

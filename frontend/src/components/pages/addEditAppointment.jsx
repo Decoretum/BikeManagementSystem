@@ -25,7 +25,6 @@ function FormGroup(props) {
   let finalContent = '';
   if (props.id === 'dateTimeAppointed'){
     finalContent = moment(props.content).format('YYYY-MM-DD').toString();
-    console.log(finalContent);
   } else {
     finalContent = props.content;
   }

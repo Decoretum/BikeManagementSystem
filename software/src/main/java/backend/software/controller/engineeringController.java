@@ -9,6 +9,7 @@ import backend.software.dto.confirmAppointment;
 import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
+import backend.software.dto.editAnOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.editCategory;
 import backend.software.dto.editCustomer;
@@ -63,6 +64,13 @@ public class engineeringController {
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public ArrayList<Object> getBikes(){
         return engineeringService.getBikes();
+    }
+
+    @GET
+    @Path("/getBikesAvailable")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ArrayList<Bike> getBikesAvailable(){
+        return engineeringService.getBikesAvailable();
     }
 
     @DELETE
@@ -151,6 +159,13 @@ public class engineeringController {
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
     public void makeOrder(makeAnOrder order){
         engineeringService.makeOrder(order);
+    }
+
+    @PUT
+    @Path("/editAnOrder")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> makeOrder(editAnOrder dto){
+        return engineeringService.editOrder(dto);
     }
 
     @POST
