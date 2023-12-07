@@ -186,7 +186,7 @@ function AddEditBike() {
 })
   
 
-  //Query Frontend
+  //Querying Display
   if (((bikeQuery.isFetching || bikeQuery.isRefetching) || (categoryQuery.isFetching || categoryQuery.isRefetching))){
     return (
       <Container className='open-sans'>

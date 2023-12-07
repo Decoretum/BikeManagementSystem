@@ -266,6 +266,12 @@ public class engineeringController {
 
     //RENTED BIKE
 
+    @GET
+    @Path("/getAllRentals")
+    public List<Object> getAllRentals(){
+        return engineeringService.getAllRentals();
+    }
+
     @POST
     @Path("/rentBike")
     public void rentBike(rentBike dto){

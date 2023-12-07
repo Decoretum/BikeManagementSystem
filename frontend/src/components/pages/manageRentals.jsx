@@ -12,7 +12,9 @@ function Rentals() {
     queryKey: ['rentedBike'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllRentals')
-        .then(res => {return res.data})
+        .then(res => {
+          console.log(res.data);
+          return res.data})
     }
     })
 
@@ -22,7 +24,15 @@ function Rentals() {
         )
     }
 
-    if (rentQuery.data?.length >= 1)
+    if (rentQuery.data?.length === 0){
+      return(
+        <Container className='open-sans'>
+        <div className='form-style'>
+          <h1 className='page-title my-5'> No Bike Rentals </h1>
+        </div>
+      </Container>
+      )
+    }
 
     return (
       <>

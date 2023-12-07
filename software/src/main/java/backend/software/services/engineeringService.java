@@ -696,6 +696,11 @@ public class engineeringService {
     }
 
     //RENTED BIKE
+    public ArrayList<Object> getAllRentals(){
+        ArrayList<Object> rentedBikes = new ArrayList<>(rentedBikeRepository.findAll());
+        return rentedBikes;
+        
+    }
 
     public void rentBike(rentBike dto){
         Bike bike = bikeRepository.queryName(dto.getBikeName()).get(0);
