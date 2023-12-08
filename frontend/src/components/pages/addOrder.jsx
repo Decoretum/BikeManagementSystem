@@ -191,20 +191,21 @@ function AddOrder() {
         
         {/* Bike order entries */}
         {
-          viewType === 'Edit' && orderQuery?.data?.orderEntries?.length >= 1 ? (
+          viewType === 'Edit' ? (
             <>
             <div className='d-flex justify-content-between'>
-              <h3 className='page-title my-4'>Bike orders</h3>
+              <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>
               <div className='d-flex align-items-center'>
-                <Link to='/orders/bike-order/Add' className='btn btn-md btn-main'>
+                <Link to={`/orders/bike-order/${orderQuery?.data?.uuid}/Add`} className='btn btn-md btn-main'>
                     <i className='me-1 bi-plus-lg'></i>
                     Add bike order
                 </Link>
             </div>
             </div>
 
-
-        <Table className='open-sans' hover>
+        
+       { orderQuery?.data?.orderEntries?.length >= 1 ? (
+       <Table className='open-sans' hover>
           <thead>
             <tr className='inter'>
               <th></th>
@@ -230,7 +231,6 @@ function AddOrder() {
                   <td>
                     <div className='d-flex'>
                       {/* Replace 0 with ${border.id} */}
-                        <Link to={`/orders/bike-order/0/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
                         <Link to={`/orders/bike-order/bo/delete/0`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                       </div>
                   </td>
@@ -241,10 +241,10 @@ function AddOrder() {
 
           </tbody>
         </Table>
+        ) : (<></>)
+        }
         </>
           ) : (<></>)
-
-
         }
         
         

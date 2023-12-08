@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
@@ -6,6 +6,9 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { Dropdown } from 'react-bootstrap';
 
 function FormGroup(props) {
   return (
@@ -19,6 +22,23 @@ function FormGroup(props) {
 
 function AddEditBikeOrder() {
   const params = useParams();
+  const orderUUID = params.uuid;
+
+  const [bikeName, setBikeName] = useState('Select Bike Name');
+
+  const operation = params.mode;
+  console.log(orderUUID);
+  console.log(params.mode);
+
+  const bikesQuery = useQuery({
+    queryKey: ['bikesQuery'],
+    queryFn: async () => {
+      return axios.get('http://localhost:8000/api/getBikes')
+      .then((res) => {
+        console.log(res.data);
+        return res.data})
+    }
+  })
 
 
   return (
@@ -29,11 +49,26 @@ function AddEditBikeOrder() {
         <div className='w-50 mx-auto'>
         <Form>
             <Row className='mb-4'>
-              <FormGroup 
-                name = "Bike Name"
-                id = "bikeName"
-                type = "text"
-              />
+            <p className='page-title' style={{marginTop: '2em'}}> Bike </p>
+              <Dropdown className='mt-1'> 
+                <Dropdown.Toggle variant='success'>
+                  {bikeName}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  {
+                    bikesQuery?.data?.map((bike) => {
+                    return <Dropdown.Item onClick={(e) => {
+                      setBikeName(e.target.innerHTML);
+                        }
+                      }
+                    > 
+                      {bike.name}
+                      </Dropdown.Item>
+                    })
+                  }
+                </Dropdown.Menu>
+              </Dropdown>
             </Row>
             <Row className='mb-4'>
               <FormGroup 
@@ -57,7 +92,7 @@ function AddEditBikeOrder() {
               />
             </Row>
             <div className='d-flex justify-content-end'>
-              <Link to='/orders/Add' className='btn btn-secondary m-1 px-3 rounded-4'>
+              <Link to={`/orders/${orderUUID}/Edit`} className='btn btn-secondary m-1 px-3 rounded-4'>
                 <i className='bi-arrow-left me-1'></i>
                 Back
                 </Link>
