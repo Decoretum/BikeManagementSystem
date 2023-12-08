@@ -199,7 +199,7 @@ public class engineeringController {
     @DELETE
     @Path("/removeOrder")
     public void deleteOrder(@QueryParam("id") Long id){
-        
+        engineeringService.removeOrder(id);
     }
 
     //APPOINTMENTS

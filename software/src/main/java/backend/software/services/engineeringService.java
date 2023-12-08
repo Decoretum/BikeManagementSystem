@@ -330,6 +330,32 @@ public class engineeringService {
         return order;
     }
 
+    public void removeOrder(Long orderID){
+        Orders order = orderRepostitory.findById(orderID).get();
+
+        //Delete first the Order entries
+        List<OrderEntry> orderEntries = order.getOrderEntries();
+        for (int i = 0; i < orderEntries.size(); i++){
+            OrderEntry entry = orderEntries.get(i);
+            Bike bike = entry.getBike();
+            
+            //Remove entry from entries of a bike
+            List<OrderEntry> bikeEntries = bike.getOrderEntries();
+            bikeEntries.remove(entry);
+
+            entry.setOrder(null);
+            entry.setBike(null);
+
+            bikeRepository.save(bike);
+            orderEntryRepository.save(entry);
+            orderEntryRepository.delete(entry);
+        }
+
+        order.setOrderEntries(null);
+        orderRepostitory.save(order);
+        orderRepostitory.delete(order);
+    }
+
     public HashMap<Object, Object> editOrder(editAnOrder dto){
         HashMap<Object, Object> result = new HashMap<>();
         Orders order = orderRepostitory.uuidQuery(dto.getUuid()).get(0);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -8,16 +8,34 @@ import PageTitle from '../PageTitle';
 
 
 
-function Orders() {
+function Orders() { 
+  
+  const [orders, setOrders] = useState([]);
+
+  //Querying all Orders
     const orderQuery = useQuery({
     queryKey: ['order'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllOrders')
         .then(res => {
           console.log(res.data)
+          setOrders(res.data);
           return res.data})
     }
     })
+
+    //Deleting an order
+    const deleteOrder = (orderID) => {
+      let newArray = [];
+      for (let order of orders){
+        if (order.id !== orderID){
+          newArray.push(order);
+        }
+      }
+
+      setOrders(newArray);
+      return axios.delete(`http://localhost:8000/api/removeOrder?id=${Number(orderID)}`)
+    } 
 
     if (orderQuery.isFetching && orderQuery.isRefetching && !orderQuery.isError){
         return (
@@ -25,7 +43,7 @@ function Orders() {
         )
     }
 
-    if (orderQuery.data?.length >= 1)
+    if (orders.length >= 1)
     return (
       <>
           <Container>
@@ -49,7 +67,7 @@ function Orders() {
           </thead>
           <tbody>
             {
-              orderQuery?.data?.map((order) =>
+              orders.map((order) =>
                 <tr key={order.id}>
                   <td>{order.id}</td>
                   <td>{order.dateOfPurchase}</td>
@@ -60,7 +78,7 @@ function Orders() {
                   <td>
                     <div className='d-flex'>
                       <Link to={`/orders/${order.uuid}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                      <Link to={`/orders/order/delete/${order.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                      <Link onClick={() => {deleteOrder(order.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                     </div>
                   </td>
                 </tr>
