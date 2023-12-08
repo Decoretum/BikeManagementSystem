@@ -1,0 +1,88 @@
+
+/* Application Styles */
+
+/* Header */
+.header {
+  background: var(--main-blue);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+
+.header-logo {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+/* Hero Section */
+.hero-container {
+  /* background: url('/public/images/hero.png') center center no-repeat; */
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  object-fit: contain;
+}
+
+/* Headings */
+.page-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: var(--main-blue);
+}
+
+/* Fonts */
+.open-sans {
+  font-family: 'Open Sans', sans-serif;
+  font-family: 400;
+}
+
+.inter {
+  font-family: 'Inter', sans-serif;
+}
+
+
+/* Buttons */
+
+.btn-main {
+  font-family: 'Open Sans', sans-serif;
+  color: var(--white) !important;
+  background: var(--main-blue) !important;
+  border-color: var(--main-blue) !important;
+  border-radius: 20px !important;
+}
+
+.btn-view {
+  color: var(--white) !important;
+  background: var(--main-blue) !important;
+  border-color: var(--main-blue) !important;
+}
+
+.btn-edit {
+  color: var(--black) !important;
+  background: var(--gray-blue) !important;
+  border-color: var(--gray-blue) !important;
+}
+
+/* Card */
+.card-style {
+  width: 18rem;
+  padding: 1rem 1rem;
+  border-radius: 15px !important;
+}
+
+/* Forms */
+.form-style {
+  width: 90% !important;
+}
+
+select, input[type='text'], 
+input[type='number'], 
+input[type='email'], 
+input[type='date'],
+textarea {
+  background-color: var(--gray-blue) !important;
+  padding: 0.5rem;
+}
+

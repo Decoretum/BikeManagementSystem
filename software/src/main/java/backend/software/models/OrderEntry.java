@@ -55,6 +55,10 @@ public class OrderEntry {
         return bike;
     }
 
+    public String getBikeName(){
+        return bike.getName();
+    }
+
     public Long getId() {
         return id;
     }

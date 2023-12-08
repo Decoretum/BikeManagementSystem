@@ -13,6 +13,7 @@ import backend.software.dto.confirmAppointment;
 import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
+import backend.software.dto.editAnOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.editCategory;
 import backend.software.dto.editCustomer;
@@ -23,6 +24,7 @@ import backend.software.dto.makeColor;
 import backend.software.dto.makeCustomer;
 import backend.software.dto.makeOrder;
 import backend.software.dto.rentBike;
+import backend.software.dto.editBike;
 import backend.software.dto.makeBike;
 import backend.software.models.Appointment;
 import backend.software.models.Bike;
@@ -98,6 +100,10 @@ public class engineeringService {
         return bikes;
     }
 
+    public ArrayList<Bike> getBikesAvailable(){
+        return bikeRepository.getAvailableBikes();
+    }
+
     public HashMap<Object, Object> makeBike(makeBike dto){
         HashMap<Object, Object> result = new HashMap<>();
 
@@ -159,15 +165,16 @@ public class engineeringService {
         return result;
     }
 
-    public HashMap<Object, Object> editBike(makeBike dto){
+    public HashMap<Object, Object> editBike(editBike dto){
         HashMap<Object, Object> result = new HashMap<>();
-        Bike newBike = bikeRepository.queryName(dto.getName()).get(0);
-
+        Bike newBike = bikeRepository.findById(dto.getId()).get();
+  
         newBike.setName(dto.getName());
         newBike.setDescription(dto.getDescription());
         newBike.setPrice(dto.getPrice());
         newBike.setStock(dto.getStock());
         newBike.setWheelSize(dto.getWheelSize());
+
 
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
@@ -180,10 +187,10 @@ public class engineeringService {
             }
             result.put("result", errors);
             return result;
-        } else if (!bikePresent.isEmpty()){
+        } else if (!dto.getName().equals(newBike.getName()) && !bikePresent.isEmpty()){
             result.put("result", "Bike " + dto.getName() + " is already present.");
             return result;
-        }
+        } 
         bikeRepository.save(newBike);
         
         //Colors and Categories
@@ -321,6 +328,60 @@ public class engineeringService {
     public Orders getOrder(String uuid){
         Orders order = orderRepostitory.uuidQuery(uuid).get(0);
         return order;
+    }
+
+    public void removeOrder(Long orderID){
+        Orders order = orderRepostitory.findById(orderID).get();
+
+        //Delete first the Order entries
+        List<OrderEntry> orderEntries = order.getOrderEntries();
+        for (int i = 0; i < orderEntries.size(); i++){
+            OrderEntry entry = orderEntries.get(i);
+            Bike bike = entry.getBike();
+            
+            //Remove entry from entries of a bike
+            List<OrderEntry> bikeEntries = bike.getOrderEntries();
+            bikeEntries.remove(entry);
+
+            entry.setOrder(null);
+            entry.setBike(null);
+
+            bikeRepository.save(bike);
+            orderEntryRepository.save(entry);
+            orderEntryRepository.delete(entry);
+        }
+
+        order.setOrderEntries(null);
+        orderRepostitory.save(order);
+        orderRepostitory.delete(order);
+    }
+
+    public HashMap<Object, Object> editOrder(editAnOrder dto){
+        HashMap<Object, Object> result = new HashMap<>();
+        Orders order = orderRepostitory.uuidQuery(dto.getUuid()).get(0);
+        
+        order.setDescription(dto.getDescription());
+        
+        //There is a change of customers
+        if (!dto.getCustomerName().equals(order.getCustomer().getName())){
+            ArrayList<Customer> customerList = customerRepository.queryName(dto.getCustomerName());        
+            if (customerList.isEmpty()) {
+                result.put("result", "There is no customer with the name of " + dto.getCustomerName());
+                return result;
+            }
+
+            Customer customer = customerList.get(0);
+            List<Orders> customerOrders = customer.getOrders();
+            customerOrders.remove(order);
+            order.setCustomer(customer);
+
+            customerRepository.save(customer);
+        }
+
+        orderRepostitory.save(order);
+        result.put("result", "Editing Order is a success!");
+        return result;
+
     }
 
     public void makeOrder(makeAnOrder order){
@@ -694,6 +755,11 @@ public class engineeringService {
     }
 
     //RENTED BIKE
+    public ArrayList<Object> getAllRentals(){
+        ArrayList<Object> rentedBikes = new ArrayList<>(rentedBikeRepository.findAll());
+        return rentedBikes;
+        
+    }
 
     public void rentBike(rentBike dto){
         Bike bike = bikeRepository.queryName(dto.getBikeName()).get(0);

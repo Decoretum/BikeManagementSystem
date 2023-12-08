@@ -9,6 +9,7 @@ import backend.software.dto.confirmAppointment;
 import backend.software.dto.confirmOrder;
 import backend.software.dto.confirmRental;
 import backend.software.dto.deleteBikeOrder;
+import backend.software.dto.editAnOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.editCategory;
 import backend.software.dto.editCustomer;
@@ -17,6 +18,7 @@ import backend.software.dto.makeAppointment;
 import backend.software.dto.makeOrder;
 import backend.software.dto.rentBike;
 import backend.software.dto.makeBike;
+import backend.software.dto.editBike;
 import backend.software.dto.makeCategory;
 import backend.software.dto.makeCustomer;
 import backend.software.models.Appointment;
@@ -64,6 +66,13 @@ public class engineeringController {
         return engineeringService.getBikes();
     }
 
+    @GET
+    @Path("/getBikesAvailable")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ArrayList<Bike> getBikesAvailable(){
+        return engineeringService.getBikesAvailable();
+    }
+
     @DELETE
     @Path("/deleteBike")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
@@ -90,8 +99,9 @@ public class engineeringController {
     @Path("/editBike")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public HashMap<Object, Object> editBike(makeBike dto){
+    public HashMap<Object, Object> editBike(editBike dto){
         return engineeringService.editBike(dto);
+
     }
 
     //CATEGORY
@@ -151,6 +161,13 @@ public class engineeringController {
         engineeringService.makeOrder(order);
     }
 
+    @PUT
+    @Path("/editAnOrder")
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> makeOrder(editAnOrder dto){
+        return engineeringService.editOrder(dto);
+    }
+
     @POST
     @Path("/confirmOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
@@ -182,7 +199,7 @@ public class engineeringController {
     @DELETE
     @Path("/removeOrder")
     public void deleteOrder(@QueryParam("id") Long id){
-        
+        engineeringService.removeOrder(id);
     }
 
     //APPOINTMENTS
@@ -263,6 +280,12 @@ public class engineeringController {
     }
 
     //RENTED BIKE
+
+    @GET
+    @Path("/getAllRentals")
+    public List<Object> getAllRentals(){
+        return engineeringService.getAllRentals();
+    }
 
     @POST
     @Path("/rentBike")
