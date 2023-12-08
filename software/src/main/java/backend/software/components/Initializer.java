@@ -1,5 +1,6 @@
 package backend.software.components;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -201,7 +202,7 @@ public class Initializer {
             makeOrder a3 = new makeOrder();
             a3.setBikeName("Tomasini");
             a3.setBike_color("Blue");
-            a3.setCost(281.07);
+            a3.setCost(new BigDecimal(281.07));
             a3.setQuantity(5);
             a3.setId(oID2);
             
@@ -209,7 +210,7 @@ public class Initializer {
             a4.setBikeName("JavaBike");
             a4.setBike_color("Brown");
             a4.setQuantity(10);
-            a4.setCost(434.4);
+            a4.setCost(new BigDecimal(434.4));
             a4.setId(oID3);
 
             engineeringService.makeBikeOrder(a3);

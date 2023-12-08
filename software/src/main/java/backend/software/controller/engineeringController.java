@@ -142,9 +142,9 @@ public class engineeringController {
     @Path("/getOrder")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Orders getOrder(
-        @QueryParam("orderUUID") String uuid
+        @QueryParam("orderID") Long orderID
     ){
-        return engineeringService.getOrder(uuid);
+        return engineeringService.getOrder(orderID);
     }
 
     @GET
@@ -179,8 +179,8 @@ public class engineeringController {
     @POST
     @Path("/makeBikeOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void makeBikeOrder(makeOrder order){
-        engineeringService.makeBikeOrder(order);
+    public HashMap<String, String> makeBikeOrder(makeOrder order){
+        return engineeringService.makeBikeOrder(order);
     }
 
     @GET
@@ -192,8 +192,8 @@ public class engineeringController {
 
     @DELETE
     @Path("/removeBikeOrder")
-    public void deleteBikeOrder(deleteBikeOrder dto){
-        engineeringService.deleteBikeOrder(dto);
+    public void deleteBikeOrder(@QueryParam("bikeOrderId") Long bikeOrderId){
+        engineeringService.deleteBikeOrder(bikeOrderId);
     }
 
     @DELETE

@@ -1,5 +1,7 @@
 package backend.software.services;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -325,8 +327,8 @@ public class engineeringService {
         return orderRepostitory.findAll();
     }
 
-    public Orders getOrder(String uuid){
-        Orders order = orderRepostitory.uuidQuery(uuid).get(0);
+    public Orders getOrder(Long orderID){
+        Orders order = orderRepostitory.findById(orderID).get();
         return order;
     }
 
@@ -396,7 +398,7 @@ public class engineeringService {
         newOrder.setCustomer(customer);
         newOrder.setDateOfPurchase(date);
         newOrder.setDescription(order.getDescription());
-        newOrder.setTotalcost(0.0);
+        newOrder.setTotalcost(new BigDecimal(0.0));
         newOrder.setUuid(uuid);
         newOrder.setFinished(false);
         orderRepostitory.save(newOrder);
@@ -404,10 +406,10 @@ public class engineeringService {
     }
 
     //Create an OrderEntry Model
-    public void makeBikeOrder(makeOrder order){
+    public HashMap<String, String> makeBikeOrder(makeOrder order){
         Orders mainOrder = orderRepostitory.findById(order.getId()).get();
         Bike bike = bikeRepository.queryName(order.getBikeName()).get(0);
-        Double oldCost = mainOrder.getTotalcost();
+        BigDecimal oldCost = mainOrder.getTotalcost();
 
         OrderEntry orderEntry = new OrderEntry();
 
@@ -416,12 +418,15 @@ public class engineeringService {
         orderEntry.setQuantity(order.getQuantity());
         orderEntry.setCost(order.getCost());
         orderEntry.setBike_color(order.getBike_color());
-        mainOrder.setTotalcost(oldCost + order.getCost());
+        mainOrder.setTotalcost(oldCost.add(order.getCost()));
         
 
         orderEntryRepository.save(orderEntry);
         orderRepostitory.save(mainOrder);
-        System.out.println("Bike added to order!");
+
+        HashMap<String, String> result = new HashMap<>();
+        result.put("result", "Success!");
+        return result;
     }
 
     //Get Bike Orders / OrderEntry within a certain Main Order
@@ -445,13 +450,13 @@ public class engineeringService {
     }
 
     //Removing a Bike Order from an Order
-    public void deleteBikeOrder(deleteBikeOrder dto){
-        OrderEntry bikeOrder = orderEntryRepository.findById(dto.getId()).get();
+    public void deleteBikeOrder(Long bikeOrderId){
+        OrderEntry bikeOrder = orderEntryRepository.findById(bikeOrderId).get();
         Orders mainOrder = bikeOrder.getOrder();
         Bike bike = bikeOrder.getBike();
 
-        Double oldCost = mainOrder.getTotalcost();
-        mainOrder.setTotalcost(oldCost - bikeOrder.getCost());
+        BigDecimal oldCost = mainOrder.getTotalcost();
+        mainOrder.setTotalcost(oldCost.subtract(bikeOrder.getCost()));
         
         List<OrderEntry> bikeOrders = mainOrder.getOrderEntries();
         bikeOrders.remove(bikeOrder);
@@ -466,7 +471,7 @@ public class engineeringService {
         
         orderEntryRepository.save(bikeOrder);
         orderEntryRepository.delete(bikeOrder);
-        System.out.println("Bike Order " + dto.getId() + " removed");
+        System.out.println("Bike Order " + bikeOrderId + " removed");
     } 
 
     //For this, this will confirm the order and relay changes to other
