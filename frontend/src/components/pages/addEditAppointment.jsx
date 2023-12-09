@@ -102,6 +102,8 @@ function AddEditAppointment() {
     data.id = params.id;
     console.log(data);
 
+    data.ongoing = data.ongoing === 'true' ? true : false;
+
     axios({
       method: request,
       url: `http://localhost:8000/api/${operation}Appointment`,
@@ -217,14 +219,14 @@ function AddEditAppointment() {
         />
 
         <Form.Group as={Col} controlId="classification">
-            <Form.Label><b>Finished</b></Form.Label>
-              <Form.Select {...register('ongoing')} defaultValue={appointmentQuery?.data?.Appointment?.ongoing}>
+            <Form.Label><b>Ongoing</b></Form.Label>
+              <Form.Select {...register('ongoing')} defaultValue={appointmentQuery?.data?.Appointment?.ongoing === true ? 'true' : 'false'}>
               {viewType === 'Edit' ? 
               (
               <>
                 <option value={true}>true</option>
                 <option value={false}>false</option>
-              </>) : (<option selected={true} value={appointmentQuery?.data?.Appointment?.ongoing === true ? true : false}> {appointmentQuery?.data?.Appointment?.ongoing === true ? 'true' : 'false'} </option>)}
+              </>) : (<option selected={true} value={appointmentQuery?.data?.Appointment?.ongoing === true ? false : true}> {appointmentQuery?.data?.Appointment?.ongoing === true ? 'true' : 'false'} </option>)}
             </Form.Select>
           </Form.Group>
         
