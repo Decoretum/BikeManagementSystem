@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import PageTitle from '../PageTitle';
-import { Alert, Modal } from 'react-bootstrap';
+import { Alert, Button, Modal } from 'react-bootstrap';
 
 
 function Rentals() {
     const [rents, setRents] = useState([]);
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
+    const history = useNavigate()
 
     const rentQuery = useQuery({
     queryKey: ['rentedBike'],
@@ -51,7 +52,9 @@ function Rentals() {
 
     if (rentQuery.isError){
       return(
+        <>
         <h3 className='m-4'>Error fetching bike rentals</h3>
+        </>
       )
     }
 
@@ -60,6 +63,8 @@ function Rentals() {
         <Container className='open-sans'>
         <div className='form-style'>
           <h1 className='page-title my-5'> No Bike Rentals </h1>
+          <Button onClick={() => {history('/rentals/Add')}}> Add a Bike Rental </Button>
+
         </div>
       </Container>
       )
