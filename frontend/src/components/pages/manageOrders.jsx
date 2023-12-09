@@ -87,7 +87,7 @@ function Orders() {
           <Container>
           <PageTitle
                 page = "Manage orders"
-                link = "/orders/Add"
+                link = "/orders/add"
                 button = "Add order" 
               />
 
@@ -97,7 +97,6 @@ function Orders() {
               <th></th>
               <th>Purchase Date</th>
               <th>Customer</th>
-              <th>Description</th>
               <th>Total Cost</th>
               <th>Finished</th>
               <th></th>
@@ -110,7 +109,6 @@ function Orders() {
                   <td>{order.id}</td>
                   <td>{order.dateOfPurchase}</td>
                   <td>{order.customer.name}</td>
-                  <td>{order.description}</td>
                   <td>P{(order.totalcost).toFixed(2)}</td>
                   <td>{order.finished === true ? 'True' : 'False'}</td>
                   <td>
