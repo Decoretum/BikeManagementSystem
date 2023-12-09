@@ -108,16 +108,16 @@ function AddEditAppointment() {
       data: data
     })
     .then(res => {
-      console.log(res.data);
-      if (res.data.result instanceof Array === false){
+      console.log(res.data.errors);
+      if (res.data.errors instanceof Array === false){
           history('/appointments');
       } else {
         let errors = <></>;
         errors = 
         <>
           {
-            res.data.result.map((error) => {
-              return <Alert varient='error'> {error} </Alert>
+            res.data.errors.map((error) => {
+              return <Alert variant='error'> {error} </Alert>
             })
           }
         </>
@@ -167,7 +167,7 @@ function AddEditAppointment() {
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit(onSubmit)}>
       <Row className='mb-4 gx-5'>
-        { viewType === 'Edit' ? (
+        { viewType === 'Edit' || viewType === 'Add' ? (
         <>
         <h3 className='page-title'> Select Customer </h3>
         <Dropdown className='mt-1 mb-4'> 

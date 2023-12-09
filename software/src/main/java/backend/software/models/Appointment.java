@@ -37,7 +37,7 @@ public class Appointment {
     private Long id;
 
     @NotNull(message = "Appointment name must have a name")
-    @Size(min = 20, max = 100, message = "Appointment name must be between 20 to 100 characters")
+    @Size(min = 5, max = 100, message = "Appointment name must be between 5 to 100 characters")
     @Column(name = "name")
     private String name;
 

@@ -43,6 +43,7 @@ function Appointments() {
               <th>Customer</th>
               <th>Appointment Date</th>
               <th>Cost</th>
+              <th>Ongoing</th>
               <th></th>
             </tr>
           </thead>
@@ -56,6 +57,7 @@ function Appointments() {
                 <td>{app.customer.name}</td>
                 <td>{app.dateTimeAppointed}</td>
                 <td>{Number(app.cost).toFixed(2)}</td>
+                <td>{app.finished === true ? 'false' : 'true'}</td>
                 <td>
                   <div className='d-flex'>
                     <Link to={`/appointments/${app.id}/View`} className='d-flex btn btn-main m-1 rounded-4'>View</Link>
