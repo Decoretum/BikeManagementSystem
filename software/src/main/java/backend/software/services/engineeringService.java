@@ -759,6 +759,7 @@ public class engineeringService {
     public HashMap<Object, Object> editAppointment(editAppointment dto){
         Appointment appointment = appointmentRepository.findById(dto.getId()).get();
         Customer customer = customerRepository.queryName(dto.getCustomerName()).get(0);
+        System.out.println(dto.getOngoing());
         appointment.setCategory(dto.getCategory());
         appointment.setCost(dto.getCost());
         appointment.setCustomer(customer);
