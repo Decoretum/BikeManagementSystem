@@ -160,7 +160,7 @@ function AddEditRental() {
             </Row>
             <Row className='mb-1'>
               <FormGroup 
-                name = "Rent Duration (in hours)"
+                name = "Rent Duration (in days)"
                 id = "days"
                 type = "number"
                 content = {viewType === 'Edit' || viewType === 'View' ? rentQuery?.data?.rentalDuration : ''}
