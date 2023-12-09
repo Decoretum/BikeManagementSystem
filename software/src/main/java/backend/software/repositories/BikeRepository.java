@@ -1,6 +1,7 @@
 package backend.software.repositories;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,7 +23,7 @@ public interface BikeRepository extends JpaRepository<Bike, Long> {
     @Query("SELECT a.name FROM Bike a")
     ArrayList<String> getAllName();
 
-    @Query("SELECT a.name FROM Bike a WHERE a.removed = false")
-    ArrayList<Bike> getAvailableBikes();
+    @Query("SELECT a.name FROM Bike a WHERE a.removed = ?1")
+    ArrayList<String> getAvailableBikes(boolean cond);
     
 }

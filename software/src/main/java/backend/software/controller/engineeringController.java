@@ -26,6 +26,7 @@ import backend.software.models.Bike;
 import backend.software.models.Categories;
 import backend.software.models.Customer;
 import backend.software.models.Orders;
+import backend.software.models.RentedBike;
 import backend.software.repositories.BikeRepository;
 import backend.software.services.engineeringService;
 import jakarta.annotation.PostConstruct;
@@ -69,7 +70,7 @@ public class engineeringController {
     @GET
     @Path("/getBikesAvailable")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public ArrayList<Bike> getBikesAvailable(){
+    public ArrayList<String> getBikesAvailable(){
         return engineeringService.getBikesAvailable();
     }
 
@@ -179,8 +180,8 @@ public class engineeringController {
     @Path("/confirmOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
     @Produces(MediaType.APPLICATION_JSON_VALUE)
-    public HashMap<Object, Object> confirmOrder(confirmOrder dto){
-        return engineeringService.confirmOrder(dto);
+    public HashMap<Object, Object> confirmOrder(@QueryParam("orderID") Long orderID){
+        return engineeringService.confirmOrder(orderID);
     }
 
     @POST
@@ -293,6 +294,13 @@ public class engineeringController {
         return engineeringService.getAllCustomer();
     }
 
+    @GET
+    @Path("/getAllCustomerNames")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public ArrayList<String> getAllCustomerNames(){
+        return engineeringService.getAllCustomerNames();
+    }
+
     //RENTED BIKE
 
     @GET
@@ -301,16 +309,24 @@ public class engineeringController {
         return engineeringService.getAllRentals();
     }
 
+    @GET
+    @Path("/getRental")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public RentedBike getRental(@QueryParam("rentID") Long rentID){
+        return engineeringService.getRental(rentID);
+    }
+
     @POST
     @Path("/rentBike")
-    public void rentBike(rentBike dto){
-        engineeringService.rentBike(dto);
+    @Consumes(MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<Object, Object> rentBike(rentBike dto){
+        return engineeringService.rentBike(dto);
     }
 
     @POST
     @Path("/confirmRental")
-    public void confirmRental(confirmRental dto){
-        engineeringService.confirmRental(dto);
+    public HashMap<Object, Object> confirmRental(@QueryParam("rentID")Long rentID){
+        return engineeringService.confirmRental(rentID);
     }
 
     @DELETE
