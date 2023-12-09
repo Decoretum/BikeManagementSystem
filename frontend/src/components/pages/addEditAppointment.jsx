@@ -104,6 +104,20 @@ function AddEditAppointment() {
 
     data.ongoing = data.ongoing === 'true' ? true : false;
 
+    if(customerName === 'Select Customer Name'){ 
+      let errors = <></>;
+      errors = 
+      <>
+        {
+          <Alert variant='error'> Select a Customer </Alert>
+        
+        }
+      </>
+      setError(errors);
+      setShowError(true);
+      return;
+      }
+
     axios({
       method: request,
       url: `http://localhost:8000/api/${operation}Appointment`,
