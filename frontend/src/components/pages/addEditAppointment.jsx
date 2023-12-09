@@ -232,8 +232,11 @@ function AddEditAppointment() {
           viewType = {viewType}
         />
 
-        <Form.Group as={Col} controlId="classification">
-            <Form.Label><b>Ongoing</b></Form.Label>
+        {
+          viewType !== 'Add' ? (
+            <>
+              <Form.Group as={Col} controlId="classification">
+              <Form.Label><b>Ongoing</b></Form.Label>
               <Form.Select {...register('ongoing')} defaultValue={appointmentQuery?.data?.Appointment?.ongoing === true ? 'true' : 'false'}>
               {viewType === 'Edit' ? 
               (
@@ -243,6 +246,10 @@ function AddEditAppointment() {
               </>) : (<option selected={true} value={appointmentQuery?.data?.Appointment?.ongoing === true ? false : true}> {appointmentQuery?.data?.Appointment?.ongoing === true ? 'true' : 'false'} </option>)}
             </Form.Select>
           </Form.Group>
+            </>
+          ) : (<></>)
+        }
+        
         
         
         
