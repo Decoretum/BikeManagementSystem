@@ -853,7 +853,7 @@ public class engineeringService {
         BigDecimal baseCost = new BigDecimal(200 + (2 * (rentDuration + 1.5)));
         BigDecimal penalty;
 
-        if (difference.compareTo(BigDecimal.valueOf(0)) == 0) {
+        if (difference.compareTo(BigDecimal.valueOf(0)) != 0) {
             BigDecimal v1 = difference.add(BigDecimal.valueOf(1.5));
             BigDecimal v2 = v1.multiply(BigDecimal.valueOf(5));
             penalty = (baseCost.add(v2));
