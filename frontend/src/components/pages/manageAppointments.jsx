@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
@@ -8,13 +8,28 @@ import PageTitle from '../PageTitle';
 
 
 function Appointments() {
+  const [apps, setApps] = useState([]);
+  const history = useNavigate();
+
     const appQuery = useQuery({
     queryKey: ['appointment'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllAppointments')
-        .then(res => {return res.data})
+        .then(res => {
+          setApps(res.data)
+          return res.data})
     }
     })
+
+    //delete app
+    const deleteAppointment = (appID) => {
+      let newArray = appQuery?.data?.filter((cust) => cust.id !== appID);
+      setApps(newArray);
+
+      axios.delete(`http://localhost:8000/api/deleteAppointment?id=${appID}`).then(() => {
+        history('/appointments')
+      })
+    }
 
     if (appQuery.isFetching && appQuery.isRefetching && !appQuery.isError){
         return (
@@ -49,7 +64,7 @@ function Appointments() {
           </thead>
           <tbody>
             {
-              appQuery.data?.map((app) =>
+              apps.map((app) =>
               <tr key={app.id}>
                 <td>{app.id}</td>
                 <td>{app.dateTimeCreated}</td>
@@ -62,7 +77,7 @@ function Appointments() {
                   <div className='d-flex'>
                     <Link to={`/appointments/${app.id}/View`} className='d-flex btn btn-main m-1 rounded-4'>View</Link>
                     <Link to={`/appointments/${app.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                    <Link to={`/appointments/app/delete/${app.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                    <Link onClick={() => {deleteAppointment(app.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                   </div>
                 </td>
               </tr>
