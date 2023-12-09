@@ -1,5 +1,7 @@
 package backend.software.services;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -276,20 +278,43 @@ public class engineeringService {
         return categoryRepository.findAll();
     }
 
+    public Categories getCategory (Long categID){
+        return categoryRepository.findById(categID).get();
+    }
+
     public HashMap<Object, Object> addCategory(makeCategory json){
         ArrayList<Categories> categPresent = categoryRepository.findThroughName(json.getName());
         HashMap<Object, Object> result = new HashMap<>();
         if (!categPresent.isEmpty()){
-            result.put("result", json.getName() + " already exists");
+            result.put("error", json.getName() + " already exists");
             return result;
-        } else {
-            result.put("errorResult", json.getName() + " successfully added!");
-        }
+        } 
+
         Categories category = new Categories();
         category.setName((String) json.getName());
         categoryRepository.save(category);
+        result.put("result", category);
         return result;
-        
+    }
+
+    public void deleteCategory(Long categID){
+        //Delete from bike
+        Categories category = categoryRepository.findById(categID).get();
+        List<BikeCategories> bikeCategories = category.getBikeCategories();
+
+        for (BikeCategories c : bikeCategories){
+            Bike bike = c.getBike();
+            List<BikeCategories> bc = bike.getBikeCategories();
+            bc.remove(c);
+            c.setBike(null);
+            c.setCategories(null);
+            bikeRepository.save(bike);
+            bikeCategoryRepository.save(c);
+        }
+
+        category.setBikeCategories(null);
+        categoryRepository.save(category);
+        categoryRepository.delete(category);
     }
 
     public HashMap<Object, Object> editCategory(editCategory json){
@@ -297,7 +322,7 @@ public class engineeringService {
         Categories edited = categoryRepository.findById(json.getCategID()).get();
         ArrayList<Categories> categPresent = categoryRepository.findThroughName(json.getName());
         if (!categPresent.isEmpty()){
-            result.put("errorResult", json.getName() + " already exists");
+            result.put("error", json.getName() + " already exists");
             return result;
         } else {
             result.put("result", "Category " + json.getCategID() + " successfully edited");
@@ -325,8 +350,8 @@ public class engineeringService {
         return orderRepostitory.findAll();
     }
 
-    public Orders getOrder(String uuid){
-        Orders order = orderRepostitory.uuidQuery(uuid).get(0);
+    public Orders getOrder(Long orderID){
+        Orders order = orderRepostitory.findById(orderID).get();
         return order;
     }
 
@@ -396,7 +421,7 @@ public class engineeringService {
         newOrder.setCustomer(customer);
         newOrder.setDateOfPurchase(date);
         newOrder.setDescription(order.getDescription());
-        newOrder.setTotalcost(0.0);
+        newOrder.setTotalcost(new BigDecimal(0.0));
         newOrder.setUuid(uuid);
         newOrder.setFinished(false);
         orderRepostitory.save(newOrder);
@@ -404,10 +429,10 @@ public class engineeringService {
     }
 
     //Create an OrderEntry Model
-    public void makeBikeOrder(makeOrder order){
+    public HashMap<String, String> makeBikeOrder(makeOrder order){
         Orders mainOrder = orderRepostitory.findById(order.getId()).get();
         Bike bike = bikeRepository.queryName(order.getBikeName()).get(0);
-        Double oldCost = mainOrder.getTotalcost();
+        BigDecimal oldCost = mainOrder.getTotalcost();
 
         OrderEntry orderEntry = new OrderEntry();
 
@@ -416,12 +441,15 @@ public class engineeringService {
         orderEntry.setQuantity(order.getQuantity());
         orderEntry.setCost(order.getCost());
         orderEntry.setBike_color(order.getBike_color());
-        mainOrder.setTotalcost(oldCost + order.getCost());
+        mainOrder.setTotalcost(oldCost.add(order.getCost()));
         
 
         orderEntryRepository.save(orderEntry);
         orderRepostitory.save(mainOrder);
-        System.out.println("Bike added to order!");
+
+        HashMap<String, String> result = new HashMap<>();
+        result.put("result", "Success!");
+        return result;
     }
 
     //Get Bike Orders / OrderEntry within a certain Main Order
@@ -445,13 +473,13 @@ public class engineeringService {
     }
 
     //Removing a Bike Order from an Order
-    public void deleteBikeOrder(deleteBikeOrder dto){
-        OrderEntry bikeOrder = orderEntryRepository.findById(dto.getId()).get();
+    public void deleteBikeOrder(Long bikeOrderId){
+        OrderEntry bikeOrder = orderEntryRepository.findById(bikeOrderId).get();
         Orders mainOrder = bikeOrder.getOrder();
         Bike bike = bikeOrder.getBike();
 
-        Double oldCost = mainOrder.getTotalcost();
-        mainOrder.setTotalcost(oldCost - bikeOrder.getCost());
+        BigDecimal oldCost = mainOrder.getTotalcost();
+        mainOrder.setTotalcost(oldCost.subtract(bikeOrder.getCost()));
         
         List<OrderEntry> bikeOrders = mainOrder.getOrderEntries();
         bikeOrders.remove(bikeOrder);
@@ -466,7 +494,7 @@ public class engineeringService {
         
         orderEntryRepository.save(bikeOrder);
         orderEntryRepository.delete(bikeOrder);
-        System.out.println("Bike Order " + dto.getId() + " removed");
+        System.out.println("Bike Order " + bikeOrderId + " removed");
     } 
 
     //For this, this will confirm the order and relay changes to other
@@ -518,10 +546,14 @@ public class engineeringService {
         return customerRepository.findAll();
     }
 
+    public Customer getCustomer(Long customerID){
+        return customerRepository.findById(customerID).get();
+    }
+
     //This will remove all of a Customer's Association
     //I don't know if this will be a feature
-    public void deleteCustomer(String name){
-        Customer customer = customerRepository.queryName(name.trim()).get(0);
+    public HashMap<String, String> deleteCustomer(Long customerID){
+        Customer customer = customerRepository.findById(customerID).get();
         List<Appointment> appointments = customer.getAppointments();
         List<Orders> orders = customer.getOrders();
         List<RentedBike> rentedBikes = customer.getRentedBikes();
@@ -560,7 +592,10 @@ public class engineeringService {
         customerRepository.save(customer);
         customerRepository.delete(customer);
 
-        System.out.println("Customer " + name + " has been deleted from the application");
+        System.out.println("Customer " + customerID + " has been deleted from the application");
+        HashMap<String, String> result = new HashMap<>();
+        result.put("result", "Success!");
+        return result;
     }
 
     public HashMap<Object, Object> makeCustomer(makeCustomer dto){
@@ -608,10 +643,10 @@ public class engineeringService {
         }
         customer.setName(dto.getName());
         customer.setIdNumber(dto.getIdNumber());
+        customer.setBalance(dto.getBalance());
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Customer>> violations = validator.validate(customer);
-
 
         HashMap<Object, Object> result = new HashMap<>();
         List<Customer> customerPresent = customerRepository.queryName(dto.getName());
@@ -622,7 +657,7 @@ public class engineeringService {
             }
             result.put("errors", errors);
             return result;
-        } else if (!customerPresent.isEmpty()){
+        } else if (!customerPresent.isEmpty() && !customer.getName().equals(dto.getName())){
             result.put("errors", "Customer " + dto.getName() + " already exists");
             return result;
         }
@@ -799,20 +834,22 @@ public class engineeringService {
 
         System.out.println("DIFFERENCE: " + duration);
         
-        Long difference = Math.abs(duration);
+        BigDecimal difference = new BigDecimal(Math.abs(duration));
         Long rentDuration = rentedBike.getRentalDuration();
 
-        Double baseCost = 200 + (2 * (rentDuration + 1.5));
-        Double penalty;
+        BigDecimal baseCost = new BigDecimal(200 + (2 * (rentDuration + 1.5)));
+        BigDecimal penalty;
 
-        if (difference != 0) {
-            penalty = baseCost + (5 * (difference + 1.5));
+        if (difference.compareTo(BigDecimal.valueOf(0)) == 0) {
+            BigDecimal v1 = difference.add(BigDecimal.valueOf(1.5));
+            BigDecimal v2 = v1.multiply(BigDecimal.valueOf(5));
+            penalty = (baseCost.add(v2));
         } else {
-            penalty = 0.0;
+            penalty = new BigDecimal(0.0);
         }
 
         bike.setCanBeBorrowed(true);
-        customer.setBalance(penalty + baseCost);
+        customer.setBalance(penalty.add(baseCost));
         rentedBike.setFinished(true);
         rentedBikeRepository.save(rentedBike);
         customerRepository.save(customer);

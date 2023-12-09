@@ -39,7 +39,7 @@ function App() {
           <Route path='/orders/:mode' Component={AddOrder} />
           <Route path='/orders/:id/:mode' Component={AddOrder} />
 
-          <Route path='/orders/bike-order/:uuid/:mode' Component={AddEditBikeOrder} />
+          <Route path='/orders/bike-order/:id/:mode' Component={AddEditBikeOrder} />
 
           <Route path='/rentals' Component={Rentals} />
           <Route path='/rentals/:mode' Component={AddEditRental} />

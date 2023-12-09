@@ -1,5 +1,6 @@
 package backend.software.models;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
@@ -52,7 +53,7 @@ public class Customer {
 
     @DecimalMin("0.0")
     @Column(name = "balance")
-    private Double balance;
+    private BigDecimal balance;
 
     @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "customer")
@@ -74,11 +75,11 @@ public class Customer {
         this.id = id;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

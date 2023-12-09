@@ -73,11 +73,11 @@ function Orders() {
                   <td>{order.dateOfPurchase}</td>
                   <td>{order.customer.name}</td>
                   <td>{order.description}</td>
-                  <td>{order.totalcost}</td>
+                  <td>P{(order.totalcost).toFixed(2)}</td>
                   <td>{order.finished === true ? 'True' : 'False'}</td>
                   <td>
                     <div className='d-flex'>
-                      <Link to={`/orders/${order.uuid}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
+                      <Link to={`/orders/${order.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
                       <Link onClick={() => {deleteOrder(order.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                     </div>
                   </td>

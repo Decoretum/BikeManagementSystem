@@ -1,5 +1,7 @@
 package backend.software.models;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -45,7 +47,7 @@ public class OrderEntry {
     @Column(name = "cost")
     @NotNull(message = "There must be at least a cost of 0.0 for the cost")
     @DecimalMin("0.0")
-    private Double cost;
+    private BigDecimal cost;
 
     @Column(name = "bike_color")
     @NotNull(message = "There must be a bike color chosen for the order")
@@ -95,11 +97,11 @@ public class OrderEntry {
         this.quantity = quantity;
     }
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(Double cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 

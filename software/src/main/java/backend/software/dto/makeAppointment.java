@@ -1,20 +1,22 @@
 package backend.software.dto;
 
+import java.math.BigDecimal;
+
 public class makeAppointment {
     private String customerName;
     private String category;
     private String description;
     private String dateTimeAppointed;
-    private Double cost;
+    private BigDecimal cost;
     private String name;
 
     public makeAppointment(){}
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(Double cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 

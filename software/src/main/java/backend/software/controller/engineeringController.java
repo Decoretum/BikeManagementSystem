@@ -129,11 +129,18 @@ public class engineeringController {
         return engineeringService.getCategories();
     }
 
+    @GET
+    @Path("/getCategory")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public Categories getCategory(@QueryParam("categID") Long categID){
+        return engineeringService.getCategory(categID);
+    }
+
     @DELETE
     @Path("/deleteCategory")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void deleteCategory(){
-        
+    public void deleteCategory(@QueryParam("categID") Long categID){
+        engineeringService.deleteCategory(categID);
     }
 
     //ORDERS
@@ -142,9 +149,9 @@ public class engineeringController {
     @Path("/getOrder")
     @Produces(MediaType.APPLICATION_JSON_VALUE)
     public Orders getOrder(
-        @QueryParam("orderUUID") String uuid
+        @QueryParam("orderID") Long orderID
     ){
-        return engineeringService.getOrder(uuid);
+        return engineeringService.getOrder(orderID);
     }
 
     @GET
@@ -179,8 +186,8 @@ public class engineeringController {
     @POST
     @Path("/makeBikeOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void makeBikeOrder(makeOrder order){
-        engineeringService.makeBikeOrder(order);
+    public HashMap<String, String> makeBikeOrder(makeOrder order){
+        return engineeringService.makeBikeOrder(order);
     }
 
     @GET
@@ -192,8 +199,8 @@ public class engineeringController {
 
     @DELETE
     @Path("/removeBikeOrder")
-    public void deleteBikeOrder(deleteBikeOrder dto){
-        engineeringService.deleteBikeOrder(dto);
+    public void deleteBikeOrder(@QueryParam("bikeOrderId") Long bikeOrderId){
+        engineeringService.deleteBikeOrder(bikeOrderId);
     }
 
     @DELETE
@@ -257,6 +264,13 @@ public class engineeringController {
         return engineeringService.makeCustomer(dto);
     }
 
+    @GET
+    @Path("/getCustomer")
+    @Produces(MediaType.APPLICATION_JSON_VALUE)
+    public Customer getCustomer(@QueryParam("customerID") Long customerID){
+        return engineeringService.getCustomer(customerID);
+    }
+
     @PUT
     @Path("/editCustomer")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
@@ -268,8 +282,8 @@ public class engineeringController {
     //I'm not sure if this is practical in a business setting
     @DELETE
     @Path("/deleteCustomer")
-    public void deleteCustomer(@QueryParam("name") String name){
-        engineeringService.deleteCustomer(name);
+    public HashMap<String, String> deleteCustomer(@QueryParam("customerID") Long customerID){
+        return engineeringService.deleteCustomer(customerID);
     }  
 
     @GET

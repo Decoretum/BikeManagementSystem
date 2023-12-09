@@ -23,6 +23,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.ws.rs.DefaultValue;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Table
@@ -57,7 +58,7 @@ public class Appointment {
     @NotNull(message = "Cost cannot be null")
     @DecimalMin("0.00")
     @DecimalMax("700.00")
-    private Double cost;
+    private BigDecimal cost;
 
     @NotNull(message = "Date Created cannot be null")
     @Column(name = "dateTimeCreated")
@@ -85,11 +86,11 @@ public class Appointment {
         this.name = name;
     }
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(Double cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 

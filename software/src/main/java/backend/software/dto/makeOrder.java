@@ -1,5 +1,7 @@
 package backend.software.dto;
 
+import java.math.BigDecimal;
+
 public class makeOrder {
 
     public makeOrder(){}
@@ -8,7 +10,7 @@ public class makeOrder {
 
     //order_entry
     private int quantity;
-    private Double cost;
+    private BigDecimal cost;
 
     //Bike and the color chosen
     private String bikeName;
@@ -20,7 +22,7 @@ public class makeOrder {
     }
 
 
-    public void setCost(Double cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 
@@ -46,7 +48,7 @@ public class makeOrder {
     }
 
 
-    public Double getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 

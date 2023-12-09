@@ -20,13 +20,10 @@ function FormGroup(props) {
   const {register} = useFormContext();
   let finalValue = props.content;
 
-  if (props.id === 'dateOfPurchases'){
-    finalValue = moment(props.content).format('YYYY-MM-DD').toString();
-  } else {
-    finalValue = props.content;
+  if (props.id === 'totalcost') {
+    finalValue = Number(props.content).toFixed(2)
   }
-  console.log(props.content + props.id);
-
+  console.log(finalValue);
   return (
     <Form.Group as={Col} controlId={props.id}>
       <Form.Label><b>{props.name}</b></Form.Label>
@@ -34,9 +31,9 @@ function FormGroup(props) {
         props.id === 'description' ? (
           <Form.Control as={'textarea'} style={{minHeight: '10em' }} {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} required/>
         ) : props.id === 'dateOfPurchase' ? (
-          <Form.Control {...register(`${props.id}`)} defaultValue={finalValue} type={'text'} placeholder={props.name} readOnly />
+          <Form.Control defaultValue={finalValue} type={'text'} placeholder={props.name} readOnly />
           ) : (
-          <Form.Control {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} readOnly />
+          <Form.Control {...register(`${props.id}`)} defaultValue={finalValue} value={finalValue} type={props.type} placeholder={props.name} readOnly />
           )
       }
     </Form.Group>
@@ -55,8 +52,8 @@ function AddOrder() {
   const {handleSubmit, register, errors} = methods;
 
   const [customerName, setCustomerName] = useState('Customer Name');
-  const [error, setError] = useState(<></>);
-  const [showError, setShowError] = useState(false);
+  const [orderEntries, setOrderEntries] = useState([]);
+  const [totalCost, setTotalCost] = useState(0);
 
   //Customer query
   const customerQuery = useQuery({
@@ -75,14 +72,26 @@ function AddOrder() {
     enabled: viewType === 'Edit',
     queryKey: ['order'],
     queryFn: async () => {
-      return axios.get(`http://localhost:8000/api/getOrder?orderUUID=${orderID}`)
+      return axios.get(`http://localhost:8000/api/getOrder?orderID=${orderID}`)
       .then((res) => {
         console.log(res.data);
         setCustomerName(res.data.customer.name);
+        setOrderEntries(res.data.orderEntries);
+        setTotalCost(res.data.totalcost);
         return res.data;
       })
     }
   })
+
+  //Deleting a Bike Order
+  const deleteOrder = (bikeOrderID, bikeOrderCost) => {
+    axios.delete(`http://localhost:8000/api/removeBikeOrder?bikeOrderId=${bikeOrderID}`)
+    
+    let newArray = orderEntries.filter((entry) => entry.id !== bikeOrderID);
+    let newCost = (totalCost - bikeOrderCost).toFixed(2);
+    setOrderEntries(newArray);
+    setTotalCost(newCost);
+  }
 
   
   //Submitting data
@@ -146,7 +155,7 @@ function AddOrder() {
                       name = "Total Cost"
                       id = "totalcost"
                       type = "number"
-                      content = {viewType === 'Add' ? 0 : orderQuery?.data?.totalcost}
+                      content = {viewType === 'Add' ? 0 : totalCost}
                     />
                   ) : (<></>)
                 }
@@ -196,7 +205,7 @@ function AddOrder() {
             <div className='d-flex justify-content-between'>
               <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>
               <div className='d-flex align-items-center'>
-                <Link to={`/orders/bike-order/${orderQuery?.data?.uuid}/Add`} className='btn btn-md btn-main'>
+                <Link to={`/orders/bike-order/${orderQuery?.data?.id}/Add`} className='btn btn-md btn-main'>
                     <i className='me-1 bi-plus-lg'></i>
                     Add bike order
                 </Link>
@@ -204,7 +213,7 @@ function AddOrder() {
             </div>
 
         
-       { orderQuery?.data?.orderEntries?.length >= 1 ? (
+       { orderEntries.length >= 1 ? (
        <Table className='open-sans' hover>
           <thead>
             <tr className='inter'>
@@ -221,7 +230,7 @@ function AddOrder() {
           <tbody>
 
             {
-              orderQuery?.data?.orderEntries?.map((bikeOrder) => {
+              orderEntries.map((bikeOrder) => {
                 return <tr>
                   <td>{bikeOrder.id}</td>
                   <td>{bikeOrder.bikeName}</td>
@@ -231,7 +240,7 @@ function AddOrder() {
                   <td>
                     <div className='d-flex'>
                       {/* Replace 0 with ${border.id} */}
-                        <Link to={`/orders/bike-order/bo/delete/0`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                        <Link onClick={() => deleteOrder(bikeOrder.id, bikeOrder.cost)} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                       </div>
                   </td>
                 </tr>

@@ -1,5 +1,6 @@
 package backend.software.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class Orders {
     @Column(name = "totalcost")
     @NotNull(message = "Total cost cannot be null!")
     @DecimalMin("0.0")
-    private Double totalcost;
+    private BigDecimal totalcost;
 
     @Column(name = "finished")
     @NotNull(message = "Finished can either be true or false, not null")
@@ -121,11 +122,11 @@ public class Orders {
         this.description = description;
     }
 
-    public Double getTotalcost() {
+    public BigDecimal getTotalcost() {
         return totalcost;
     }
 
-    public void setTotalcost(Double totalcost) {
+    public void setTotalcost(BigDecimal totalcost) {
         this.totalcost = totalcost;
     }
 
