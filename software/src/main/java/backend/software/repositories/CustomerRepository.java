@@ -12,4 +12,7 @@ import backend.software.models.Customer;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("SELECT a FROM Customer a WHERE a.name = ?1")
     ArrayList<Customer> queryName(String name);
+
+    @Query("SELECT a.name FROM Customer a")
+    ArrayList<String> getCustomerNames();
 }

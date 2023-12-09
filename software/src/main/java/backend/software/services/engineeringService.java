@@ -102,8 +102,8 @@ public class engineeringService {
         return bikes;
     }
 
-    public ArrayList<Bike> getBikesAvailable(){
-        return bikeRepository.getAvailableBikes();
+    public ArrayList<String> getBikesAvailable(){
+        return bikeRepository.getAvailableBikes(false);
     }
 
     public HashMap<Object, Object> makeBike(makeBike dto){
@@ -500,8 +500,8 @@ public class engineeringService {
     //For this, this will confirm the order and relay changes to other
     //necessary entities. 
     //Goal is to avoid using database calls as much as possible
-    public HashMap<Object, Object> confirmOrder(confirmOrder dto){
-        Orders cart = orderRepostitory.uuidQuery(dto.getUuid()).get(0);
+    public HashMap<Object, Object> confirmOrder(Long orderID){
+        Orders cart = orderRepostitory.findById(orderID).get();
         ArrayList<Object> errors = new ArrayList<>();
         List<OrderEntry> bikeOrders = cart.getOrderEntries();
 
@@ -544,6 +544,10 @@ public class engineeringService {
 
     public List<Customer> getAllCustomer(){
         return customerRepository.findAll();
+    }
+
+    public ArrayList<String> getAllCustomerNames(){
+        return customerRepository.getCustomerNames();
     }
 
     public Customer getCustomer(Long customerID){
@@ -796,7 +800,12 @@ public class engineeringService {
         
     }
 
-    public void rentBike(rentBike dto){
+    public RentedBike getRental(Long rentID){
+        RentedBike rentedBike = rentedBikeRepository.findById(rentID).get();
+        return rentedBike;
+    }
+
+    public HashMap<Object, Object> rentBike(rentBike dto){
         Bike bike = bikeRepository.queryName(dto.getBikeName()).get(0);
         Customer customer = customerRepository.queryName(dto.getCustomerName()).get(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
@@ -814,11 +823,14 @@ public class engineeringService {
         
         rentedBikeRepository.save(rentedBike);
         bikeRepository.save(bike);
+        HashMap<Object, Object> result = new HashMap<>();
+        result.put("result", "Success!");
         System.out.println("Bike " + dto.getBikeName() + " rented by " + dto.getCustomerName());
+        return result;
     }
 
-    public void confirmRental(confirmRental dto){
-        RentedBike rentedBike = rentedBikeRepository.findById(dto.getRentalID()).get();
+    public HashMap<Object, Object> confirmRental(Long rentID){
+        RentedBike rentedBike = rentedBikeRepository.findById(rentID).get();
         Customer customer = rentedBike.getCustomer();
         Bike bike = rentedBike.getBike();
         
@@ -855,6 +867,9 @@ public class engineeringService {
         customerRepository.save(customer);
         bikeRepository.save(bike);
         System.out.println("Bike Rental Completed!");
+        HashMap<Object, Object> result = new HashMap<>();
+        result.put("result", "Success!");
+        return result;
         
     }
 

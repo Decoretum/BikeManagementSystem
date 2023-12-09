@@ -5,12 +5,15 @@ import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import PageTitle from '../PageTitle';
+import { Modal } from 'react-bootstrap';
 
 
 
 function Orders() { 
   
   const [orders, setOrders] = useState([]);
+  const [show, setShow] = useState(false);
+  const [name, setName] = useState('');
 
   //Querying all Orders
     const orderQuery = useQuery({
@@ -37,6 +40,25 @@ function Orders() {
       return axios.delete(`http://localhost:8000/api/removeOrder?id=${Number(orderID)}`)
     } 
 
+    //Confirming an order
+    const confirmOrder = (orderID) => {
+      axios.post(`http://localhost:8000/api/confirmOrder?orderID=${orderID}`)
+      .then((res) => {
+        if (res.data.result !== null){
+          setName(orderID);
+          let newArray = []
+          for (let o of orders){
+            if (orderID === o.id){
+              o.finished = true;
+          }
+        newArray.push(o);
+      }
+      setShow(true);
+      setOrders(newArray);
+        }
+      })
+    }
+
     if (orderQuery.isFetching && orderQuery.isRefetching && !orderQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
@@ -46,6 +68,12 @@ function Orders() {
     if (orders.length >= 1)
     return (
       <>
+          <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Order Confirmation</Modal.Title>
+            </Modal.Header>
+              <Modal.Body> Order {name} has been confirmed </Modal.Body>
+          </Modal>
           <Container>
           <PageTitle
                 page = "Manage orders"
@@ -77,8 +105,9 @@ function Orders() {
                   <td>{order.finished === true ? 'True' : 'False'}</td>
                   <td>
                     <div className='d-flex'>
-                      <Link to={`/orders/${order.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                      <Link onClick={() => {deleteOrder(order.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                      <Link to={`/orders/${order.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>{order.finished === true ? 'View' : 'Edit'}</Link>
+                      <Link onClick={() => {confirmOrder(order.id)}} className='d-flex btn btn-success m-1 rounded-4'>Confirm</Link>
+                      <Link onClick={() => {deleteOrder(order.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>                   
                     </div>
                   </td>
                 </tr>

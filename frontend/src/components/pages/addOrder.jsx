@@ -28,7 +28,7 @@ function FormGroup(props) {
     <Form.Group as={Col} controlId={props.id}>
       <Form.Label><b>{props.name}</b></Form.Label>
       {
-        props.id === 'description' ? (
+        props.id === 'description' && props.editable === true ? (
           <Form.Control as={'textarea'} style={{minHeight: '10em' }} {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} required/>
         ) : props.id === 'dateOfPurchase' ? (
           <Form.Control defaultValue={finalValue} type={'text'} placeholder={props.name} readOnly />
@@ -126,7 +126,7 @@ function AddOrder() {
   return (
     <>  
         <Container>
-        <h1 className='page-title my-5'>{params.mode} order</h1>
+        <h1 className='page-title my-5'>{params.mode === 'Edit' && orderQuery?.data?.finished === false ? 'Edit' : 'View'} order</h1>
 
         <div className='form-style'>
         <FormProvider {...methods}>
@@ -145,6 +145,7 @@ function AddOrder() {
                 name = "Description"
                 id = "description"
                 type = "text"
+                editable = {orderQuery?.data?.finished === true ? false : false}
                 content = {viewType === 'Add' ? '' : orderQuery?.data?.description}
               />
                 
@@ -188,7 +189,7 @@ function AddOrder() {
                   Back
                   </Link>
                   {
-                    params.mode === 'Edit' || params.mode === 'Add' ? (
+                    (params.mode === 'Edit' || params.mode === 'Add') && orderQuery?.data?.finished === false ? (
                       <Button type='submit' className='btn-view m-1 px-3 rounded-4 mt-4'>
                         Submit
                       </Button>
