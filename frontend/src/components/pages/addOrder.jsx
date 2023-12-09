@@ -16,30 +16,6 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 const currentDate = moment().utcOffset('+08:00').format('MM/DD/YYYY');
 
-function FormGroup(props) {
-  const {register} = useFormContext();
-  let finalValue = props.content;
-
-  if (props.id === 'totalcost') {
-    finalValue = Number(props.content).toFixed(2)
-  }
-  console.log(finalValue);
-  return (
-    <Form.Group as={Col} controlId={props.id}>
-      <Form.Label><b>{props.name}</b></Form.Label>
-      {
-        props.id === 'description' && props.editable === true ? (
-          <Form.Control as={'textarea'} style={{minHeight: '10em' }} {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} required/>
-        ) : props.id === 'dateOfPurchase' ? (
-          <Form.Control defaultValue={finalValue} type={'text'} placeholder={props.name} readOnly />
-          ) : (
-          <Form.Control {...register(`${props.id}`)} defaultValue={finalValue} value={finalValue} type={props.type} placeholder={props.name} readOnly />
-          )
-      }
-    </Form.Group>
-  )
-}
-
 
 
 function AddOrder() {
@@ -54,6 +30,32 @@ function AddOrder() {
   const [customerName, setCustomerName] = useState('Customer Name');
   const [orderEntries, setOrderEntries] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
+
+  const FormGroup = (props) => {
+    const {register} = useFormContext();
+    let finalValue = props.content;
+    console.log(viewType);
+    console.log(props)
+    if (props.id === 'totalcost') {
+      finalValue = Number(props.content).toFixed(2)
+    }
+    console.log(finalValue);
+    return (
+      <Form.Group as={Col} controlId={props.id}>
+        <Form.Label><b>{props.name}</b></Form.Label>
+        {
+          props.id === 'description' && (viewType === 'edit' || viewType === 'add') ? (
+            <Form.Control as={'textarea'} style={{minHeight: '10em' }} {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} required/>
+          ) : props.id === 'dateOfPurchase' ? (
+            <Form.Control defaultValue={currentDate} value={currentDate} type={'text'} placeholder={props.name} readOnly />
+            ) : (
+            <Form.Control {...register(`${props.id}`)} defaultValue={finalValue} value={finalValue} type={props.type} placeholder={props.name} readOnly />
+            )
+        }
+      </Form.Group>
+    )
+  }
+  
 
   //Customer query
   const customerQuery = useQuery({
@@ -103,7 +105,7 @@ function AddOrder() {
     let request = '';
     let operation = '';
     
-    if (viewType === 'Add'){
+    if (viewType === 'add'){
       request = 'post';
       operation = 'make'
     } else {
@@ -151,7 +153,7 @@ function AddOrder() {
                 
                 {/* Total cost Must show in Edit Order only */}
                 {
-                  viewType === 'Edit' ? (
+                  viewType === 'edit' ? (
                     <FormGroup 
                       name = "Total Cost"
                       id = "totalcost"
@@ -189,7 +191,7 @@ function AddOrder() {
                   Back
                   </Link>
                   {
-                    (params.mode === 'Edit' || params.mode === 'Add') && orderQuery?.data?.finished === false ? (
+                    (params.mode === 'edit' || params.mode === 'add') || (viewType === 'edit' && orderQuery?.data?.finished === false) || (viewType === 'add') ? (
                       <Button type='submit' className='btn-view m-1 px-3 rounded-4 mt-4'>
                         Submit
                       </Button>
@@ -201,7 +203,7 @@ function AddOrder() {
         
         {/* Bike order entries */}
         {
-          viewType === 'Edit' ? (
+          viewType === 'edit' ? (
             <>
             <div className='d-flex justify-content-between'>
               <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import PageTitle from '../PageTitle';
-import { Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 
 
 
@@ -14,6 +14,7 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const [show, setShow] = useState(false);
   const [name, setName] = useState('');
+  const history = useNavigate();
 
   //Querying all Orders
     const orderQuery = useQuery({
@@ -63,6 +64,15 @@ function Orders() {
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
+    }
+
+    if (orders.length < 1){
+      return(
+                <>
+                  <h3 className='m-4'>No Orders in the Application!</h3>
+                  <Button style={{marginLeft: '3em'}} onClick={() => {history('/orders/add')}}> Add an Order </Button>
+                </>
+      )
     }
 
     if (orders.length >= 1)
