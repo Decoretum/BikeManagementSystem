@@ -44,8 +44,8 @@ function AddOrder() {
       <Form.Group as={Col} controlId={props.id}>
         <Form.Label><b>{props.name}</b></Form.Label>
         {
-          props.id === 'description' && (viewType === 'edit' || viewType === 'add') ? (
-            <Form.Control as={'textarea'} style={{minHeight: '10em' }} {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} required/>
+          props.id === 'description' && (viewType === 'Edit' || viewType === 'add') ? (
+            <Form.Control as='textarea' style={{minHeight: '30vh' }} {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} required/>
           ) : props.id === 'dateOfPurchase' ? (
             <Form.Control defaultValue={currentDate} value={currentDate} type={'text'} placeholder={props.name} readOnly />
             ) : (
@@ -59,7 +59,6 @@ function AddOrder() {
 
   //Customer query
   const customerQuery = useQuery({
-    enabled: viewType !== 'View',
     queryKey: ['customer'],
     queryFn: async () => {
       return axios.get('http://localhost:8000/api/getAllCustomer')
@@ -138,7 +137,7 @@ function AddOrder() {
                     name = "Date of Purchase"
                     id = "dateOfPurchase"
                     type = "date"
-                    content = {viewType === 'Add' ? currentDate : orderQuery?.data?.dateOfPurchase}
+                    content = {viewType === 'add' ? currentDate : orderQuery?.data?.dateOfPurchase}
                   />
             </Row>
             <Row className='mb-4 gx-5'>
@@ -148,17 +147,17 @@ function AddOrder() {
                 id = "description"
                 type = "text"
                 editable = {orderQuery?.data?.finished === true ? false : false}
-                content = {viewType === 'Add' ? '' : orderQuery?.data?.description}
+                content = {viewType === 'add' ? '' : orderQuery?.data?.description}
               />
                 
                 {/* Total cost Must show in Edit Order only */}
                 {
-                  viewType === 'edit' ? (
+                  viewType === 'Edit' ? (
                     <FormGroup 
                       name = "Total Cost"
                       id = "totalcost"
                       type = "number"
-                      content = {viewType === 'Add' ? 0 : totalCost}
+                      content = {viewType === 'add' ? 0 : totalCost}
                     />
                   ) : (<></>)
                 }
@@ -191,7 +190,7 @@ function AddOrder() {
                   Back
                   </Link>
                   {
-                    (params.mode === 'edit' || params.mode === 'add') || (viewType === 'edit' && orderQuery?.data?.finished === false) || (viewType === 'add') ? (
+                    (params.mode === 'Edit' || params.mode === 'add') || (viewType === 'Edit' && orderQuery?.data?.finished === false) || (viewType === 'add') ? (
                       <Button type='submit' className='btn-view m-1 px-3 rounded-4 mt-4'>
                         Submit
                       </Button>
@@ -203,7 +202,7 @@ function AddOrder() {
         
         {/* Bike order entries */}
         {
-          viewType === 'edit' ? (
+          viewType === 'Edit' ? (
             <>
             <div className='d-flex justify-content-between'>
               <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>
