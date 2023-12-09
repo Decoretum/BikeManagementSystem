@@ -89,6 +89,20 @@ function Appointments() {
           </Container>
       </>
     )
+    else {
+      return (
+          <>
+              <Container>
+              <PageTitle 
+                  page = "Manage appointments"
+                  link = "/appointments/Add"
+                  button = "Add appointment" 
+              />
+              <h2>No appointments stored in the application.</h2>
+              </Container>
+          </>
+      )
+    }
   }
   
   export default Appointments;
