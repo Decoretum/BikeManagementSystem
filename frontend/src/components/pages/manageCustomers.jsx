@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
@@ -10,13 +10,31 @@ import PageTitle from '../PageTitle';
 
 
 function Customers() {
+  const [customers, setCustomers] = useState([]);
+  const history = useNavigate();
+
     const custQuery = useQuery({
     queryKey: ['customer'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllCustomer')
-        .then(res => {return res.data})
+        .then(res => {
+          setCustomers(res.data);
+          return res.data})
     }
     })
+
+    //delete customer
+    const deleteCustomer = (customerID) => {
+      let newArray = custQuery?.data?.filter((cust) => cust.id !== customerID);
+      setCustomers(newArray);
+
+      axios.delete(`http://localhost:8000/api/deleteCustomer?customerID=${customerID}`)
+      .then((res) => {
+        if (res.result === 'success!'){
+          history('/customers');
+        }
+      })
+    }
 
     if (custQuery.isFetching && custQuery.isRefetching && !custQuery.isError){
         return (
@@ -48,7 +66,7 @@ function Customers() {
                 </tr>
               </thead>
               <tbody>
-                { custQuery.data?.map((cust) =>
+                { customers.map((cust) =>
                     <tr key={cust.id}>
                       <td>{cust.id}</td>
                       <td>{cust.idNumber}</td>
@@ -56,11 +74,11 @@ function Customers() {
                       <td>{cust.email}</td>
                       <td>{cust.contactNumber}</td>
                       <td>{cust.classification}</td>
-                      <td>{cust.balance}</td>
+                      <td>{cust.balance === null ? 0 : cust.balance}</td>
                       <td>
                         <div className='d-flex'>
                           <Link to={`/customers/${cust.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>Edit</Link>
-                          <Link to={`/customers/cust/delete/${cust.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                          <Link onClick={() => deleteCustomer(cust.id)} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                         </div>
                       </td>
                     </tr>

@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Alert, Modal } from 'react-bootstrap';
+import { Alert, Dropdown, Modal } from 'react-bootstrap';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 
 const currentDate = moment().utcOffset('+08:00').format('MM/DD/YYYY');
@@ -63,6 +63,7 @@ function AddEditAppointment() {
 
   const [error, setError] = useState(<></>);
   const [showError, setShowError] = useState(false);
+  const [customerName, setCustomerName] = useState('Select Customer Name');
 
   let operation = '';
   let request = '';
@@ -75,15 +76,28 @@ function AddEditAppointment() {
     request = 'post';
   }
 
+  //Customers Query
+  const customerQuery = useQuery({
+    enabled: viewType === 'Add' || viewType === 'Edit',
+    queryKey: ['customerQuery'],
+    queryFn: async () => {
+      return axios.get('http://localhost:8000/api/getAllCustomer')
+      .then((res) => {
+        console.log(res.data.result);
+        return res.data;
+      })
+    }
+  })
   //Submitting data
   const onSubmit = (data) => {
     //Adjusting date
     let tempDate = data.dateTimeAppointed;
     let newDate = moment(tempDate).format('MM/DD/YYYY');
     data.dateTimeAppointed = newDate;
+    data.customerName = customerName;
 
     //Adjusting number values
-    let newCost = Number(data.cost);
+    let newCost = Number(data.cost).toFixed(2);
     data.cost = newCost;
     data.id = params.id;
     console.log(data);
@@ -119,6 +133,7 @@ function AddEditAppointment() {
     queryFn: async () => {
       return axios.get(`http://localhost:8000/api/appointment?apID=${params.id}`)
       .then((res) => {
+        setCustomerName(res.data.Appointment.customer.name)
         console.log(res.data);
         return res.data})
     }
@@ -152,13 +167,38 @@ function AddEditAppointment() {
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit(onSubmit)}>
       <Row className='mb-4 gx-5'>
-        <FormGroup 
-          name = "Customer Name"
-          id = "customerName"
-          type = "text"
-          content = {viewType === 'Add' ? '' : appointmentQuery?.data?.Appointment?.customer?.name}
-          viewType = {viewType}
-        />
+        { viewType === 'Edit' ? (
+        <>
+        <h3 className='page-title'> Select Customer </h3>
+        <Dropdown className='mt-1 mb-4'> 
+          <Dropdown.Toggle variant='success'>
+            {customerName}
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            {
+              customerQuery?.data?.map((customer) => {
+              return <Dropdown.Item onClick={(e) => {
+                setCustomerName(e.target.innerHTML);
+                  }
+                }
+              > 
+                {customer.name}
+                </Dropdown.Item>
+              })
+            }
+          </Dropdown.Menu>
+        </Dropdown>
+        </>
+        ) : (
+            <FormGroup 
+            name = "Customer Name"
+            id = "customerName"
+            type = "text"
+            content = {appointmentQuery?.data?.Appointment?.customer?.name}
+            viewType = {viewType}
+          />
+              )}
         <FormGroup 
           name = "Category"
           id = "category"
@@ -169,19 +209,27 @@ function AddEditAppointment() {
       </Row>
       <Row className='mb-4 gx-5'>
         <FormGroup 
-          name = "Name"
+          name = "Appointment Name"
           id = "name"
           type = "text"
           content = {viewType === 'Add' ? '' : appointmentQuery?.data?.Appointment?.name}
           viewType = {viewType}
         />
-        <FormGroup 
-          name = "Ongoing"
-          id = "ongoing"
-          type = "text"
-          content = {viewType === 'Add' ? '' : appointmentQuery?.data?.Appointment?.ongoing}
-          viewType = {viewType}
-        />
+
+        <Form.Group as={Col} controlId="classification">
+            <Form.Label><b>Ongoing</b></Form.Label>
+              <Form.Select {...register('ongoing')} defaultValue={appointmentQuery?.data?.Appointment?.ongoing}>
+              {viewType === 'Edit' ? 
+              (
+              <>
+                <option value={true}>true</option>
+                <option value={false}>false</option>
+              </>) : (<option selected={true} value={appointmentQuery?.data?.Appointment?.ongoing === true ? true : false}> {appointmentQuery?.data?.Appointment?.ongoing === true ? 'true' : 'false'} </option>)}
+            </Form.Select>
+          </Form.Group>
+        
+        
+        
       </Row>
       <Row className='mb-4 gx-5'>
         <FormGroup 

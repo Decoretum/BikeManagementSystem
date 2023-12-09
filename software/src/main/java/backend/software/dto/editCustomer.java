@@ -1,5 +1,7 @@
 package backend.software.dto;
 
+import java.math.BigDecimal;
+
 public class editCustomer {
     private String name;
     private String idNumber;
@@ -7,9 +9,19 @@ public class editCustomer {
     private String contactNumber;
     private String email;
     private Long id;
+    private BigDecimal balance;
+    
     
     public editCustomer(){}
     
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     public Long getId() {
         return id;
     }

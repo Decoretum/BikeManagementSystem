@@ -158,7 +158,7 @@ public class Initializer {
         if (appointments.isEmpty()){
             makeAppointment a1 = new makeAppointment();
             a1.setCategory("Repairs");
-            a1.setCost(0.0);
+            a1.setCost(new BigDecimal(0.0));
             a1.setDateTimeAppointed("02-07-2023");
             a1.setDescription("I would like to have my bike repaired");
             a1.setName("Bike Repair on Front Wheel");
@@ -166,7 +166,7 @@ public class Initializer {
 
             makeAppointment a2 = new makeAppointment();
             a2.setCategory("Inquiry");
-            a2.setCost(0.0);
+            a2.setCost(new BigDecimal(0.0));
             a2.setDateTimeAppointed("08-14-2023");
             a2.setDescription("I would like to inquire how to optimize my bike using my own personal tools and DIY equipment.");
             a2.setName("Bike Optimization Inquiry");

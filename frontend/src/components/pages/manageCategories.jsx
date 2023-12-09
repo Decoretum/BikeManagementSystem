@@ -1,5 +1,5 @@
 import { React, useState }  from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form'
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -9,27 +9,77 @@ import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import EditCategory from './editCategory';
+import { Alert } from 'react-bootstrap';
 
 
 
 function Categories() {
     const params = useParams();
     const [show, setShow] = useState(false);
+    const [catName, setCatName] = useState('');
+    const [error, setError] = useState(<></>);
+    const [showError, setShowError] = useState(false);
+    const [cats, setCats] = useState([]);
+
+    const history = useNavigate();
+
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     
 
     const {register, handleSubmit} = useForm();
-    const onSubmit = (data) => { 
+    const onSubmit = () => { 
       // insert add category
+      let data = {};
+      data.name = catName;
+
+      axios({
+        method: 'post',
+        url: `http://localhost:8000/api/makeCategory`,
+        data: data
+      }).then((res) => {
+        console.log(res)
+        if (res.data.hasOwnProperty('error')){
+          let errors = <></>;
+          errors = 
+          <>
+            {
+              <Alert varient='error'> {res.data.error} </Alert>
+
+            }
+          </>
+          setError(errors);
+          setShowError(true);
+        } else {
+          
+          let newCateg = res.data.result;
+          console.log(newCateg);
+          history('/categories');
+          let newArray = cats;
+          newArray.push(newCateg);
+          setCats(newArray);
+          setShow(false);
+        }
+      })
+    }
+
+    const deleteCategory = (categID) => {
+      axios.delete(`http://localhost:8000/api/deleteCategory?categID=${categID}`)
+      .then(() => {
+        let newArray = cats.filter((cat) => cat.id !== categID)
+        setCats(newArray);
+        setShow(false);
+      })
     }
 
     const catQuery = useQuery({
     queryKey: ['category'],
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getCategories')
-        .then(res => {return res.data})
+        .then(res => {
+          setCats(res.data)
+          return res.data})
     }
     })
 
@@ -42,6 +92,16 @@ function Categories() {
     if (catQuery.data?.length >= 1)
     return (
       <>
+          {/* Error modals */}
+          <Modal show={showError} onHide={() => setShowError(false)}>
+            <Modal.Header closeButton onClick={() => setShowError(false)}>
+              <Modal.Title>Errors</Modal.Title>
+            </Modal.Header>
+              <Modal.Body>
+                {error}
+              </Modal.Body>
+          </Modal>
+
           <Container>
           <div className='d-flex justify-content-between'>
             <h1 className='page-title my-5'>Manage categories</h1>
@@ -63,7 +123,7 @@ function Categories() {
             </thead>
             <tbody>
             {
-              catQuery.data?.map((cat) => 
+              cats.map((cat) => 
               <tr key={cat.id}>
                 <th>{cat.id}</th>
                 <td>{cat.name}</td>
@@ -75,7 +135,7 @@ function Categories() {
                         } 
                           className='d-flex btn-edit m-1 rounded-4'>Edit</Button>
                      
-                      <Link to={`/categories/cat/delete/${cat.id}`} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
+                      <Link onClick={() => {deleteCategory(cat.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                     </div>
                 </td>
               </tr>
@@ -93,13 +153,14 @@ function Categories() {
               <Modal.Title>Add Category</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form>
-                <Form.Group className="mb-3" controlId="name">
+              <Form onSubmit={handleSubmit(onSubmit)}>
+                <Form.Group className="mb-3"  controlId="name">
                   <Form.Label><b>Category</b></Form.Label>
                   <Form.Control
                     type="text"
                     placeholder=""
                     autoFocus
+                    onChange={(e) => setCatName(e.target.value)}
                   />
                 </Form.Group>
                 
@@ -109,7 +170,7 @@ function Categories() {
               <Button variant="secondary" className="rounded-4" onClick={handleClose}>
                 Close
               </Button>
-              <Button type="submit" className="btn-main">
+              <Button type="submit" onClick={() => {onSubmit()}} className="btn-main">
                 Save
               </Button>
             </Modal.Footer>
