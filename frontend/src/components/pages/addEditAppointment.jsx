@@ -217,7 +217,7 @@ function AddEditAppointment() {
         />
 
         <Form.Group as={Col} controlId="classification">
-            <Form.Label><b>Ongoing</b></Form.Label>
+            <Form.Label><b>Finished</b></Form.Label>
               <Form.Select {...register('ongoing')} defaultValue={appointmentQuery?.data?.Appointment?.ongoing}>
               {viewType === 'Edit' ? 
               (
