@@ -32,7 +32,7 @@ function Customers() {
       //This functionality works, but isn't logical business-wise
       axios.delete(`http://localhost:8000/api/deleteCustomer?customerID=${customerID}`)
       .then((res) => {
-        if (res.result === 'success!'){
+        if (res.data === 'success!'){
           history('/customers');
         }
       })
@@ -50,7 +50,7 @@ function Customers() {
       )
     }
 
-    if (custQuery.data?.length >= 1)
+    if (customers.length >= 1)
     return (
       <>
           <Container>
@@ -110,7 +110,7 @@ function Customers() {
                   link = "/customers/Add"
                   button = "Add customer" 
               />
-              <h2>No customers added in the application.</h2>
+              <h2>No customers are present in the application.</h2>
               </Container>
           </>
       )

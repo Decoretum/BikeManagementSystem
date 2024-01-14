@@ -382,21 +382,21 @@ public class engineeringService {
         
         order.setDescription(dto.getDescription());
         
-        //There is a change of customers
-        if (!dto.getCustomerName().equals(order.getCustomer().getName())){
-            ArrayList<Customer> customerList = customerRepository.queryName(dto.getCustomerName());        
-            if (customerList.isEmpty()) {
-                result.put("result", "There is no customer with the name of " + dto.getCustomerName());
-                return result;
-            }
-
-            Customer customer = customerList.get(0);
-            List<Orders> customerOrders = customer.getOrders();
-            customerOrders.remove(order);
-            order.setCustomer(customer);
-
-            customerRepository.save(customer);
+        //Customer is invalid
+        if (dto.getCustomerName().equals("No Customer")){
+            result.put("result", "Choose a valid Customer");
+            return result;
         }
+
+        ArrayList<Customer> customerList = customerRepository.queryName(dto.getCustomerName());        
+        if (customerList.isEmpty()) {
+            result.put("result", "There is no customer with the name of " + dto.getCustomerName());
+            return result;
+        }
+        
+        Customer customer = customerList.get(0);
+        System.out.println(customer.getName()); 
+        order.setCustomer(customer);
 
         orderRepostitory.save(order);
         result.put("result", "Editing Order is a success!");
@@ -502,6 +502,12 @@ public class engineeringService {
 
         //Contain the product - cost 
         HashMap<Object, Object> productCost = new HashMap<>();
+
+        //Edge Case - Customer is null
+        if (cart.getCustomer() == null){
+            productCost.put("errors", "Order " + orderID + " has no Customer. Add a Customer to it.");
+            return productCost;
+        }
         
         for (OrderEntry a : bikeOrders){
             Bike bike = a.getBike();
@@ -550,18 +556,16 @@ public class engineeringService {
         return customerRepository.findById(customerID).get();
     }
 
-    public HashMap<String, String> deleteTempCustomer(Long customerID){
+    public String deleteTempCustomer(Long customerID){
         Customer customer = customerRepository.findById(customerID).get();
         customer.setDeleted(true);
         customerRepository.save(customer);
-        HashMap<String, String> result = new HashMap<>();
-        result.put("result", "success!");
-        return result;
+        return "success!";
     }
 
     //This will remove all of a Customer's Association
     //This algorithm works perfectly as long as Appointment's relation to Customer is not "NOT NULL" in Models
-    public HashMap<String, String> deleteCustomer(Long customerID){
+    public String deleteCustomer(Long customerID){
         Customer customer = customerRepository.findById(customerID).get();
         List<Appointment> appointments = customer.getAppointments();
         List<Orders> orders = customer.getOrders();
@@ -602,9 +606,7 @@ public class engineeringService {
         customerRepository.delete(customer);
 
         System.out.println("Customer " + customerID + " has been deleted from the application");
-        HashMap<String, String> result = new HashMap<>();
-        result.put("result", "Success!");
-        return result;
+        return "success!";
     }
 
     public HashMap<Object, Object> makeCustomer(makeCustomer dto){
@@ -793,8 +795,8 @@ public class engineeringService {
         return result;
     }
 
-    public String confirmAppointment(confirmAppointment dto){
-        Optional<Appointment> appointment = appointmentRepository.findById(dto.getId());
+    public String confirmAppointment(Long appID){
+        Optional<Appointment> appointment = appointmentRepository.findById(appID);
         appointment.get().setOngoing(false);
         appointmentRepository.save(appointment.get());
         System.out.println("Appointment Confirmed");
@@ -813,7 +815,7 @@ public class engineeringService {
         return rentedBike;
     }
 
-    public HashMap<Object, Object> rentBike(rentBike dto){
+    public String rentBike(rentBike dto){
         Bike bike = bikeRepository.queryName(dto.getBikeName()).get(0);
         Customer customer = customerRepository.queryName(dto.getCustomerName()).get(0);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
@@ -831,13 +833,11 @@ public class engineeringService {
         
         rentedBikeRepository.save(rentedBike);
         bikeRepository.save(bike);
-        HashMap<Object, Object> result = new HashMap<>();
-        result.put("result", "Success!");
         System.out.println("Bike " + dto.getBikeName() + " rented by " + dto.getCustomerName());
-        return result;
+        return "success!";
     }
 
-    public HashMap<Object, Object> confirmRental(Long rentID){
+    public String confirmRental(Long rentID){
         RentedBike rentedBike = rentedBikeRepository.findById(rentID).get();
         Customer customer = rentedBike.getCustomer();
         Bike bike = rentedBike.getBike();
@@ -875,31 +875,33 @@ public class engineeringService {
         customerRepository.save(customer);
         bikeRepository.save(bike);
         System.out.println("Bike Rental Completed!");
-        HashMap<Object, Object> result = new HashMap<>();
-        result.put("result", "Success!");
-        return result;
+        return "success!";
         
     }
 
-    public void deleteRental(Long rentedBikeID){
+    public String deleteRental(Long rentedBikeID){
         RentedBike rentedBike = rentedBikeRepository.findById(rentedBikeID).get();
         if (rentedBike.getFinished() == false){
-            Customer customer = rentedBike.getCustomer();
             Bike bike = rentedBike.getBike();
-            List<RentedBike> rentedBikes = customer.getRentedBikes();
             List<RentedBike> rentedBikes2 = bike.getRentedBikes();
-            rentedBikes.remove(rentedBike);
-            rentedBikes2.remove(rentedBike);
-            rentedBike.setCustomer(null);
+            //rentedBikes2.remove(rentedBike);
             rentedBike.setBike(null);
+            //bikeRepository.save(bike);
 
-            bikeRepository.save(bike);
-            customerRepository.save(customer);
+            Customer customer = rentedBike.getCustomer();
+            if (customer != null){
+                List<RentedBike> rentedBikes = customer.getRentedBikes();
+                //rentedBikes.remove(rentedBike);
+                rentedBike.setCustomer(null);
+                //customerRepository.save(customer);
+            }
+
             rentedBikeRepository.save(rentedBike);
             rentedBikeRepository.delete(rentedBike);
             
-            System.out.println("Rented Bike " + rentedBikeID + " has been deleted");
+            System.out.println("Rented Bike " + rentedBikeID + " has been deleted");       
         }
+        return "success!"; 
     }
 
 

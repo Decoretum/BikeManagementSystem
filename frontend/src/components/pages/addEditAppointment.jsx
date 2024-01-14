@@ -104,7 +104,7 @@ function AddEditAppointment() {
 
     data.ongoing = data.ongoing === 'true' ? true : false;
 
-    if(customerName === 'Select Customer Name'){ 
+    if(customerName === 'Select Customer Name' || customerName === 'No Name'){ 
       let errors = <></>;
       errors = 
       <>
@@ -149,7 +149,11 @@ function AddEditAppointment() {
     queryFn: async () => {
       return axios.get(`http://localhost:8000/api/appointment?apID=${params.id}`)
       .then((res) => {
-        setCustomerName(res.data.Appointment.customer.name)
+        if (res.data.Appointment.customer === null){
+          setCustomerName('No Name');
+        } else {
+          setCustomerName(res.data.Appointment.customer.name)
+        }
         console.log(res.data);
         return res.data})
     }

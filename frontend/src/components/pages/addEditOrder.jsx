@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import { useParams } from 'react-router-dom';
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Modal } from 'react-bootstrap';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
@@ -31,6 +31,8 @@ function AddOrder() {
   const [customerName, setCustomerName] = useState('Customer Name');
   const [orderEntries, setOrderEntries] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
+  const [show, setShow] = useState(false);
+  const [name, setName] = useState('');
 
   const FormGroup = (props) => {
     const {register} = useFormContext();
@@ -123,6 +125,11 @@ function AddOrder() {
     })
       .then((res) => {
         console.log(res.data);
+        if (res.data.result === 'Choose a valid Customer'){
+          setShow(true);
+          setName(res.data.result);
+          return;
+        }
         history('/orders')
     })
 
@@ -143,6 +150,12 @@ function AddOrder() {
   
   return (
     <>  
+        <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Order Confirmation</Modal.Title>
+            </Modal.Header>
+              <Modal.Body> {name} </Modal.Body>
+          </Modal>
         <Container>
         <h1 className='page-title my-5'>{params.mode === 'Edit' && orderQuery?.data?.finished === false ? 'Edit' : params.mode === 'add' ? 'Create' : 'View'} order</h1>
 

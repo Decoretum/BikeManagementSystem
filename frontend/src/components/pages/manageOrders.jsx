@@ -45,17 +45,24 @@ function Orders() {
     const confirmOrder = (orderID) => {
       axios.post(`http://localhost:8000/api/confirmOrder?orderID=${orderID}`)
       .then((res) => {
-        if (res.data.result !== null){
-          setName(orderID);
+        if (res.data.result !== null && res.data.errors === null){
           let newArray = []
           for (let o of orders){
             if (orderID === o.id){
               o.finished = true;
-          }
+            }
         newArray.push(o);
-      }
-      setShow(true);
-      setOrders(newArray);
+          }
+        
+        let successMessage = `Order ${orderID} has been confirmed`
+        setName(successMessage);
+        setShow(true);
+        setOrders(newArray);
+        } else {
+          let errorMessage = res.data.errors;
+          setShow(true);
+          setName(errorMessage);
+          console.log(res);
         }
       })
     }
@@ -88,7 +95,7 @@ function Orders() {
             <Modal.Header closeButton>
               <Modal.Title>Order Confirmation</Modal.Title>
             </Modal.Header>
-              <Modal.Body> Order {name} has been confirmed </Modal.Body>
+              <Modal.Body> {name} </Modal.Body>
           </Modal>
           <Container>
           <PageTitle
@@ -120,7 +127,11 @@ function Orders() {
                   <td>
                     <div className='d-flex'>
                       <Link to={`/orders/${order.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>{order.finished === true ? 'View' : 'Edit'}</Link>
-                      <Link onClick={() => {confirmOrder(order.id)}} className='d-flex btn btn-success m-1 rounded-4'>Confirm</Link>
+                      {
+                        order.finished !== true ? (
+                          <Link onClick={() => {confirmOrder(order.id)}} className='d-flex btn btn-success m-1 rounded-4'>Confirm</Link>
+                          ) : (<></>)
+                      }
                       <Link onClick={() => {deleteOrder(order.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>                   
                     </div>
                   </td>
