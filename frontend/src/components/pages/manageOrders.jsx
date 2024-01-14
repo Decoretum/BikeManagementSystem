@@ -45,25 +45,38 @@ function Orders() {
     const confirmOrder = (orderID) => {
       axios.post(`http://localhost:8000/api/confirmOrder?orderID=${orderID}`)
       .then((res) => {
-        if (res.data.result !== null){
-          setName(orderID);
+        if (res.data.result !== null && res.data.errors === null){
           let newArray = []
           for (let o of orders){
             if (orderID === o.id){
               o.finished = true;
-          }
+            }
         newArray.push(o);
-      }
-      setShow(true);
-      setOrders(newArray);
+          }
+        
+        let successMessage = `Order ${orderID} has been confirmed`
+        setName(successMessage);
+        setShow(true);
+        setOrders(newArray);
+        } else {
+          let errorMessage = res.data.errors;
+          setShow(true);
+          setName(errorMessage);
+          console.log(res);
         }
       })
     }
 
-    if (orderQuery.isFetching && orderQuery.isRefetching && !orderQuery.isError){
+    if ((orderQuery.isFetching || orderQuery.isRefetching) && !orderQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
+    }
+
+    if (orderQuery.isError){
+      return (
+        <h3 className='m-4'>Error fetching Order data</h3>
+      )
     }
 
     if (orders.length < 1){
@@ -82,7 +95,7 @@ function Orders() {
             <Modal.Header closeButton>
               <Modal.Title>Order Confirmation</Modal.Title>
             </Modal.Header>
-              <Modal.Body> Order {name} has been confirmed </Modal.Body>
+              <Modal.Body> {name} </Modal.Body>
           </Modal>
           <Container>
           <PageTitle
@@ -108,13 +121,17 @@ function Orders() {
                 <tr key={order.id}>
                   <td>{order.id}</td>
                   <td>{order.dateOfPurchase}</td>
-                  <td>{order.customer.name}</td>
+                  <td>{order.customer === null ? 'No Customer' : order.customer.name}</td>
                   <td>P{(order.totalcost).toFixed(2)}</td>
                   <td>{order.finished === true ? 'True' : 'False'}</td>
                   <td>
                     <div className='d-flex'>
                       <Link to={`/orders/${order.id}/Edit`} className='d-flex btn btn-edit m-1 rounded-4'>{order.finished === true ? 'View' : 'Edit'}</Link>
-                      <Link onClick={() => {confirmOrder(order.id)}} className='d-flex btn btn-success m-1 rounded-4'>Confirm</Link>
+                      {
+                        order.finished !== true ? (
+                          <Link onClick={() => {confirmOrder(order.id)}} className='d-flex btn btn-success m-1 rounded-4'>Confirm</Link>
+                          ) : (<></>)
+                      }
                       <Link onClick={() => {deleteOrder(order.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>                   
                     </div>
                   </td>

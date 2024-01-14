@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import backend.software.dto.confirmAppointment;
-import backend.software.dto.confirmOrder;
-import backend.software.dto.confirmRental;
-import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAnOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.editCategory;
@@ -241,11 +238,11 @@ public class engineeringController {
         return engineeringService.editAppointment(dto);
     }  
 
-    @POST
+    @PUT
     @Path("/confirmAppointment")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void confirmAppointment(confirmAppointment dto){
-        engineeringService.confirmAppointment(dto);
+    public String confirmAppointment(@QueryParam("appID") Long appID){
+        return engineeringService.confirmAppointment(appID);
     }
 
     @GET
@@ -283,7 +280,7 @@ public class engineeringController {
     //I'm not sure if this is practical in a business setting
     @DELETE
     @Path("/deleteCustomer")
-    public HashMap<String, String> deleteCustomer(@QueryParam("customerID") Long customerID){
+    public String deleteCustomer(@QueryParam("customerID") Long customerID){
         return engineeringService.deleteCustomer(customerID);
     }  
 
@@ -319,20 +316,20 @@ public class engineeringController {
     @POST
     @Path("/rentBike")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public HashMap<Object, Object> rentBike(rentBike dto){
+    public String rentBike(rentBike dto){
         return engineeringService.rentBike(dto);
     }
 
     @POST
     @Path("/confirmRental")
-    public HashMap<Object, Object> confirmRental(@QueryParam("rentID")Long rentID){
+    public String confirmRental(@QueryParam("rentID")Long rentID){
         return engineeringService.confirmRental(rentID);
     }
 
     @DELETE
     @Path("/deleteRentedBike")
-    public void deleteRentedBike(@QueryParam("rentedBikeID") Long rentedBikeID){
-        engineeringService.deleteRental(rentedBikeID);
+    public String deleteRentedBike(@QueryParam("rentedBikeID") Long rentedBikeID){
+        return engineeringService.deleteRental(rentedBikeID);
     } 
 
 }

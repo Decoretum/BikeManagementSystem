@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import { useParams } from 'react-router-dom';
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Modal } from 'react-bootstrap';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { FormProvider, useForm, useFormContext } from 'react-hook-form';
@@ -23,6 +23,7 @@ function AddOrder() {
   const viewType = params.mode;
   const orderID = params.id;
   const history = useNavigate();
+  console.log(params.mode);
 
   const methods = useForm();
   const {handleSubmit, register, errors} = methods;
@@ -30,26 +31,26 @@ function AddOrder() {
   const [customerName, setCustomerName] = useState('Customer Name');
   const [orderEntries, setOrderEntries] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
+  const [show, setShow] = useState(false);
+  const [name, setName] = useState('');
 
   const FormGroup = (props) => {
     const {register} = useFormContext();
     let finalValue = props.content;
-    console.log(viewType);
-    console.log(props)
     if (props.id === 'totalcost') {
       finalValue = Number(props.content).toFixed(2)
-    }
+    } 
     console.log(finalValue);
     return (
       <Form.Group as={Col} controlId={props.id}>
         <Form.Label><b>{props.name}</b></Form.Label>
         {
-          props.id === 'description' && (viewType === 'Edit' || viewType === 'add') ? (
+          props.id === 'description' ? (
             <Form.Control as='textarea' style={{minHeight: '30vh' }} {...register(`${props.id}`)} defaultValue={finalValue} type={props.type} placeholder={props.name} required/>
           ) : props.id === 'dateOfPurchase' ? (
             <Form.Control defaultValue={currentDate} value={currentDate} type={'text'} placeholder={props.name} readOnly />
             ) : (
-            <Form.Control {...register(`${props.id}`)} defaultValue={finalValue} value={finalValue} type={props.type} placeholder={props.name} readOnly />
+            <Form.Control {...register(`${props.id}`)} defaultValue={finalValue} value={finalValue} type={'number'} placeholder={props.name} readOnly />
             )
         }
       </Form.Group>
@@ -75,8 +76,12 @@ function AddOrder() {
     queryFn: async () => {
       return axios.get(`http://localhost:8000/api/getOrder?orderID=${orderID}`)
       .then((res) => {
-        console.log(res.data);
-        setCustomerName(res.data.customer.name);
+        if (res.data.customer === null){
+          setCustomerName('No Customer')
+        } else {
+          setCustomerName(res.data.customer.name);
+        }
+        
         setOrderEntries(res.data.orderEntries);
         setTotalCost(res.data.totalcost);
         return res.data;
@@ -99,6 +104,7 @@ function AddOrder() {
   const onSubmit = (data) => {
     data.customerName = customerName;
     data.uuid = orderQuery?.data?.uuid;
+    data.description = data.description.trim();
     console.log(data)
 
     let request = '';
@@ -119,15 +125,39 @@ function AddOrder() {
     })
       .then((res) => {
         console.log(res.data);
+        if (res.data.result === 'Choose a valid Customer'){
+          setShow(true);
+          setName(res.data.result);
+          return;
+        }
         history('/orders')
     })
 
   }
   
+  if ((orderQuery?.isFetching || orderQuery?.isRefetching) && !orderQuery?.isError)
+  {
+    return (
+      <h3 className='m-4'>Loading Order Data</h3>
+      )
+  }
+
+  if (orderQuery?.isError){
+    return(
+      <h3 className='m-4'>Error Fetching Order Data</h3>
+    )
+  }
+  
   return (
     <>  
+        <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Order Confirmation</Modal.Title>
+            </Modal.Header>
+              <Modal.Body> {name} </Modal.Body>
+          </Modal>
         <Container>
-        <h1 className='page-title my-5'>{params.mode === 'Edit' && orderQuery?.data?.finished === false ? 'Edit' : 'View'} order</h1>
+        <h1 className='page-title my-5'>{params.mode === 'Edit' && orderQuery?.data?.finished === false ? 'Edit' : params.mode === 'add' ? 'Create' : 'View'} order</h1>
 
         <div className='form-style'>
         <FormProvider {...methods}>
@@ -190,7 +220,7 @@ function AddOrder() {
                   Back
                   </Link>
                   {
-                    (params.mode === 'Edit' || params.mode === 'add') || (viewType === 'Edit' && orderQuery?.data?.finished === false) || (viewType === 'add') ? (
+                    (params.mode === 'Edit' && orderQuery?.data?.finished === false) || (params.mode === 'add') ? (
                       <Button type='submit' className='btn-view m-1 px-3 rounded-4 mt-4'>
                         Submit
                       </Button>
@@ -204,15 +234,24 @@ function AddOrder() {
         {
           viewType === 'Edit' ? (
             <>
-            <div className='d-flex justify-content-between'>
+            {
+              orderQuery?.data?.finished === false ? (
+            <div className='d-flex justify-content-between mt-5'>
               <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>
               <div className='d-flex align-items-center'>
                 <Link to={`/orders/bike-order/${orderQuery?.data?.id}/Add`} className='btn btn-md btn-main'>
                     <i className='me-1 bi-plus-lg'></i>
                     Add bike order
                 </Link>
+              </div>
             </div>
-            </div>
+              ) : (
+              <>
+                <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>
+              </>
+              )
+            }
+            
 
         
        { orderEntries.length >= 1 ? (
@@ -239,12 +278,19 @@ function AddOrder() {
                   <td>{bikeOrder.quantity}</td>
                   <td>{bikeOrder.cost}</td>
                   <td>{bikeOrder.bike_color}</td>
-                  <td>
+                  {
+                    orderQuery?.data?.finished === false ? (
+                      <td>
                     <div className='d-flex'>
-                      {/* Replace 0 with ${border.id} */}
+                      
                         <Link onClick={() => deleteOrder(bikeOrder.id, bikeOrder.cost)} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                       </div>
                   </td>
+                    ) : (
+                      <></>
+                    )
+                  }
+                  
                 </tr>
               })
             

@@ -28,7 +28,7 @@ function Rentals() {
     const confirmRent = (rentID) => {
       axios.post(`http://localhost:8000/api/confirmRental?rentID=${rentID}`)
       .then((res) => {
-        if (res.data.result === 'Success!'){
+        if (res.data === 'success!'){
           let newArray = []
           for (let rent of rents){
             if (rent.id === rentID){
@@ -40,11 +40,18 @@ function Rentals() {
       setShow(true);
       setRents(newArray);
         }
-      })
-      
+      }) 
     }
 
-    if (rentQuery.isFetching && rentQuery.isRefetching && !rentQuery.isError){
+    const deleteRent = (rentID) => {
+      axios.delete(`http://localhost:8000/api/deleteRentedBike?rentedBikeID=${rentID}`)
+      .then((res) => {
+        let newArray = rents.filter((rent) => rent.id !== rentID);
+        setRents(newArray);
+      })
+    }
+
+    if ((rentQuery.isFetching || rentQuery.isRefetching) && !rentQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
@@ -58,7 +65,7 @@ function Rentals() {
       )
     }
 
-    if (rentQuery.data?.length === 0){
+    if (rents.length === 0){
       return(
         <Container className='open-sans'>
         <div className='form-style'>
@@ -108,14 +115,18 @@ function Rentals() {
                             <td>{rb.id}</td>
                             <td>{rb.dateRented}</td>
                             <td>{rb.bike.name}</td>
-                            <td>{rb.customer.name}</td>
+                            <td>{rb.customer !== null ? rb.customer.name : 'No Customer'}</td>
                             <td>{rb.rentalDuration}</td>
                             <td>{rb.finished === true ? 'true' : 'false'}</td>
                             <td>
                               <div className='d-flex'>
                                 <Link to={`/rentals/${rb.id}/View`} className='d-flex btn btn-main m-1 rounded-4'>View</Link>
-                                {/* the button below should also set the bike.canBeBorrowed = true */}
-                                <Link onClick={() => {confirmRent(rb.id)}} className='d-flex btn btn-edit m-1 rounded-4'>Confirm</Link> 
+                                {
+                                  rb.finished !== true && rb.customer !== null ? (
+                                    <Link onClick={() => {confirmRent(rb.id)}} className='d-flex btn btn-edit m-1 rounded-4'>Confirm</Link> 
+                                    ) : (<></>)
+                                }
+                                <Link onClick={() => {deleteRent(rb.id)}} className='d-flex btn btn-danger m-1 rounded-4'>Delete</Link>
                               </div>
                             </td>
                         </tr>

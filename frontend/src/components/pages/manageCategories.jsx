@@ -83,10 +83,16 @@ function Categories() {
     }
     })
 
-    if (catQuery.isFetching && catQuery.isRefetching && !catQuery.isError){
+    if ((catQuery.isFetching || catQuery.isRefetching) && !catQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
+    }
+
+    if (catQuery.isError){
+      return (
+        <h3 className='m-4'>Error fetching category data</h3>
+      )
     }
 
     if (catQuery.data?.length >= 1)

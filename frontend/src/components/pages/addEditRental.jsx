@@ -24,7 +24,8 @@ function AddEditRental() {
   const onSubmit = (data) => {
     axios.post('http://localhost:8000/api/rentBike', data)
     .then((res) => {
-      if (res.data.result === 'Success!')
+      console.log(res)
+      if (res.data === 'success!')
       navigate('/rentals');
     })
 

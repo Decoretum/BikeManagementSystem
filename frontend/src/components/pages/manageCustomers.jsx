@@ -18,8 +18,9 @@ function Customers() {
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllCustomer')
         .then(res => {
-          setCustomers(res.data);
-          return res.data})
+          let newCustomers = res.data.filter((customer) => customer.deleted !== true);
+          setCustomers(newCustomers);
+          return newCustomers})
     }
     })
 
@@ -28,21 +29,28 @@ function Customers() {
       let newArray = custQuery?.data?.filter((cust) => cust.id !== customerID);
       setCustomers(newArray);
 
+      //This functionality works, but isn't logical business-wise
       axios.delete(`http://localhost:8000/api/deleteCustomer?customerID=${customerID}`)
       .then((res) => {
-        if (res.result === 'success!'){
+        if (res.data === 'success!'){
           history('/customers');
         }
       })
     }
 
-    if (custQuery.isFetching && custQuery.isRefetching && !custQuery.isError){
+    if ((custQuery.isFetching || custQuery.isRefetching) && !custQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
     }
 
-    if (custQuery.data?.length >= 1)
+    if (custQuery.isError){
+      return(
+        <h3 className='m-4'>Error fetching Customer Data</h3>
+      )
+    }
+
+    if (customers.length >= 1)
     return (
       <>
           <Container>
@@ -102,7 +110,7 @@ function Customers() {
                   link = "/customers/Add"
                   button = "Add customer" 
               />
-              <h2>No customers added in the application.</h2>
+              <h2>No customers are present in the application.</h2>
               </Container>
           </>
       )

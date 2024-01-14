@@ -48,7 +48,7 @@ function FormGroup(props) {
           ) : (isView && props.id === 'description') ? (
             <Form.Control readOnly style={{minHeight: '50vh'}} as='textarea' defaultValue={finalContent} type={props.type} />
             ) : (!isView && props.id === 'description') ? (
-              <Form.Control style={{minHeight: '50vh'}} {...register(`${props.id}`)} as='textarea' defaultValue={finalContent} type={props.type} placeholder={props.name} />
+              <Form.Control style={{minHeight: '50vh'}} {...register(`${props.id}`)} as='textarea' defaultValue={finalContent} type={props.type} placeholder={props.name} required/>
               ) : (
             <Form.Control as='textarea' {...register(`${props.id}`)} defaultValue={finalContent} type={props.type} placeholder={props.name} required/>
             ) 
@@ -104,6 +104,11 @@ function AddEditBike() {
     data.id = bikeID;
 
     console.log(data);
+
+    //Trim Strings
+    data.description = data.description.trim();
+    data.name = data.name.trim();
+    data.wheelSize = data.wheelSize.trim();
 
     //Decimal validation
     if (data.stock.toString().includes('.')){
