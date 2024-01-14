@@ -70,7 +70,6 @@ public class Appointment {
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER)
-    @NotNull(message = "Appointment must be linked with a Customer")
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

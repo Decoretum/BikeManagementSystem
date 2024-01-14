@@ -529,6 +529,7 @@ public class engineeringService {
 
         if (!errors.isEmpty()){
             productCost.put("errors", errors);
+            return productCost;
         }
         
         cart.setFinished(true);
