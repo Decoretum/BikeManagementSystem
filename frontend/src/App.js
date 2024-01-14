@@ -13,7 +13,7 @@ import './App.css';
 import AddEditBike from './components/pages/addEditBike';
 import AddEditCustomer from './components/pages/addEditCustomer';
 import AddEditAppointment from './components/pages/addEditAppointment';
-import AddOrder from './components/pages/addOrder';
+import AddOrder from './components/pages/addEditOrder';
 import AddEditBikeOrder from './components/pages/addEditBikeOrder';
 import AddEditRental from './components/pages/addEditRental';
 import EditCategory from './components/pages/editCategory';

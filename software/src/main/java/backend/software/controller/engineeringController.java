@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import backend.software.dto.confirmAppointment;
-import backend.software.dto.confirmOrder;
-import backend.software.dto.confirmRental;
-import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAnOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.editCategory;
@@ -244,8 +241,8 @@ public class engineeringController {
     @POST
     @Path("/confirmAppointment")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void confirmAppointment(confirmAppointment dto){
-        engineeringService.confirmAppointment(dto);
+    public String confirmAppointment(confirmAppointment dto){
+        return engineeringService.confirmAppointment(dto);
     }
 
     @GET
@@ -284,7 +281,7 @@ public class engineeringController {
     @DELETE
     @Path("/deleteCustomer")
     public HashMap<String, String> deleteCustomer(@QueryParam("customerID") Long customerID){
-        return engineeringService.deleteCustomer(customerID);
+        return engineeringService.deleteTempCustomer(customerID);
     }  
 
     @GET

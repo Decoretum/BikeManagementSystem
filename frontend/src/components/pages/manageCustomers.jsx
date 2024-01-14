@@ -18,8 +18,9 @@ function Customers() {
     queryFn: async () => {
         return axios.get('http://localhost:8000/api/getAllCustomer')
         .then(res => {
-          setCustomers(res.data);
-          return res.data})
+          let newCustomers = res.data.filter((customer) => customer.deleted !== true);
+          setCustomers(newCustomers);
+          return newCustomers})
     }
     })
 
@@ -28,6 +29,7 @@ function Customers() {
       let newArray = custQuery?.data?.filter((cust) => cust.id !== customerID);
       setCustomers(newArray);
 
+      //This functionality works, but isn't logical business-wise
       axios.delete(`http://localhost:8000/api/deleteCustomer?customerID=${customerID}`)
       .then((res) => {
         if (res.result === 'success!'){

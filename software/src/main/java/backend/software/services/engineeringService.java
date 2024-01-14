@@ -1,20 +1,15 @@
 package backend.software.services;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import backend.software.dto.confirmAppointment;
-import backend.software.dto.confirmOrder;
-import backend.software.dto.confirmRental;
-import backend.software.dto.deleteBikeOrder;
 import backend.software.dto.editAnOrder;
 import backend.software.dto.editAppointment;
 import backend.software.dto.editCategory;
@@ -555,8 +550,17 @@ public class engineeringService {
         return customerRepository.findById(customerID).get();
     }
 
+    public HashMap<String, String> deleteTempCustomer(Long customerID){
+        Customer customer = customerRepository.findById(customerID).get();
+        customer.setDeleted(true);
+        customerRepository.save(customer);
+        HashMap<String, String> result = new HashMap<>();
+        result.put("result", "success!");
+        return result;
+    }
+
     //This will remove all of a Customer's Association
-    //I don't know if this will be a feature
+    //This algorithm works perfectly as long as Appointment's relation to Customer is not "NOT NULL" in Models
     public HashMap<String, String> deleteCustomer(Long customerID){
         Customer customer = customerRepository.findById(customerID).get();
         List<Appointment> appointments = customer.getAppointments();
@@ -609,6 +613,7 @@ public class engineeringService {
         newCustomer.setClassification(dto.getClassification());
         newCustomer.setContactNumber(dto.getContactNumber());
         newCustomer.setIdNumber(dto.getIdNumber());
+        newCustomer.setDeleted(false);
 
         if (dto.getEmail() == ""){
             newCustomer.setEmail(null);
@@ -628,7 +633,7 @@ public class engineeringService {
             result.put("errors", errors);
             return result;
         } else if (!customerPresent.isEmpty()){
-            result.put("errors", "Customer " + dto.getName() + " already exists");
+            result.put("errors", "Customer " + dto.getName() + " already exists in the database");
             return result;
         }
 
@@ -788,11 +793,12 @@ public class engineeringService {
         return result;
     }
 
-    public void confirmAppointment(confirmAppointment dto){
+    public String confirmAppointment(confirmAppointment dto){
         Optional<Appointment> appointment = appointmentRepository.findById(dto.getId());
         appointment.get().setOngoing(false);
         appointmentRepository.save(appointment.get());
         System.out.println("Appointment Confirmed");
+        return "success!";
     }
 
     //RENTED BIKE

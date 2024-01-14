@@ -34,6 +34,9 @@ public class Customer {
     @Column(name = "name")
     private String name;
 
+    @Column(name="deleted")
+    private Boolean deleted;
+
     @NotNull(message = "ID Number cannot be null")
     @Column(name = "idNumber")
     private String idNumber;
@@ -145,6 +148,14 @@ public class Customer {
 
     public void setAppointments(List<Appointment> appointments) {
         this.appointments = appointments;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
     
     
