@@ -39,9 +39,15 @@ function Bikes() {
     }
 
 
-    if (bikeQuery.isFetching && bikeQuery.isRefetching && !bikeQuery.isError){
+    if ((bikeQuery.isFetching || bikeQuery.isRefetching) && !bikeQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
+        )
+    }
+
+    if (bikeQuery.isError){
+        return(
+            <h3 className='m-4'>Error fetching Bike Data</h3>
         )
     }
 

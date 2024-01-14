@@ -44,7 +44,7 @@ function Rentals() {
       
     }
 
-    if (rentQuery.isFetching && rentQuery.isRefetching && !rentQuery.isError){
+    if ((rentQuery.isFetching || rentQuery.isRefetching) && !rentQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )

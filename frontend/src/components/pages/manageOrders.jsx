@@ -60,10 +60,16 @@ function Orders() {
       })
     }
 
-    if (orderQuery.isFetching && orderQuery.isRefetching && !orderQuery.isError){
+    if ((orderQuery.isFetching || orderQuery.isRefetching) && !orderQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
+    }
+
+    if (orderQuery.isError){
+      return (
+        <h3 className='m-4'>Error fetching Order data</h3>
+      )
     }
 
     if (orders.length < 1){
@@ -108,7 +114,7 @@ function Orders() {
                 <tr key={order.id}>
                   <td>{order.id}</td>
                   <td>{order.dateOfPurchase}</td>
-                  <td>{order.customer.name}</td>
+                  <td>{order.customer === null ? 'No Customer' : order.customer.name}</td>
                   <td>P{(order.totalcost).toFixed(2)}</td>
                   <td>{order.finished === true ? 'True' : 'False'}</td>
                   <td>

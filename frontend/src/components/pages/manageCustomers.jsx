@@ -36,10 +36,16 @@ function Customers() {
       })
     }
 
-    if (custQuery.isFetching && custQuery.isRefetching && !custQuery.isError){
+    if ((custQuery.isFetching || custQuery.isRefetching) && !custQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
+    }
+
+    if (custQuery.isError){
+      return(
+        <h3 className='m-4'>Error fetching Customer Data</h3>
+      )
     }
 
     if (custQuery.data?.length >= 1)

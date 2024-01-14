@@ -31,10 +31,16 @@ function Appointments() {
       })
     }
 
-    if (appQuery.isFetching && appQuery.isRefetching && !appQuery.isError){
+    if ((appQuery.isFetching || appQuery.isRefetching) && !appQuery.isError){
         return (
             <h3 className='m-4'>Loading data...</h3>
         )
+    }
+
+    if (appQuery.isError){
+      return(
+        <h3 className='m-4'>Error fetching Appointment Data</h3>
+      )
     }
 
     if (appQuery.data?.length >= 1)
