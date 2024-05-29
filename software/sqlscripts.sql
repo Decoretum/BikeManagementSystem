@@ -44,6 +44,29 @@ SELECT * FROM `Customer`;
 SELECT * FROM `Appointment`;
 SELECT * FROM `rented_bike`;
 
+DELETE FROM `rented_bike`;
 
+ALTER TABLE Appointment
+modify customer_id bigint(20);
 
+appointment	CREATE TABLE `appointment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `category` varchar(255) NOT NULL,
+  `cost` decimal(38,2) NOT NULL,
+  `date_time_appointed` varchar(255) NOT NULL,
+  `date_time_created` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `ongoing` bit(1) NOT NULL,
+  `customer_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKmyowslj1th8d9j6j3wlbwrtoe` (`customer_id`),
+  CONSTRAINT `FKmyowslj1th8d9j6j3wlbwrtoe` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+Show create table appointment;
+
+SELECT constraint_name
+FROM information_schema.key_column_usage
+WHERE RE
 
