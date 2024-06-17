@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -15,6 +15,12 @@ function Orders() {
   const [show, setShow] = useState(false);
   const [name, setName] = useState('');
   const history = useNavigate();
+
+  useEffect(() => {
+    setShow(false);
+    setName('');
+    setOrders([])
+  }, [])
 
   //Querying all Orders
     const orderQuery = useQuery({
@@ -36,33 +42,32 @@ function Orders() {
           newArray.push(order);
         }
       }
-
+      axios.delete(`http://localhost:8000/api/removeOrder?id=${Number(orderID)}`)
       setOrders(newArray);
-      return axios.delete(`http://localhost:8000/api/removeOrder?id=${Number(orderID)}`)
     } 
 
     //Confirming an order
     const confirmOrder = (orderID) => {
       axios.post(`http://localhost:8000/api/confirmOrder?orderID=${orderID}`)
       .then((res) => {
-        if (res.data.result !== null && res.data.errors === null){
+        console.log(res.data.result)
+        console.log(res.data.errors)
+        if (res?.data?.result !== null && res?.data?.errors === undefined){
           let newArray = []
           for (let o of orders){
             if (orderID === o.id){
               o.finished = true;
             }
-        newArray.push(o);
-          }
+            newArray.push(o);
+            }
         
-        let successMessage = `Order ${orderID} has been confirmed`
-        setName(successMessage);
-        setShow(true);
-        setOrders(newArray);
+          setName(res?.data?.result);
+          setOrders(newArray);
+          setShow(true);
         } else {
-          let errorMessage = res.data.errors;
+          let errorMessage = res?.data?.errors;
           setShow(true);
           setName(errorMessage);
-          console.log(res);
         }
       })
     }

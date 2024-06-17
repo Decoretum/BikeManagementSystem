@@ -505,14 +505,19 @@ public class engineeringService {
         Orders cart = orderRepostitory.findById(orderID).get();
         ArrayList<Object> errors = new ArrayList<>();
         List<OrderEntry> bikeOrders = cart.getOrderEntries();
-
+        
+   
         //Contain the product - cost 
         HashMap<Object, Object> productCost = new HashMap<>();
 
-        //Edge Case - Customer is null
+
+        //Edge Case - Customer is null or Bike Orders are empty
         if (cart.getCustomer() == null){
             productCost.put("errors", "Order " + orderID + " has no Customer. Add a Customer to it.");
             return productCost;
+        } else if (bikeOrders.isEmpty()) {
+        	productCost.put("errors", "Order " + orderID + " has no Bike Orders. Add Bike Orders to this Order.");
+        	return productCost;
         }
         
         for (OrderEntry a : bikeOrders){
