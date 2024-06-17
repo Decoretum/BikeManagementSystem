@@ -51,7 +51,7 @@ function AddEditBikeOrder() {
     queryFn: async () => {
       return axios.get('http://localhost:8000/api/getBikes')
       .then((res) => {
-        let filteredBikes = res.data.filter((bike) => bike.stock >= 1)
+        let filteredBikes = res.data.filter((bike) => bike.stock >= 1 && bike.removed === false)
         setBikes(filteredBikes);
         console.log(res.data);
         return res.data})

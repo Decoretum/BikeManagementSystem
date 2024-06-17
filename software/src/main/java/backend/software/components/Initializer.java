@@ -106,6 +106,7 @@ public class Initializer {
 
             DTO.setCategory(a1);
             DTO.setColors(a2);
+            DTO.setRemoved(false);
 
             DTO.setWheelSize("Diameter x Rim Width: 700 x 19C");
 
@@ -126,6 +127,7 @@ public class Initializer {
 
             DTO2.setCategory(a3);
             DTO2.setColors(a4);
+            DTO2.setRemoved(false);
 
             DTO2.setWheelSize("Diameter x Rim Width: 400 x 13C");
             engineeringService.makeBike(DTO);

@@ -94,6 +94,20 @@ function AddEditBike() {
     data.colors = newColors;
 
     //Fixing Color array
+    let colorCondition = [', ', ',', ' '];
+    let colorConditionWrong = (oldColors.includes(',') === false) && (oldColors.includes(' '))
+    console.log(oldColors.substr(oldColors.length - 1) === colorCondition)
+    console.log(oldColors)
+    if (colorConditionWrong === true || colorCondition.includes(oldColors.substr(oldColors.length - 1))){
+      let errors = <></>;
+      errors = 
+      <>
+        <Alert varient='error'> Colors must be in the form of "COLOR, COLOR" for multiple or "COLOR" for single color </Alert>
+      </>
+      setError(errors);
+      setShowError(true);
+      return;
+    }
     const newArray2 = data['colors'].filter((n) => n !== '');
     data.colors = newArray2;
 
@@ -103,15 +117,15 @@ function AddEditBike() {
     //bikeID
     data.id = bikeID;
 
-    console.log(data);
-
     //Trim Strings
     data.description = data.description.trim();
     data.name = data.name.trim();
     data.wheelSize = data.wheelSize.trim();
 
     //Decimal validation
-    if (data.stock.toString().includes('.')){
+    let stockDecimal = data.stock.toString().includes('.');
+    let isInt = isNaN(data.stock) === false;
+    if (stockDecimal){
       let errors = <></>;
       errors = 
       <>
@@ -120,7 +134,30 @@ function AddEditBike() {
       setError(errors);
       setShowError(true);
       return;
+    } else if (isInt !== true) {
+      let errors = <></>;
+      errors = 
+      <>
+        <Alert varient='error'> Stock cannot be a string </Alert>
+      </>
+      setError(errors);
+      setShowError(true);
+      return;
     }
+
+    //Price Validation
+    let PriceIsNumber = isNaN(data.price * 1) === false;
+    if (PriceIsNumber === false){
+      let errors = <></>;
+      errors = 
+      <>
+        <Alert varient='error'> Price cannot be a string </Alert>
+      </>
+      setError(errors);
+      setShowError(true);
+      return;
+    }
+
 
     let operation = '';
     let request = '';
@@ -133,13 +170,15 @@ function AddEditBike() {
       request = 'post';
     }
 
+    console.log('Make Bike Data: ', data);
+
     axios({
       method: request,
       url: `http://localhost:8000/api/${operation}Bike`,
       data: data
     })
     .then(res => {
-      console.log(res.data);
+      console.log(res.data.result);
       if (res.data.result instanceof Array === false){
           history('/bikes');
       } else {
@@ -229,7 +268,7 @@ function AddEditBike() {
               <FormGroup 
                 name = "Stock"
                 id = "stock"
-                type = "number"
+                type = "Number"
                 content = {viewType === 'Add' ? '' : bikeQuery?.data?.stock}
                 viewType = {viewType}
               />

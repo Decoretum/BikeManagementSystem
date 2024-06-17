@@ -9,11 +9,18 @@ public class makeBike {
     private ArrayList<String> category;
     private ArrayList<String> colors;
     private String wheelSize;
+    private boolean removed;
 
     public makeBike(){}
     
     public String getName() {
         return name;
+    }
+    public void setRemoved(boolean condition) {
+    	this.removed = condition;
+    }
+    public boolean getRemoved() {
+    	return removed;
     }
     public void setName(String name) {
         this.name = name;

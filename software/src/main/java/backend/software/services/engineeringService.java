@@ -103,7 +103,7 @@ public class engineeringService {
 
     public HashMap<Object, Object> makeBike(makeBike dto){
         HashMap<Object, Object> result = new HashMap<>();
-
+        
         Bike newBike = new Bike();
         newBike.setName(dto.getName());
         newBike.setDescription(dto.getDescription());
@@ -112,21 +112,27 @@ public class engineeringService {
         newBike.setWheelSize(dto.getWheelSize());
         newBike.setCanBeBorrowed(true);
         newBike.setRemoved(false);
-
+        
+        System.out.println(newBike);
         //Validator
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Bike>> constraintViolations = validator.validate(newBike);
         List<Bike> bikePresent = bikeRepository.queryName(dto.getName());
+        ArrayList<String> errors = new ArrayList<>();
         if (constraintViolations.size() >= 1){
-            ArrayList<String> errors = new ArrayList<>();
             for (ConstraintViolation<Bike> violation : constraintViolations){
                 errors.add(violation.getPropertyPath() + " " + violation.getMessage());
             }
             result.put("result", errors);
             return result;
         } else if (!bikePresent.isEmpty()){
-            result.put("result", "Bike " + dto.getName() + " is already present.");
+        	errors.add("Bike " + dto.getName() + " is already present.");
+            result.put("result", errors);
             return result;
+        } else if (dto.getCategory().size() == 0) {
+        	errors.add("Bike " + dto.getName() + "'s categories cannot be empty");
+        	result.put("result", errors);
+        	return result;
         }
 
         bikeRepository.save(newBike);
