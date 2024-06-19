@@ -410,9 +410,18 @@ public class engineeringService {
 
     }
 
-    public void makeOrder(makeAnOrder order){
+    public HashMap<String, String> makeOrder(makeAnOrder order){
         Orders newOrder = new Orders();
         String uuid = UUID.randomUUID().toString();
+        HashMap<String, String> result = new HashMap<>();
+        
+        if (order.getCustomerName().equals("Customer Name")) {
+        	result.put("error", "Select a Customer");
+        	return result;
+        } else if (order.getDescription().trim().isBlank()) {
+        	result.put("error", "Add Description to the order");
+        	return result;
+        }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter newFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -426,7 +435,9 @@ public class engineeringService {
         newOrder.setUuid(uuid);
         newOrder.setFinished(false);
         orderRepostitory.save(newOrder);
-        System.out.println("Order Created!");
+        
+        result.put("success", "Success!");
+        return result;
     }
 
     //Create an OrderEntry Model
@@ -434,8 +445,15 @@ public class engineeringService {
         Orders mainOrder = orderRepostitory.findById(order.getId()).get();
         Bike bike = bikeRepository.queryName(order.getBikeName()).get(0);
         BigDecimal oldCost = mainOrder.getTotalcost();
-
+        
         OrderEntry orderEntry = new OrderEntry();
+        HashMap<String, String> result = new HashMap<>();
+        
+        if (order.getBike_color().equals("Select a Color"))
+        {
+        	result.put("error", "You must select a color for the bike");
+        	return result;
+        }
 
         orderEntry.setBike(bike);
         orderEntry.setOrder(mainOrder);
@@ -448,7 +466,7 @@ public class engineeringService {
         orderEntryRepository.save(orderEntry);
         orderRepostitory.save(mainOrder);
 
-        HashMap<String, String> result = new HashMap<>();
+ 
         result.put("result", "Success!");
         return result;
     }

@@ -28,7 +28,7 @@ import backend.software.repositories.OrderRepostitory;
 import backend.software.services.engineeringService;
 import jakarta.annotation.PostConstruct;
 
-@Component
+//@Component
 public class Initializer {
     @Autowired
     private engineeringService engineeringService;
@@ -194,6 +194,7 @@ public class Initializer {
         }
 
         List<OrderEntry> bikeOrders = orderEntryRepository.findAll();
+//        Bike chosenOne = bikeRepository.findById(null)
         if (bikeOrders.isEmpty()){
             // Bike Orders inside the Orders
             Orders orders2 = orderRepostitory.findById(1L).get();

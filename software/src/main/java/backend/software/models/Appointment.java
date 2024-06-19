@@ -42,12 +42,13 @@ public class Appointment {
     private String name;
 
     @NotNull(message = "Description cannot be null")
+    @Size(min = 2, max = 255, message = "Description must be between 2 to 255 characters")
     @Column(name = "description")
     private String description;
 
     @NotNull(message = "Category cannot be null")
     @Column(name = "category")
-    @Length(min = 5, message = "Category must have a minimum of 5 characters")
+    @Size(min = 5, message = "Category must have a minimum of 5 characters")
     private String category;
 
     @Column(name = "ongoing")

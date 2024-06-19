@@ -105,7 +105,6 @@ function AddOrder() {
     data.customerName = customerName;
     data.uuid = orderQuery?.data?.uuid;
     data.description = data.description.trim();
-    console.log(data)
 
     let request = '';
     let operation = '';
@@ -125,9 +124,9 @@ function AddOrder() {
     })
       .then((res) => {
         console.log(res.data);
-        if (res.data.result === 'Choose a valid Customer'){
+        if (res.data.hasOwnProperty('error')){
           setShow(true);
-          setName(res.data.result);
+          setName(res.data.error);
           return;
         }
         history('/orders')

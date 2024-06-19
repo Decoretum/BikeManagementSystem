@@ -96,8 +96,6 @@ function AddEditBike() {
     //Fixing Color array
     let colorCondition = [', ', ',', ' '];
     let colorConditionWrong = (oldColors.includes(',') === false) && (oldColors.includes(' '))
-    console.log(oldColors.substr(oldColors.length - 1) === colorCondition)
-    console.log(oldColors)
     if (colorConditionWrong === true || colorCondition.includes(oldColors.substr(oldColors.length - 1))){
       let errors = <></>;
       errors = 

@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
+import Modal from 'react-bootstrap/Modal'
 import { useForm } from 'react-hook-form';
 
 
@@ -26,6 +27,12 @@ function AddEditBikeOrder() {
   const [colorArray, setColorArray] = useState([]);
   const [color, setColor] = useState('Select a Color');
 
+  //Modal
+  const [modalText, setModalText] = useState('');
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleOpen = () => setShow(true);
+
   const {handleSubmit} = useForm();
   const operation = params.mode;
 
@@ -38,10 +45,21 @@ function AddEditBikeOrder() {
     data.bikeName = bikeName;
     data.bike_color = color;
 
+
     axios.post('http://localhost:8000/api/makeBikeOrder', data)
     .then((res) => {
-      if (res.data.result === 'Success!')
-        navigate(`/orders/${orderID}/Edit`)
+      console.log(res)
+      if (res.data.hasOwnProperty('result'))
+        {
+          
+          setModalText(res.data.result.success);
+          setShow(true);
+          navigate(`/orders/${orderID}/Edit`)
+        } else {
+        console.log('error')
+        setModalText(res?.data?.error);
+        setShow(true);
+        }
       })
   }
 
@@ -82,6 +100,17 @@ function AddEditBikeOrder() {
   return (
     <>  
         <Container>
+
+        {/* Modal */}
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton onClick={handleClose}>
+            <Modal.Title> Order Error </Modal.Title>
+          </Modal.Header>
+            <Modal.Body> {modalText} </Modal.Body>
+        </Modal>
+
+
+        {/* Page Content */}
         <h1 className='page-title my-5'>{params.mode} bike order</h1>
 
         <div className='w-50 mx-auto'>

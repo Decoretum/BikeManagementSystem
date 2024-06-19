@@ -103,9 +103,9 @@ function AddEditAppointment() {
     console.log(data);
 
     data.ongoing = data.ongoing === 'true' ? true : false;
+    let errors = <></>;
 
     if(customerName === 'Select Customer Name' || customerName === 'No Name'){ 
-      let errors = <></>;
       errors = 
       <>
         {
@@ -116,6 +116,16 @@ function AddEditAppointment() {
       setError(errors);
       setShowError(true);
       return;
+      } else if (data.cost === 'NaN'){
+        errors = 
+        <>
+          {
+            <Alert variant='error'> Cost cannot be a String or Special Character </Alert>
+          }
+        </>
+        setError(errors)
+        setShowError(true);
+        return;
       }
 
     axios({
@@ -298,7 +308,7 @@ function AddEditAppointment() {
         {/* For the Error results */}
       <Modal show={showError} onHide={() => setShowError(false)}>
         <Modal.Header closeButton onClick={() => setShowError(false)}>
-          <Modal.Title>Errors</Modal.Title>
+          <Modal.Title>Order Confirmation</Modal.Title>
         </Modal.Header>
           <Modal.Body>
             {error}

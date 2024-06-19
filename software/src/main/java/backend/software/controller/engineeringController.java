@@ -161,8 +161,8 @@ public class engineeringController {
     @POST
     @Path("/makeAnOrder")
     @Consumes(MediaType.APPLICATION_JSON_VALUE)
-    public void makeOrder(makeAnOrder order){
-        engineeringService.makeOrder(order);
+    public HashMap<String, String> makeOrder(makeAnOrder order){
+        return engineeringService.makeOrder(order);
     }
 
     @PUT

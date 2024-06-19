@@ -22,6 +22,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
 
 @Table
 @Entity
@@ -31,6 +32,7 @@ public class Customer {
     private Long id;
 
     @NotNull(message = "Name cannot be null")
+    @Size(min = 5, max = 20, message = "Name must be between 5 to 20 characters")
     @Column(name = "name")
     private String name;
 
@@ -38,19 +40,22 @@ public class Customer {
     private Boolean deleted;
 
     @NotNull(message = "ID Number cannot be null")
+    @Size(min = 6, max = 10, message = "ID must be between 6 to 10 characters")
     @Column(name = "idNumber")
     private String idNumber;
 
     @NotNull(message = "Classification cannot be null")
-    @Length(min = 5, message = "Classification can only have a minimum of 5 characters")
+    @Size(min = 5, message = "Classification can only have a minimum of 5 characters")
     @Column(name = "classification")
     private String classification;
 
     @NotNull(message = "Contact Number cannot be null")
+    @Size(min = 5, message = "Classification can only have a minimum of 5 characters")
     @Column(name = "contactNumber")
     private String contactNumber;
     
     @Email(message = "Email must be a valid Email address")
+    @Size(min = 15, message = "Email can only have a minimum of 15 characters")
     @Column(name = "email")
     private String email;
 
