@@ -33,6 +33,7 @@ function AddOrder() {
   const [totalCost, setTotalCost] = useState(0);
   const [show, setShow] = useState(false);
   const [name, setName] = useState('');
+  const [present, setPresent] = useState('No Bike Orders');
 
   const FormGroup = (props) => {
     const {register} = useFormContext();
@@ -84,6 +85,11 @@ function AddOrder() {
         
         setOrderEntries(res.data.orderEntries);
         setTotalCost(res.data.totalcost);
+        if (res.data.orderEntries.length === 0) {
+          setPresent('No Bike Orders');
+        } else {
+          setPresent('Bike Orders');
+        }
         return res.data;
       })
     }
@@ -97,6 +103,11 @@ function AddOrder() {
     let newCost = (totalCost - bikeOrderCost).toFixed(2);
     setOrderEntries(newArray);
     setTotalCost(newCost);
+    if (newArray.length === 0) {
+      setPresent('No Bike Orders');
+    } else {
+      setPresent('Bike Orders')
+    }
   }
 
   
@@ -236,7 +247,8 @@ function AddOrder() {
             {
               orderQuery?.data?.finished === false ? (
             <div className='d-flex justify-content-between mt-5'>
-              <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>
+              {/* <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3> */}
+              <h3 className='page-title my-4'>{ present }</h3>
               <div className='d-flex align-items-center'>
                 <Link to={`/orders/bike-order/${orderQuery?.data?.id}/Add`} className='btn btn-md btn-main'>
                     <i className='me-1 bi-plus-lg'></i>
@@ -246,7 +258,8 @@ function AddOrder() {
             </div>
               ) : (
               <>
-                <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3>
+                {/* <h3 className='page-title my-4'>{ orderQuery?.data?.orderEntries?.length >= 1 ? 'Bike orders' : 'No Bike Orders'}</h3> */}
+                <h3 className='page-title my-4'>{ present }</h3>
               </>
               )
             }
