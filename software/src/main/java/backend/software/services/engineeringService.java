@@ -73,7 +73,14 @@ public class engineeringService {
 
     @Autowired
     private RentedBikeRepository rentedBikeRepository;
-
+    
+//  Dependency Injection - The injector injects objects of interfaces that have the features or methods 
+//  that the class needs to perform certain operations
+    
+    //2 Types
+    // Setter - You call setter function to inject dependencies to class
+    // Constructor - Dependencies injected through the constructor
+    
     public engineeringService(RentedBikeRepository rentedBikeRepository, AppointmentRepository appointmentRepository, CustomerRepository customerRepository, CategoryRepository categoryRepository, BikeCategoryRepository bikeCategoryRepository, BikeColorsRepository bikeColorsRepository, OrderEntryRepository orderEntryRepository, BikeRepository bikeRepository, OrderRepostitory orderRepostitory){
         this.rentedBikeRepository = rentedBikeRepository;
         this.appointmentRepository = appointmentRepository;
