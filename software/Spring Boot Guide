@@ -1,0 +1,29 @@
+Guide
+
+For Relational Entities (including One to Many and Many to One):
+@JsonManagedReference vs @JsonBackReference
+
+@JsonManagedReference: Forward reference which is included in the serialization process
+- Property annotated with this would have its target Entity be serialized whenever an object of the parent class containing this property 
+is called
+
+@JsonBackReference: Back reference that emits during the serialization process
+- Property annotated with this will not have its target entity serialized whenever an object of the parent class containing 
+this property is called
+
+One-Entity (on the One side)
+- Use @OneToMany(fetch = "", mappedBy="") //mappedBy should be the lower case name of the entity of the one-side, 
+- owner of the relationship
+
+Many-Entity (on the Many side)
+- Use @ManyToOne(fetch = "")
+- Use @JoinColumn(name="")
+	- We use this to specify an association between the Many entity to One entity 
+	- <name> argument must be the database column name for the foreign key of the "one" entity
+- Based on Database design, this entity will have foreign key id for the "one" entity	
+
+
+Fetch Type
+- FetchType.EAGER is used to eagerly fetch data of the entities from relations
+- 
+

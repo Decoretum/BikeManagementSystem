@@ -85,6 +85,7 @@ function AddOrder() {
         
         setOrderEntries(res.data.orderEntries);
         setTotalCost(res.data.totalcost);
+        
         if (res.data.orderEntries.length === 0) {
           setPresent('No Bike Orders');
         } else {

@@ -109,7 +109,7 @@ function Appointments() {
                 <td>{app.category}</td>
                 <td>{app.customer !== null ? app.customer.name : 'No Customer'}</td>
                 <td>{app.dateTimeAppointed}</td>
-                <td>{Number(app.cost).toFixed(2)}</td>
+                <td>P{Number(app.cost).toFixed(2)}</td>
                 <td>{app.ongoing === true ? 'true' : 'false'}</td>
                 <td>
                   <div className='d-flex'>

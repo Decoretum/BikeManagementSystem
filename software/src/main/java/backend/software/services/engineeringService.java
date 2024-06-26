@@ -891,12 +891,21 @@ public class engineeringService {
         System.out.println("DIFFERENCE: " + duration);
         
         BigDecimal difference = new BigDecimal(Math.abs(duration));
+        
+        //Turn Rental Duration to Days
         Long rentDuration = rentedBike.getRentalDuration();
+        Long rentDurationDays = (rentDuration / 24);
+        
+        //Get Expected Date of Returning rental
+        LocalDate expectedDate = dateRented.plusDays(rentDurationDays);
 
         BigDecimal baseCost = new BigDecimal(200 + (2 * (rentDuration + 1.5)));
         BigDecimal penalty;
+        
+        //Compare the "Now" date to the "Expected Date"
+        Long gap = now.until(expectedDate, ChronoUnit.DAYS);
 
-        if (difference.compareTo(BigDecimal.valueOf(0)) != 0) {
+        if (gap < 0) {
             BigDecimal v1 = difference.add(BigDecimal.valueOf(1.5));
             BigDecimal v2 = v1.multiply(BigDecimal.valueOf(5));
             penalty = (baseCost.add(v2));
@@ -935,9 +944,13 @@ public class engineeringService {
             rentedBikeRepository.save(rentedBike);
             rentedBikeRepository.delete(rentedBike);
             
-            System.out.println("Rented Bike " + rentedBikeID + " has been deleted");       
+            System.out.println("Rented Bike " + rentedBikeID + " has been deleted");     
+            return "success!"; 
         }
-        return "success!"; 
+        else {
+        	return "Rental Bike ID instance of " + rentedBikeID + " has already been confirmed and cannot be deleted"; 
+        }
+        
     }
 
 

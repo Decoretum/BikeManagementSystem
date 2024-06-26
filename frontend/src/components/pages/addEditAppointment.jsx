@@ -21,6 +21,7 @@ function FormGroup(props) {
   const isViewAndDate = props.viewType === 'View' && props.id === 'dateTimeAppointed';
   const notViewAndDesc = props.viewType !== 'View' && props.id === 'description';
   const notViewAndTime = props.viewType !== 'View' && props.id === 'dateTimeAppointed';
+  const isCost = props.name === 'Cost';
 
   let finalContent = '';
   if (props.id === 'dateTimeAppointed'){
@@ -30,7 +31,8 @@ function FormGroup(props) {
   }
   return (
     <Form.Group as={Col} controlId={props.id}>
-      <Form.Label><b>{props.name}</b></Form.Label>
+      {(isCost) ? (<Form.Label><b>{props.name} (in Pesos)</b></Form.Label>) : (<Form.Label><b>{props.name}</b></Form.Label>)}
+      {/*<Form.Label><b>{props.name}</b></Form.Label>*/}
       {
         (isViewAndNormal) ? (
           <Form.Control as='textarea' readOnly defaultValue={finalContent} type={props.type} />

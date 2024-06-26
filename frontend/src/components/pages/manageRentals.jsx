@@ -12,6 +12,7 @@ function Rentals() {
     const [rents, setRents] = useState([]);
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
+    const [modalContent, setModalContent] = useState('');
     const history = useNavigate()
 
     const rentQuery = useQuery({
@@ -29,11 +30,14 @@ function Rentals() {
       axios.post(`http://localhost:8000/api/confirmRental?rentID=${rentID}`)
       .then((res) => {
         if (res.data === 'success!'){
+          let tempName = "";
           let newArray = []
           for (let rent of rents){
             if (rent.id === rentID){
               rent.finished = true;
               setName(rent.customer.name);
+              tempName = rent.customer.name;
+              setModalContent(tempName + ' has been added balance for the rental');
           }
         newArray.push(rent);
       }
@@ -46,8 +50,17 @@ function Rentals() {
     const deleteRent = (rentID) => {
       axios.delete(`http://localhost:8000/api/deleteRentedBike?rentedBikeID=${rentID}`)
       .then((res) => {
-        let newArray = rents.filter((rent) => rent.id !== rentID);
-        setRents(newArray);
+        let result = res.data;
+        if (result === 'success!'){
+          let newArray = rents.filter((rent) => rent.id !== rentID);
+          setRents(newArray);
+          setModalContent('Bike Rental ID ' + rentID + " has been deleted");
+        } else {
+          setShow(true);
+          setModalContent(res.data);
+
+        }
+        
       })
     }
 
@@ -84,7 +97,7 @@ function Rentals() {
         <Modal.Header closeButton>
           <Modal.Title>Bike Rental Update</Modal.Title>
         </Modal.Header>
-          <Modal.Body> {name} has been added balance for the rental </Modal.Body>
+          <Modal.Body> {modalContent} </Modal.Body>
         </Modal>
 
           <Container>
@@ -116,7 +129,7 @@ function Rentals() {
                             <td>{rb.dateRented}</td>
                             <td>{rb.bike.name}</td>
                             <td>{rb.customer !== null ? rb.customer.name : 'No Customer'}</td>
-                            <td>{rb.rentalDuration}</td>
+                            <td>{rb.rentalDuration} hours</td>
                             <td>{rb.finished === true ? 'true' : 'false'}</td>
                             <td>
                               <div className='d-flex'>
