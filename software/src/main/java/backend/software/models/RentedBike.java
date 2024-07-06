@@ -29,6 +29,10 @@ public class RentedBike {
     @Column(name = "dateRented")
     @NotNull(message = "Date Rented cannot be null")
     private String dateRented;
+    
+    @Column(name = "dateConfirmed")
+    @NotNull(message = "Date Rented cannot be null")
+    private String dateConfirmed;
 
     @Column(name = "finished")
     @NotNull(message = "Finished can only be true or false")
@@ -97,6 +101,14 @@ public class RentedBike {
     public void setFinished(Boolean finished) {
         this.finished = finished;
     }
+
+	public String getDateConfirmed() {
+		return dateConfirmed;
+	}
+
+	public void setDateConfirmed(String dateConfirmed) {
+		this.dateConfirmed = dateConfirmed;
+	}
 
     
 

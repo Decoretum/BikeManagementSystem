@@ -865,6 +865,7 @@ public class engineeringService {
         rentedBike.setDateRented(formatter.format(date));
         rentedBike.setRentalDuration(hours);
         rentedBike.setFinished(false);
+        rentedBike.setDateConfirmed("In Progress");
         bike.setCanBeBorrowed(false);
         
         rentedBikeRepository.save(rentedBike);
@@ -916,6 +917,8 @@ public class engineeringService {
         bike.setCanBeBorrowed(true);
         customer.setBalance(penalty.add(baseCost));
         rentedBike.setFinished(true);
+        rentedBike.setDateConfirmed(nowDate);
+        
         rentedBikeRepository.save(rentedBike);
         customerRepository.save(customer);
         bikeRepository.save(bike);

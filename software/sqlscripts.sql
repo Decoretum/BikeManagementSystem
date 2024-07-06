@@ -22,6 +22,8 @@ DESC `bike`;
 DESC `bike_categories`;
 DESC `Customer`;
 DESC `Appointment`;
+DESC `rented_bike`;
+DESC `categories`;
 
 DELETE FROM `bike_colors`;
 DELETE FROM `bike_categories`;

@@ -20,6 +20,7 @@ function Categories() {
     const [error, setError] = useState(<></>);
     const [showError, setShowError] = useState(false);
     const [cats, setCats] = useState([]);
+    const [categoryEmpty, setCategoryEmpty] = useState(true);
 
     const history = useNavigate();
 
@@ -60,6 +61,7 @@ function Categories() {
           newArray.push(newCateg);
           setCats(newArray);
           setShow(false);
+          setCategoryEmpty(false);
         }
       })
     }
@@ -70,6 +72,9 @@ function Categories() {
         let newArray = cats.filter((cat) => cat.id !== categID)
         setCats(newArray);
         setShow(false);
+        if (newArray.length === 0) {
+         setCategoryEmpty(true);
+        }
       })
     }
 
@@ -95,7 +100,6 @@ function Categories() {
       )
     }
 
-    if (catQuery.data?.length >= 1)
     return (
       <>
           {/* Error modals */}
@@ -118,8 +122,12 @@ function Categories() {
                 </Button>
             </div>
           </div>
-
-            <Table className='open-sans w-50 mx-auto' hover>
+            {
+               (catQuery.data?.length === 0) && (categoryEmpty)  ? (
+                  <h2 className='my-3'>No Categories Stored in the Application</h2>
+                  ) 
+               : (
+         <Table className='open-sans w-50 mx-auto' hover>
             <thead>
               <tr className='inter'>
                 <th></th>
@@ -149,7 +157,10 @@ function Categories() {
               )
             }
             </tbody>
-            </Table>
+         </Table>
+                  )
+            }
+            
   
           </Container>
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
@@ -11,8 +11,8 @@ import { Alert, Button, Modal } from 'react-bootstrap';
 function Rentals() {
     const [rents, setRents] = useState([]);
     const [show, setShow] = useState(false);
-    const [name, setName] = useState('');
     const [modalContent, setModalContent] = useState('');
+    const [queryNow, setQueryNow] = useState(false);
     const history = useNavigate()
 
     const rentQuery = useQuery({
@@ -26,18 +26,19 @@ function Rentals() {
     }
     })
 
+   const queryClient = useQueryClient();
+
     const confirmRent = (rentID) => {
       axios.post(`http://localhost:8000/api/confirmRental?rentID=${rentID}`)
       .then((res) => {
         if (res.data === 'success!'){
+         queryClient.invalidateQueries({queryKey: ['rentedBike']})
           let tempName = "";
           let newArray = []
           for (let rent of rents){
             if (rent.id === rentID){
-              rent.finished = true;
-              setName(rent.customer.name);
               tempName = rent.customer.name;
-              setModalContent(tempName + ' has been added balance for the rental');
+              setModalContent("Customer " + tempName + ' has been added balance for the rental');
           }
         newArray.push(rent);
       }
@@ -112,6 +113,7 @@ function Rentals() {
                   <tr className='inter'>
                     <th></th>
                     <th>Date Rented</th>
+                    <th>Date Confirmed</th>
                     <th>Bike Name</th>
                     <th>Customer Name</th>
                     <th>Rental Duration</th>
@@ -127,6 +129,7 @@ function Rentals() {
                         <tr key={rb.id}>
                             <td>{rb.id}</td>
                             <td>{rb.dateRented}</td>
+                            <td>{rb.dateConfirmed}</td>
                             <td>{rb.bike.name}</td>
                             <td>{rb.customer !== null ? rb.customer.name : 'No Customer'}</td>
                             <td>{rb.rentalDuration} hours</td>
