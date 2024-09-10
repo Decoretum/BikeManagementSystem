@@ -66,8 +66,28 @@ function Orders() {
           setShow(true);
         } else {
           let errorMessage = res?.data?.errors;
+          let newArray = [];
+          if (errorMessage !== undefined)
+          {
+            for (let i = 0; i <= errorMessage?.length - 1; i = i + 1)
+             {
+                let message = errorMessage[i];
+                let bolded = "";
+                let indexHas = message.indexOf("has");
+                let bikeName = message.slice(5, indexHas);
+                let firstString = message.slice(0,5);
+                let lastString = message.slice(indexHas);
+                let newString = (
+                  <>
+                     {firstString} <b>{bikeName}</b> {lastString}
+                  </>
+                  )
+                newArray.push(newString);
+             }
+          }
+          
           setShow(true);
-          setName(errorMessage);
+          setName(newArray);
         }
       })
     }

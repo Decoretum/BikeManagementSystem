@@ -560,7 +560,8 @@ public class engineeringService {
             Bike bike = bikeRepository.queryName((String) bikeName).get(0);
             Integer mapQuantity = (Integer) productCost.get(bikeName);
             if (bike.getStock() < mapQuantity){
-                errors.add("Bike " + bikeName + " has an excess stock of " + productCost.get(bikeName));                
+            	int excess = mapQuantity - bike.getStock(); 
+                errors.add("Bike " + bikeName + " has " + excess + " excess units in Order " + cart.getId());                
             }
         }
 

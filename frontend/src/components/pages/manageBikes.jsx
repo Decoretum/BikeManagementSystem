@@ -67,7 +67,7 @@ function Bikes() {
                     bikes.map((bike) => 
                         <Card className='card-style mx-2 open-sans'>
                             <Card.Body>
-                                <Card.Title className='inter'><b>{bike.name}</b></Card.Title>
+                                <Card.Title className='inter'><b>{bike.name}</b> ({bike.stock} units) </Card.Title>
                                 <Card.Text>
                                 {bike.bikeCategories.length} categories <br />
                                 {bike.bikeColors.length} colors

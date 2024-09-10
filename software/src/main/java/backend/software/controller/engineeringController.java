@@ -52,7 +52,15 @@ public class engineeringController {
 
     @PostConstruct
     public void initialize(){
-        System.out.println("Application is running at Port 8000");
+    	System.out.println("");
+        System.out.println("Good day! This is a back-end application named \"Bisikleta para sa Atenista!\"\n");
+        System.out.println("Through the use of the Java Spring Boot and other awesome algorithms,"
+        		+ " \nthe user is able to manage bike orders, bike-related appointments, as well as bike rentals for "
+        		+ "\nAteneo de Manila University staff and students.");
+        System.out.println("\nThere is a front-end application and server that acommpanies this backend application"
+        		+ "\nwhich was developed in ReactJS with the aid of other frontend libraries for UX and "
+        		+ "\ninternal server routing");
+        System.out.println("");
     }
 
     //BIKES
