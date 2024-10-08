@@ -74,8 +74,34 @@ public class engineeringService {
     @Autowired
     private RentedBikeRepository rentedBikeRepository;
     
-//  Dependency Injection - The injector injects objects of interfaces that have the features or methods 
-//  that the class needs to perform certain operations
+    /*
+  	Dependency Injection (https://stackify.com/dependency-injection/)
+  
+  	The injector injects objects of interfaces that have the features or methods 
+  	that the class needs to perform certain operations
+ * 	
+ * 	1st Benefit
+ *  Makes a class dependent of its dependencies
+ *  
+ *  Achieved by decoupling usage of an object from its creation, which allows you to replace dependencies without
+ *  changing the class that uses them
+ *	
+ *	
+ *	2nd Benefit
+ *	Testability
+ *
+ *	You can replace services (Dependencies) with fake implementations for unit tests. Hence, unit tests
+ *	can be executed independent of external factors like databases, file system, or http services.
+ *	
+ *	The 4 roles in dependency injection
+	If you want to use this technique, you need classes that fulfill four basic roles. These are:
+	
+	- The service you want to use.
+	- The client that uses the service.
+	- An interface that’s used by the client and implemented by the service.
+	- The injector which creates a service instance and injects it into the client.
+ */
+ 
     
     //2 Types
     // Setter - You call setter function to inject dependencies to class
