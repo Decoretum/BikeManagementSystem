@@ -16,7 +16,7 @@ Link: https://drive.google.com/file/d/1Jj3acBON9X6yO8bS2A5SBsKElkoOOqd7/view?usp
 
 
 ## Frontend
-The system utilizes **ReactJS** accompanied with packages such as Bootstrap, Tanstack Query, React hook and router packages, and Axios. <br>
+The system utilizes **ReactJS** accompanied with packages such as Bootstrap, Tanstack Query, React hook and router packages, and Axios. <br><br>
 The frontend was developed with consideration to ease of use, minimal process steps required for system processes, and design preferences.
 
 ## Backend
