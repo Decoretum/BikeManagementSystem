@@ -6,6 +6,10 @@ This is an application that was designed and developed from scratch by Christian
 <li> Admin-Side (only Admin will access system) </li>
 <li> Manage appointments with students for bike repairs and services </li>
 
+<br>
+
+The application was developed using the _REST architecture_. 
+
 ## Database Design <br><br>
 
 Link: https://drive.google.com/file/d/1Jj3acBON9X6yO8bS2A5SBsKElkoOOqd7/view?usp=drive_link <br><br>
@@ -20,7 +24,7 @@ The system utilizes **ReactJS** accompanied with packages such as Bootstrap, Tan
 The frontend was developed with consideration to ease of use, minimal process steps required for system processes, and design preferences.
 
 ## Backend
-**Spring Boot** was used to developed the backend of the application. The backend application utilizes the following archicture:<br><br>
+**Spring Boot** was used to developed the backend of the application. The backend application also utilizes the following archicture aside from REST:<br><br>
 ![BisikletaArchitecture drawio](https://github.com/user-attachments/assets/66c936e0-f617-4db8-a7e3-73376ddff907)
 
 
