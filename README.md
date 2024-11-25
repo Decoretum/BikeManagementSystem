@@ -24,7 +24,7 @@ The system utilizes **ReactJS** accompanied with packages such as Bootstrap, Tan
 The frontend was developed with consideration to ease of use, minimal process steps required for system processes, and design preferences.
 
 ## Backend
-**Spring Boot** was used to developed the backend of the application. The backend application also utilizes the following archicture aside from REST:<br><br>
+**Spring Boot** was used to developed the backend of the application. The backend application also utilizes Controller-Service-Repository (CSR) pattern longside the Rest architecture:<br><br>
 ![BisikletaArchitecture drawio](https://github.com/user-attachments/assets/66c936e0-f617-4db8-a7e3-73376ddff907)
 
 
